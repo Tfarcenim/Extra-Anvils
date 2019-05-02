@@ -54,12 +54,9 @@ public class ContainerDiamondAnvil extends Container {
    */
   private final EntityPlayer thePlayer;
 
-  private String name = "";
-
   @OnlyIn(Dist.CLIENT)
   public ContainerDiamondAnvil(InventoryPlayer playerInventory, World worldIn, EntityPlayer player) {
     this(playerInventory, worldIn, BlockPos.ORIGIN, player);
-    this.name = "er";
   }
 
   public ContainerDiamondAnvil(InventoryPlayer playerInventory, final World worldIn, final BlockPos blockPosIn, EntityPlayer player) {
@@ -143,8 +140,6 @@ public class ContainerDiamondAnvil extends Container {
       }
     });
 
-
-
   for (int i = 0; i < 3; ++i) {
     for (int j = 0; j < 9; ++j) {
       this.addSlot(new Slot(playerInventory, j + i * 9 + 9, 8 + j * 18, 84 + i * 18));
@@ -155,11 +150,6 @@ public class ContainerDiamondAnvil extends Container {
     this.addSlot(new Slot(playerInventory, k, 8 + k * 18, 142));
   }
 }
-
-  public String getName(){
-    return name;
-  }
-
   /**
    * Callback for when the crafting matrix is changed.
    */
@@ -293,7 +283,7 @@ public class ContainerDiamondAnvil extends Container {
         }
       }
 
-      if (flag && !itemstack1.getItem().isBookEnchantable(itemstack1, itemstack2)) itemstack1 = null;
+      if (flag && !itemstack1.getItem().isBookEnchantable(itemstack1, itemstack2)) itemstack1 = ItemStack.EMPTY;
 
       if (StringUtils.isBlank(this.repairedItemName)) {
         if (itemstack.hasDisplayName()) {
@@ -301,7 +291,7 @@ public class ContainerDiamondAnvil extends Container {
           i += k;
           itemstack1.clearCustomName();
         }
-      } else if (!this.repairedItemName.equals(itemstack.getDisplayName())) {
+      } else if (!this.repairedItemName.equals(itemstack.getDisplayName().getString())) {
         k = 1;
         i += k;
         itemstack1.setDisplayName(new TextComponentString(this.repairedItemName));

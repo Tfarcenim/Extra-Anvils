@@ -1,6 +1,8 @@
 package com.tfar.extraanvils.gold;
 
 import com.tfar.extraanvils.ExtraAnvils;
+import com.tfar.extraanvils.network.PacketAnvilRename;
+import com.tfar.extraanvils.network.Message;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.gui.IGuiEventListener;
@@ -13,7 +15,6 @@ import net.minecraft.inventory.IContainerListener;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraft.network.play.client.CPacketRenameItem;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
@@ -24,13 +25,10 @@ import javax.annotation.Nonnull;
 
 @OnlyIn(Dist.CLIENT)
 public class GuiGoldAnvil extends GuiContainer implements IContainerListener {
-  private static final ResourceLocation anvilResource = new ResourceLocation(ExtraAnvils.MODID,"textures/gui/gold_anvil.png");
+  private static final ResourceLocation anvilResource = new ResourceLocation(ExtraAnvils.MODID, "textures/gui/gold_anvil.png");
   private final ContainerGoldAnvil anvil;
   private GuiTextField nameField;
   private final InventoryPlayer playerInventory;
-
-//  private final PacketDispatcher packetDispatcher;
-
 
   public GuiGoldAnvil(InventoryPlayer inventoryIn, World worldIn) {
     super(new ContainerGoldAnvil(inventoryIn, worldIn, Minecraft.getInstance().player));
@@ -60,7 +58,6 @@ public class GuiGoldAnvil extends GuiContainer implements IContainerListener {
     this.inventorySlots.addListener(this);
   }
 
-
   /**
    * Called when the GUI is resized in order to update the world and the resolution
    */
@@ -87,7 +84,7 @@ public class GuiGoldAnvil extends GuiContainer implements IContainerListener {
       int i = 8453920;
       boolean flag = true;
       String s = I18n.format("container.repair.cost", this.anvil.maximumCost);
-      if (this.anvil.maximumCost >= 40 && !this.mc.player.abilities.isCreativeMode) {
+      if (this.anvil.maximumCost >= this.anvil.maximumCap && !this.mc.player.abilities.isCreativeMode) {
         s = I18n.format("container.repair.expensive");
         i = 16736352;
       } else if (!this.anvil.getSlot(2).getHasStack()) {
@@ -100,13 +97,12 @@ public class GuiGoldAnvil extends GuiContainer implements IContainerListener {
         int j = this.xSize - 8 - this.fontRenderer.getStringWidth(s) - 2;
         int k = 69;
         drawRect(j - 2, 67, this.xSize - 8, 79, 1325400064);
-        this.fontRenderer.drawStringWithShadow(s, (float)j, 69, i);
+        this.fontRenderer.drawStringWithShadow(s, (float) j, 69, i);
       }
     }
 
     GlStateManager.enableLighting();
   }
-
 
   private void syncPacket(int unused, String name) {
     if (!name.isEmpty()) {
@@ -116,38 +112,9 @@ public class GuiGoldAnvil extends GuiContainer implements IContainerListener {
         s = "";
       }
       this.anvil.updateItemName(s);
-    //  this.mc.player.connection.sendPacket(new CPacketRenameItem(s));//THIS DOESN'T WORK
+    //  Message.INSTANCE.sendToServer(new PacketAnvilRename(s));
     }
   }
-
-
-  private void renameItem() {
-    String s = this.nameField.getText();
-    //TODO: Make sure this works
-  //  PacketDispatcher.//(new UpdateRenameMessage(s));
-    Slot slot = this.anvil.getSlot(0);
-
-    if (slot.getHasStack() && !slot.getStack().hasDisplayName() && s.equals(slot.getStack().getDisplayName())) {
-      s = "";
-    }
-
-    this.anvil.updateItemName(s);
-  }
-
-
-  /*@Override
-  protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
-    super.mouseClicked(mouseX, mouseY, mouseButton);
-    this.nameField.mouseClicked(mouseX, mouseY, mouseButton);
-  }
-
-  @Override
-  public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-    super.drawScreen(mouseX, mouseY, partialTicks);
-    GlStateManager.disableLighting();
-    GlStateManager.disableBlend();
-    this.nameField.drawTextBox();
-  } */
 
   @Override
   protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
@@ -161,10 +128,6 @@ public class GuiGoldAnvil extends GuiContainer implements IContainerListener {
     if ((this.anvil.getSlot(0).getHasStack() || this.anvil.getSlot(1).getHasStack()) && !this.anvil.getSlot(2).getHasStack()) {
       this.drawTexturedModalRect(i + 99, j + 45, this.xSize, 0, 28, 21);
     }
-  //  hammers.putIfAbsent(anvil.getName(), new ResourceLocation("moreanvils:textures/gui/"+anvil.getName().toLowerCase()+"_hammer.png"));
-
-   // this.mc.getTextureManager().bindTexture(hammers.get(anvil.getName()));
-   // drawModalRectWithCustomSizedTexture(i+25, j+7, 0, 0, 22, 22, 22, 22);
   }
 
   @Override
@@ -177,14 +140,13 @@ public class GuiGoldAnvil extends GuiContainer implements IContainerListener {
    * contents of that slot.
    */
   @Override
-  public void sendSlotContents(@Nonnull Container containerToSend, int slotInd,@Nonnull ItemStack stack) {
+  public void sendSlotContents(@Nonnull Container containerToSend, int slotInd, @Nonnull ItemStack stack) {
     if (slotInd == 0) {
       this.nameField.setText(stack.isEmpty() ? "" : stack.getDisplayName().getString());
       this.nameField.setEnabled(!stack.isEmpty());
     }
 
   }
-
 
   @Override
   public void render(int mouseX, int mouseY, float partialTicks) {
@@ -193,7 +155,8 @@ public class GuiGoldAnvil extends GuiContainer implements IContainerListener {
     this.renderHoveredToolTip(mouseX, mouseY);
     GlStateManager.disableLighting();
     GlStateManager.disableBlend();
-    this.nameField.drawTextField(mouseX, mouseY, partialTicks);  }
+    this.nameField.drawTextField(mouseX, mouseY, partialTicks);
+  }
 
   @Override
   public void sendWindowProperty(@Nonnull Container containerIn, int varToUpdate, int newValue) {
@@ -203,5 +166,3 @@ public class GuiGoldAnvil extends GuiContainer implements IContainerListener {
   public void sendAllWindowProperties(@Nonnull Container containerIn, @Nonnull IInventory inventory) {
   }
 }
-
-

@@ -51,11 +51,10 @@ public class ContainerGoldAnvil extends Container {
 
   @OnlyIn(Dist.CLIENT)
   public ContainerGoldAnvil(InventoryPlayer playerInventory, World worldIn, EntityPlayer player) {
-    this(playerInventory, worldIn, BlockPos.ORIGIN, player);
+    this(playerInventory, worldIn, BlockPos.ORIGIN,player);
   }
 
   public ContainerGoldAnvil(InventoryPlayer playerInventory, final World worldIn, final BlockPos blockPosIn, EntityPlayer player) {
-
     this.selfPosition = blockPosIn;
     this.theWorld = worldIn;
     this.thePlayer = player;
@@ -267,7 +266,7 @@ public class ContainerGoldAnvil extends Container {
 
                 i += k3 * j3;
                 if (itemstack.getCount() > 1) {
-                  i = 40;
+                  i = this.maximumCap;
                 }
               }
             }
