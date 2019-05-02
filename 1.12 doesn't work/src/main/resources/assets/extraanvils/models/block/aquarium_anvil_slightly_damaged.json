@@ -1,0 +1,8 @@
+{
+  "parent": "block/anvil",
+  "textures": {
+    "particle": "moreanvils:blocks/aquarium_anvil_base",
+    "body": "moreanvils:blocks/aquarium_anvil_base",
+    "top": "moreanvils:blocks/aquarium_anvil_top_damaged_1"
+  }
+}

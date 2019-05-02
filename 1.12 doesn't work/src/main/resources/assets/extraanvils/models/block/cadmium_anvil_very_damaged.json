@@ -1,0 +1,8 @@
+{
+  "parent": "block/anvil",
+  "textures": {
+    "particle": "moreanvils:blocks/cadmium_anvil_base",
+    "body": "moreanvils:blocks/cadmium_anvil_base",
+    "top": "moreanvils:blocks/cadmium_anvil_top_damaged_2"
+  }
+}

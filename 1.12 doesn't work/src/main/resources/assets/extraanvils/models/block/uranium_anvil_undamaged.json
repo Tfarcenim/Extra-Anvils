@@ -1,0 +1,8 @@
+{
+  "parent": "block/anvil",
+  "textures": {
+    "particle": "moreanvils:blocks/uranium_anvil_base",
+    "body": "moreanvils:blocks/uranium_anvil_base",
+    "top": "moreanvils:blocks/uranium_anvil_top_damaged_0"
+  }
+}

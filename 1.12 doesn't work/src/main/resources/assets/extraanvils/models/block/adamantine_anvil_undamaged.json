@@ -1,0 +1,8 @@
+{
+  "parent": "block/anvil",
+  "textures": {
+    "particle": "moreanvils:blocks/adamantine_anvil_base",
+    "body": "moreanvils:blocks/adamantine_anvil_base",
+    "top": "moreanvils:blocks/adamantine_anvil_top_damaged_0"
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "parent": "block/anvil",
+  "textures": {
+    "particle": "moreanvils:blocks/cupronickel_anvil_base",
+    "body": "moreanvils:blocks/cupronickel_anvil_base",
+    "top": "moreanvils:blocks/cupronickel_anvil_top_damaged_0"
+  }
+}
