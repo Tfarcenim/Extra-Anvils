@@ -1,7 +1,7 @@
 package com.tfar.extraanvils.gold;
 
+import com.tfar.extraanvils.AnvilTags;
 import com.tfar.extraanvils.ModAnvils;
-import net.minecraft.block.BlockAnvil;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -9,7 +9,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.*;
-import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemEnchantedBook;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
@@ -27,53 +26,36 @@ import javax.annotation.Nonnull;
 import java.util.Map;
 
 public class ContainerGoldAnvil extends Container {
-  /**
-   * Here comes out item you merged and/or renamed.
-   */
-  private IInventory outputSlot;
-  /**
-   * The 2slots where you put your items in that you want to merge and/or rename.
-   */
-  private IInventory inputSlots;
+  /**Here comes out item you merged and/or renamed.*/
+  private final IInventory outputSlot = new InventoryCraftResult();
+  /**The 2slots where you put your items in that you want to merge and/or rename.*/
+  private final IInventory inputSlots = new InventoryBasic(new TextComponentTranslation(ModAnvils.blockGoldAnvil.toString()), 2) {
+    @Override
+    public void markDirty() {
+      super.markDirty();
+      ContainerGoldAnvil.this.onCraftMatrixChanged(this);
+    }
+  };
+
   private World theWorld;
   private BlockPos selfPosition;
-  /**
-   * The maximum cost of repairing/renaming in the anvil.
-   */
+  /**The maximum cost of repairing/renaming in the anvil.*/
   public int maximumCost;
-  /**
-   * The cap for the maximum cost, varies by Gold.
-   */
-  public int maximumCap;
-  public ItemArmor.Properties material;
-  /**
-   * determined by damage of input item and stackSize of repair materials
-   */
+  /**The cap for the maximum cost, varies by Anvil.*/
+  public final int maximumCap = 160;
+  /**determined by damage of input item and stackSize of repair materials*/
   public int materialCost;
-  public String repairedItemName;
-  /**
-   * The player that has this container open.
-   */
+  private String repairedItemName;
+  /**The player that has this container open.*/
   private final EntityPlayer thePlayer;
-
-  private String name = "";
 
   @OnlyIn(Dist.CLIENT)
   public ContainerGoldAnvil(InventoryPlayer playerInventory, World worldIn, EntityPlayer player) {
     this(playerInventory, worldIn, BlockPos.ORIGIN, player);
-    this.name = "er";
   }
 
   public ContainerGoldAnvil(InventoryPlayer playerInventory, final World worldIn, final BlockPos blockPosIn, EntityPlayer player) {
-    this.maximumCap = 160;
-    this.outputSlot = new InventoryCraftResult();
-    this.inputSlots = new InventoryBasic(new TextComponentTranslation(ModAnvils.blockGoldAnvil.toString()), 2) {
-      @Override
-      public void markDirty() {
-        super.markDirty();
-        ContainerGoldAnvil.this.onCraftMatrixChanged(this);
-      }
-    };
+
     this.selfPosition = blockPosIn;
     this.theWorld = worldIn;
     this.thePlayer = player;
@@ -81,12 +63,13 @@ public class ContainerGoldAnvil extends Container {
     this.addSlot(new Slot(this.inputSlots, 0, 27, 47));
     this.addSlot(new Slot(this.inputSlots, 1, 76, 47));
     this.addSlot(new Slot(this.outputSlot, 2, 134, 47) {
+      /**
+       * Check if the stack is allowed to be placed in this slot, used for armor slots as well as furnace fuel.
+       */
       @Override
       public boolean isItemValid(ItemStack stack) {
         return false;
       }
-
-
 
       /**
        * Return whether this slot's stack can be taken from this slot.
@@ -106,7 +89,6 @@ public class ContainerGoldAnvil extends Container {
         float breakChance = getBreakChance(playerIn, stack);
 
         ContainerGoldAnvil.this.inputSlots.setInventorySlotContents(0, ItemStack.EMPTY);
-
         if (ContainerGoldAnvil.this.materialCost > 0) {
           ItemStack itemstack = ContainerGoldAnvil.this.inputSlots.getStackInSlot(1);
 
@@ -145,30 +127,21 @@ public class ContainerGoldAnvil extends Container {
       }
     });
 
-
-
   for (int i = 0; i < 3; ++i) {
     for (int j = 0; j < 9; ++j) {
       this.addSlot(new Slot(playerInventory, j + i * 9 + 9, 8 + j * 18, 84 + i * 18));
     }
   }
-
         for (int k = 0; k < 9; ++k) {
     this.addSlot(new Slot(playerInventory, k, 8 + k * 18, 142));
   }
 }
-
-  public String getName(){
-    return name;
-  }
-
   /**
    * Callback for when the crafting matrix is changed.
    */
   @Override
   public void onCraftMatrixChanged(IInventory inventoryIn) {
     super.onCraftMatrixChanged(inventoryIn);
-
     if (inventoryIn == this.inputSlots) {
       this.updateRepairOutput();
     }
@@ -196,7 +169,7 @@ public class ContainerGoldAnvil extends Container {
       boolean flag = false;
 
       if (!itemstack2.isEmpty()) {
-        if (!onAnvilChange(this, itemstack, itemstack2, outputSlot, repairedItemName, j)) return;
+         if (!onAnvilChange(this, itemstack, itemstack2, outputSlot, this.repairedItemName, j)) return;
         flag = itemstack2.getItem() == Items.ENCHANTED_BOOK && !ItemEnchantedBook.getEnchantments(itemstack2).isEmpty();
 
         if (itemstack1.isDamageable() && itemstack1.getItem().getIsRepairable(itemstack, itemstack2)) {
@@ -244,6 +217,9 @@ public class ContainerGoldAnvil extends Container {
 
           Map<Enchantment, Integer> map1 = EnchantmentHelper.getEnchantments(itemstack2);
 
+          boolean flag2 = false;
+          boolean flag3 = false;
+
           for (Enchantment enchantment1 : map1.keySet()) {
             if (enchantment1 != null) {
               int i3 = map.getOrDefault(enchantment1, 0);
@@ -256,13 +232,14 @@ public class ContainerGoldAnvil extends Container {
               }
 
               for (Enchantment enchantment : map.keySet()) {
-                if (enchantment != null && enchantment != enchantment1 && !enchantment.isCompatibleWith(enchantment1)) {//func_191560_c checks if ench can apply with ench1 and vice versa
+                if (enchantment != enchantment1 && !enchantment.isCompatibleWith(enchantment1)) {
                   flag1 = false;
                   ++i;
                 }
               }
-
-              if (flag1) {
+              if (!flag1) flag3 = true;
+              else {
+                flag2 = true;
                 if (j3 > enchantment1.getMaxLevel()) {
                   j3 = enchantment1.getMaxLevel();
                 }
@@ -289,13 +266,19 @@ public class ContainerGoldAnvil extends Container {
                 }
 
                 i += k3 * j3;
+                if (itemstack.getCount() > 1) {
+                  i = 40;
+                }
               }
             }
           }
+          if (flag3 && !flag2) {
+            this.outputSlot.setInventorySlotContents(0, ItemStack.EMPTY);
+            this.maximumCost = 0;
+            return;
+          }
         }
       }
-
-      if (flag && !itemstack1.getItem().isBookEnchantable(itemstack1, itemstack2)) itemstack1 = null;
 
       if (StringUtils.isBlank(this.repairedItemName)) {
         if (itemstack.hasDisplayName()) {
@@ -303,11 +286,13 @@ public class ContainerGoldAnvil extends Container {
           i += k;
           itemstack1.clearCustomName();
         }
-      } else if (!this.repairedItemName.equals(itemstack.getDisplayName())) {
+      } else if (!this.repairedItemName.equals(itemstack.getDisplayName().getString())) {
         k = 1;
         i += k;
         itemstack1.setDisplayName(new TextComponentString(this.repairedItemName));
       }
+
+      if (flag && !itemstack1.isBookEnchantable(itemstack2)) itemstack1 = ItemStack.EMPTY;
 
       this.maximumCost = j + i;
 
@@ -340,6 +325,18 @@ public class ContainerGoldAnvil extends Container {
 
       this.outputSlot.setInventorySlotContents(0, itemstack1);
       this.detectAndSendChanges();
+    }
+  }
+
+  /**
+   * Determines whether supplied player can use this container
+   */
+  @Override
+  public boolean canInteractWith(@Nonnull EntityPlayer playerIn) {
+    if (!this.theWorld.getBlockState(this.selfPosition).isIn(AnvilTags.GOLD_ANVIL)) {
+      return false;
+    } else {
+      return playerIn.getDistanceSq((double)this.selfPosition.getX() + 0.5D, (double)this.selfPosition.getY() + 0.5D, (double)this.selfPosition.getZ() + 0.5D) <= 64.0D;
     }
   }
 
@@ -408,11 +405,6 @@ public class ContainerGoldAnvil extends Container {
     }
 
     return itemstack;
-  }
-
-  @Override
-  public boolean canInteractWith (@Nonnull EntityPlayer playerIn){
-    return this.theWorld.getBlockState(this.selfPosition).getBlock() instanceof BlockGoldAnvil && playerIn.getDistanceSq((double) this.selfPosition.getX() + 0.5D, (double) this.selfPosition.getY() + 0.5D, (double) this.selfPosition.getZ() + 0.5D) <= 64.0D;
   }
 
   /**
