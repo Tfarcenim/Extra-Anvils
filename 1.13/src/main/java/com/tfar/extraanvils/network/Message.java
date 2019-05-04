@@ -6,10 +6,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.network.NetworkRegistry;
 import net.minecraftforge.fml.network.simple.SimpleChannel;
 
-/**
- * @author coolAlias
- * @author The_Fireplace
- */
+
 public class Message {
 
   public static SimpleChannel INSTANCE;
