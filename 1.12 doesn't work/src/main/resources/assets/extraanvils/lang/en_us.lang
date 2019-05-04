@@ -1,0 +1,7 @@
+tile.extraanvils:gold_anvil.name=Gold Anvil
+tile.extraanvils:gold_anvil_chipped.name=Chipped Gold Anvil
+tile.extraanvils:gold_anvil_damaged.name=Damaged Gold Anvil
+tile.extraanvils:diamond_anvil.name=Diamond Anvil
+tile.extraanvils:diamond_anvil_chipped.name=Chipped Diamond Anvil
+tile.extraanvils:diamond_anvil_damaged.name=Damaged Diamond Anvil
+itemGroup.extraanvils=Extra Anvils
