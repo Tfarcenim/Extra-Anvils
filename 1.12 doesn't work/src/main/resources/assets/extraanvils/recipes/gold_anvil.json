@@ -1,16 +1,19 @@
 {
-  "type": "crafting_shaped",
+  "type": "minecraft:crafting_shaped",
   "pattern": [
     "III",
     " i ",
     "iii"
   ],
   "key": {
-    "I": {
-      "item": "minecraft:gold_block"
-    },
     "i": {
-      "item": "minecraft:gold_ingot"
+      "type": "forge:ore_dict",
+      "ore": "ingotGold"
+    },
+
+    "I": {
+      "type": "forge:ore_dict",
+      "ore": "blockGold"
     }
   },
   "result": {

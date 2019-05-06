@@ -1,16 +1,19 @@
 {
-  "type": "crafting_shaped",
+  "type": "minecraft:crafting_shaped",
   "pattern": [
     "III",
     " i ",
     "iii"
   ],
   "key": {
-    "I": {
-      "item": "minecraft:diamond_block"
-    },
     "i": {
-      "item": "minecraft:diamond"
+      "type": "forge:ore_dict",
+      "ore": "gemDiamond"
+    },
+
+    "I": {
+      "type": "forge:ore_dict",
+      "ore": "blockDiamond"
     }
   },
   "result": {

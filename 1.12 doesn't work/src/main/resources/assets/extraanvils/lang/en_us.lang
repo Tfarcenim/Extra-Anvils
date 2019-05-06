@@ -1,3 +1,6 @@
+tile.extraanvils:stone_anvil.name=Stone Anvil
+tile.extraanvils:stone_anvil_chipped.name=Chipped Stone Anvil
+tile.extraanvils:stone_anvil_damaged.name=Damaged Stone Anvil
 tile.extraanvils:gold_anvil.name=Gold Anvil
 tile.extraanvils:gold_anvil_chipped.name=Chipped Gold Anvil
 tile.extraanvils:gold_anvil_damaged.name=Damaged Gold Anvil

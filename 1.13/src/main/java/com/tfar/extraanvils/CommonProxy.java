@@ -6,7 +6,6 @@ import net.minecraft.world.World;
 
 public class CommonProxy {
 
-
   public EntityPlayer getClientPlayer() {
     return null;
   }

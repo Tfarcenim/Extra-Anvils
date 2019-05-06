@@ -1,17 +1,18 @@
 package com.tfar.extraanvils;
 
-import net.minecraft.block.Block;
+import com.tfar.extraanvils.generic.BlockGenericAnvil;
+import com.tfar.extraanvils.vanilla.VanillaAnvils;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.event.RegistryEvent;
-
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import org.apache.logging.log4j.Logger;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 @Mod(modid = ExtraAnvils.MODID,name = ExtraAnvils.NAME, version = ExtraAnvils.MODVERSION/*, dependencies = "required-after:forge@[14.23.5.2796)"*/)
 public class ExtraAnvils
@@ -20,10 +21,14 @@ public class ExtraAnvils
     public static final String NAME = "Extra Anvils";
     public static final String MODVERSION = "@VERSION@";
 
+    public static final HashMap<BlockGenericAnvil,BlockGenericAnvil> anvilDamageMap = new HashMap<>();
+
+    public static final List<BlockGenericAnvil> anvils = new ArrayList<>();
+
     public static CreativeTabs creativeTab = new CreativeTabs(MODID) {
         @Override
         public ItemStack createIcon() {
-            return new ItemStack(ModAnvils.blockDiamondAnvil);
+            return new ItemStack(VanillaAnvils.blockDiamondAnvil);
         }
     };
 
@@ -37,6 +42,18 @@ public class ExtraAnvils
     @Mod.EventHandler
     public void preInit(final FMLPreInitializationEvent event) {
         proxy.preInit(event);
+
+      //  String[] materials = new String[]{"copper","silver"};
+
+      //  for (String material :materials)
+
+     //   JsonObject itemBlock = new JsonObject();
+
+   //     itemBlock.addProperty("parent", value);
+
+
+
+
     }
 
     @Mod.EventHandler

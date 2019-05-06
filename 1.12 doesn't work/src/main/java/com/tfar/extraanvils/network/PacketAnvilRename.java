@@ -1,11 +1,9 @@
 package com.tfar.extraanvils.network;
 
-import com.tfar.extraanvils.diamond.ContainerDiamondAnvil;
-import com.tfar.extraanvils.gold.ContainerGoldAnvil;
+import com.tfar.extraanvils.generic.ContainerGenericAnvil;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;
-import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.IThreadListener;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.fml.common.FMLCommonHandler;
@@ -51,11 +49,8 @@ public class PacketAnvilRename implements IMessage {
         Container container = playerEntity.openContainer;
         IThreadListener mainThread = (WorldServer) ctx.getServerHandler().player.world;
         mainThread.addScheduledTask(() -> {
-          if (container instanceof ContainerDiamondAnvil) {
-            ContainerDiamondAnvil anvil = (ContainerDiamondAnvil) ctx.getServerHandler().player.openContainer;
-            anvil.updateItemName(message.name);
-          } else if (container instanceof ContainerGoldAnvil){
-            ContainerGoldAnvil anvil = (ContainerGoldAnvil) ctx.getServerHandler().player.openContainer;
+          if (container instanceof ContainerGenericAnvil){
+            ContainerGenericAnvil anvil = (ContainerGenericAnvil) ctx.getServerHandler().player.openContainer;
             anvil.updateItemName(message.name);
           }
         });

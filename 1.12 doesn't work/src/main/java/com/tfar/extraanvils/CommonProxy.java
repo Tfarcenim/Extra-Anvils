@@ -1,21 +1,23 @@
 package com.tfar.extraanvils;
 
 
-import com.tfar.extraanvils.diamond.BlockDiamondAnvil;
-import com.tfar.extraanvils.gold.BlockGoldAnvil;
+import com.tfar.extraanvils.generic.AnvilProperties;
+import com.tfar.extraanvils.generic.BlockGenericAnvil;
 import com.tfar.extraanvils.network.PacketHandler;
+import com.tfar.extraanvils.vanilla.VanillaAnvils;
 import net.minecraft.block.Block;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
-import net.minecraft.world.World;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.registries.IForgeRegistry;
+
 @Mod.EventBusSubscriber//(modid = ExtraAnvils.MODID)
 public class CommonProxy {
 
@@ -32,26 +34,42 @@ public class CommonProxy {
 
     IForgeRegistry<Block> registry = event.getRegistry();
 
-    registry.register(new BlockDiamondAnvil("diamond_anvil"));
-    registry.register(new BlockDiamondAnvil("diamond_anvil_chipped"));
-    registry.register(new BlockDiamondAnvil("diamond_anvil_damaged"));
+    for (EnumVariants variant : EnumVariants.values()) {
+      registry.register(new BlockGenericAnvil(
+              new AnvilProperties("stone", 20, .8,1, .25), variant));
+    }
 
-    registry.register(new BlockGoldAnvil("gold_anvil"));
-    registry.register(new BlockGoldAnvil("gold_anvil_chipped"));
-    registry.register(new BlockGoldAnvil("gold_anvil_damaged"));
-  }
+    for (EnumVariants variant : EnumVariants.values()) {
+      registry.register(new BlockGenericAnvil(
+              new AnvilProperties("gold", 160, 2.8,1, 4), variant));
+    }
+
+    for (EnumVariants variant : EnumVariants.values()) {
+      registry.register(new BlockGenericAnvil(
+              new AnvilProperties("diamond", Integer.MAX_VALUE, .5,1, 64), variant));
+    }
+
+    }
+
 
   @SubscribeEvent
   public static void registerItems(RegistryEvent.Register<Item> event) {
     IForgeRegistry<Item> registry = event.getRegistry();
 
-    registry.register(new ItemBlock(ModAnvils.blockDiamondAnvil).setRegistryName(ModAnvils.blockDiamondAnvil.getRegistryName()));
-    registry.register(new ItemBlock(ModAnvils.blockDiamondAnvilChipped).setRegistryName(ModAnvils.blockDiamondAnvilChipped.getRegistryName()));
-    registry.register(new ItemBlock(ModAnvils.blockDiamondAnvilDamaged).setRegistryName(ModAnvils.blockDiamondAnvilDamaged.getRegistryName()));
+    for (BlockGenericAnvil anvil : ExtraAnvils.anvils)
+      registry.register(new ItemBlock(anvil).setRegistryName(anvil.getRegistryName()));
 
-    registry.register(new ItemBlock(ModAnvils.blockGoldAnvil).setRegistryName(ModAnvils.blockGoldAnvil.getRegistryName()));
-    registry.register(new ItemBlock(ModAnvils.blockGoldAnvilChipped).setRegistryName(ModAnvils.blockGoldAnvilChipped.getRegistryName()));
-    registry.register(new ItemBlock(ModAnvils.blockGoldAnvilDamaged).setRegistryName(ModAnvils.blockGoldAnvilDamaged.getRegistryName()));
+  /*  registry.register(new ItemBlock(VanillaAnvils.blockDiamondAnvil).setRegistryName(VanillaAnvils.blockDiamondAnvil.getRegistryName()));
+    registry.register(new ItemBlock(VanillaAnvils.blockDiamondAnvilChipped).setRegistryName(VanillaAnvils.blockDiamondAnvilChipped.getRegistryName()));
+    registry.register(new ItemBlock(VanillaAnvils.blockDiamondAnvilDamaged).setRegistryName(VanillaAnvils.blockDiamondAnvilDamaged.getRegistryName()));
+
+    registry.register(new ItemBlock(VanillaAnvils.blockGoldAnvil).setRegistryName(VanillaAnvils.blockGoldAnvil.getRegistryName()));
+    registry.register(new ItemBlock(VanillaAnvils.blockGoldAnvilChipped).setRegistryName(VanillaAnvils.blockGoldAnvilChipped.getRegistryName()));
+    registry.register(new ItemBlock(VanillaAnvils.blockGoldAnvilDamaged).setRegistryName(VanillaAnvils.blockGoldAnvilDamaged.getRegistryName()));
+
+    registry.register(new ItemBlock(VanillaAnvils.blockStoneAnvil).setRegistryName(VanillaAnvils.blockStoneAnvil.getRegistryName()));
+    registry.register(new ItemBlock(VanillaAnvils.blockStoneAnvilChipped).setRegistryName(VanillaAnvils.blockStoneAnvilChipped.getRegistryName()));
+    registry.register(new ItemBlock(VanillaAnvils.blockStoneAnvilDamaged).setRegistryName(VanillaAnvils.blockStoneAnvilDamaged.getRegistryName()));*/
 
   }
 }

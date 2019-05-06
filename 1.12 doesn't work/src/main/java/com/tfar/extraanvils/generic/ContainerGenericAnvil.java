@@ -1,4 +1,4 @@
-package com.tfar.extraanvils.gold;
+package com.tfar.extraanvils.generic;
 
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.enchantment.Enchantment;
@@ -21,7 +21,7 @@ import org.apache.commons.lang3.StringUtils;
 import javax.annotation.Nonnull;
 import java.util.Map;
 
-public class ContainerGoldAnvil extends Container {
+public class ContainerGenericAnvil extends Container {
   /**
    * Here comes out item you merged and/or renamed.
    */
@@ -32,6 +32,7 @@ public class ContainerGoldAnvil extends Container {
   private IInventory inputSlots;
   private World theWorld;
   private BlockPos selfPosition;
+  private double durMultiplier;
   /**
    * The maximum cost of repairing/renaming in the anvil.
    */
@@ -50,25 +51,29 @@ public class ContainerGoldAnvil extends Container {
    */
   private final EntityPlayer thePlayer;
 
+  public String name;
+
   @SideOnly(Side.CLIENT)
-  public ContainerGoldAnvil(InventoryPlayer playerInventory, World worldIn, EntityPlayer player)
+  public ContainerGenericAnvil(InventoryPlayer playerInventory, World worldIn, EntityPlayer player,BlockGenericAnvil anvil)
   {
-    this(playerInventory, worldIn, BlockPos.ORIGIN, player);
+    this(playerInventory, worldIn, BlockPos.ORIGIN, player,anvil);
   }
 
-  public ContainerGoldAnvil(InventoryPlayer playerInventory, final World worldIn, final BlockPos blockPosIn, EntityPlayer player) {
-    this.maximumCap = 160;
+  public ContainerGenericAnvil(InventoryPlayer playerInventory, final World worldIn, final BlockPos blockPosIn, EntityPlayer player,BlockGenericAnvil genericAnvil) {
     this.outputSlot = new InventoryCraftResult();
     this.inputSlots = new InventoryBasic("Repair", true, 2) {
       @Override
       public void markDirty() {
         super.markDirty();
-        ContainerGoldAnvil.this.onCraftMatrixChanged(this);
+        ContainerGenericAnvil.this.onCraftMatrixChanged(this);
       }
     };
     this.selfPosition = blockPosIn;
     this.theWorld = worldIn;
     this.thePlayer = player;
+    this.maximumCap = genericAnvil.properties.cap;
+    this.durMultiplier = genericAnvil.properties.durabilityMultiplier;
+    this.name = genericAnvil.properties.material;
     this.addSlotToContainer(new Slot(this.inputSlots, 0, 27, 47));
     this.addSlotToContainer(new Slot(this.inputSlots, 1, 76, 47));
     this.addSlotToContainer(new Slot(this.outputSlot, 2, 134, 47) {
@@ -85,56 +90,48 @@ public class ContainerGoldAnvil extends Container {
        */
       @Override
       public boolean canTakeStack(EntityPlayer playerIn) {
-        return (playerIn.capabilities.isCreativeMode || playerIn.experienceLevel >= ContainerGoldAnvil.this.maximumCost) && ContainerGoldAnvil.this.maximumCost > 0 && this.getHasStack();
+        return (playerIn.capabilities.isCreativeMode || playerIn.experienceLevel >= ContainerGenericAnvil.this.maximumCost) && ContainerGenericAnvil.this.maximumCost > 0 && this.getHasStack();
       }
 
       @Override
       @Nonnull
       public ItemStack onTake(EntityPlayer playerIn, @Nonnull ItemStack stack) {
         if (!playerIn.capabilities.isCreativeMode) {
-          playerIn.addExperienceLevel(-ContainerGoldAnvil.this.maximumCost);
+          playerIn.addExperienceLevel(-ContainerGenericAnvil.this.maximumCost);
         }
 
-        float breakChance = getBreakChance(playerIn, stack);
+        double breakChance = getBreakChance(playerIn, stack);
 
-        ContainerGoldAnvil.this.inputSlots.setInventorySlotContents(0, ItemStack.EMPTY);
+        ContainerGenericAnvil.this.inputSlots.setInventorySlotContents(0, ItemStack.EMPTY);
 
-        if (ContainerGoldAnvil.this.materialCost > 0) {
-          ItemStack itemstack = ContainerGoldAnvil.this.inputSlots.getStackInSlot(1);
+        if (ContainerGenericAnvil.this.materialCost > 0) {
+          ItemStack itemstack = ContainerGenericAnvil.this.inputSlots.getStackInSlot(1);
 
-          if (!itemstack.isEmpty() && itemstack.getCount() > ContainerGoldAnvil.this.materialCost) {
-            itemstack.shrink(ContainerGoldAnvil.this.materialCost);
-            ContainerGoldAnvil.this.inputSlots.setInventorySlotContents(1, itemstack);
+          if (!itemstack.isEmpty() && itemstack.getCount() > ContainerGenericAnvil.this.materialCost) {
+            itemstack.shrink(ContainerGenericAnvil.this.materialCost);
+            ContainerGenericAnvil.this.inputSlots.setInventorySlotContents(1, itemstack);
           } else {
-            ContainerGoldAnvil.this.inputSlots.setInventorySlotContents(1, ItemStack.EMPTY);
+            ContainerGenericAnvil.this.inputSlots.setInventorySlotContents(1, ItemStack.EMPTY);
           }
         } else {
-          ContainerGoldAnvil.this.inputSlots.setInventorySlotContents(1, ItemStack.EMPTY);
+          ContainerGenericAnvil.this.inputSlots.setInventorySlotContents(1, ItemStack.EMPTY);
         }
 
-        ContainerGoldAnvil.this.maximumCost = 0;
+        ContainerGenericAnvil.this.maximumCost = 0;
         IBlockState iblockstate = worldIn.getBlockState(blockPosIn);
 
         //damage the anvil
-        if (!playerIn.capabilities.isCreativeMode && !worldIn.isRemote && iblockstate.getBlock() instanceof BlockGoldAnvil && playerIn.getRNG().nextFloat() < breakChance) {
-          iblockstate = BlockGoldAnvil.damage(iblockstate);
+        if (!playerIn.capabilities.isCreativeMode && !worldIn.isRemote && iblockstate.getBlock() instanceof BlockGenericAnvil && playerIn.getRNG().nextFloat() < breakChance) {
 
-          //delete anvil
-          if (iblockstate == null) {
-            worldIn.setBlockToAir(blockPosIn);
-            worldIn.playEvent(1029, blockPosIn, 0);
-          } else {
-            worldIn.setBlockState(blockPosIn, iblockstate, 2);
-            worldIn.playEvent(1030, blockPosIn, 0);
-          }
+          ((BlockGenericAnvil)(iblockstate.getBlock())).damage(iblockstate,worldIn,blockPosIn);
         } else if (!worldIn.isRemote) {
           worldIn.playEvent(1030, blockPosIn, 0);
         }
         return stack;
       }
 
-      public float getBreakChance(EntityPlayer playerIn, ItemStack stack){
-        return ForgeHooks.onAnvilRepair(playerIn, stack, ContainerGoldAnvil.this.inputSlots.getStackInSlot(0), ContainerGoldAnvil.this.inputSlots.getStackInSlot(1)) / 64;
+      public double getBreakChance(EntityPlayer playerIn, ItemStack stack){
+        return ForgeHooks.onAnvilRepair(playerIn, stack, ContainerGenericAnvil.this.inputSlots.getStackInSlot(0), ContainerGenericAnvil.this.inputSlots.getStackInSlot(1)) / durMultiplier;
       }
     });
 
@@ -148,7 +145,6 @@ public class ContainerGoldAnvil extends Container {
       this.addSlotToContainer(new Slot(playerInventory, k, 8 + k * 18, 142));
     }
   }
-
   /**
    * Callback for when the crafting matrix is changed.
    */
@@ -367,7 +363,7 @@ public class ContainerGoldAnvil extends Container {
    */
   public boolean canInteractWith(@Nonnull EntityPlayer playerIn)
   {
-    return this.theWorld.getBlockState(this.selfPosition).getBlock() instanceof BlockGoldAnvil && playerIn.getDistanceSq((double) this.selfPosition.getX() + 0.5D, (double) this.selfPosition.getY() + 0.5D, (double) this.selfPosition.getZ() + 0.5D) <= 64.0D;
+    return this.theWorld.getBlockState(this.selfPosition).getBlock() instanceof BlockGenericAnvil && playerIn.getDistanceSq((double) this.selfPosition.getX() + 0.5D, (double) this.selfPosition.getY() + 0.5D, (double) this.selfPosition.getZ() + 0.5D) <= 64.0D;
   }
 
   /**
@@ -432,7 +428,7 @@ public class ContainerGoldAnvil extends Container {
     this.updateRepairOutput();
   }
 
-  public static boolean onAnvilChange(ContainerGoldAnvil container, ItemStack left, ItemStack right, IInventory outputSlot, String name, int baseCost) {
+  public static boolean onAnvilChange(ContainerGenericAnvil container, ItemStack left, ItemStack right, IInventory outputSlot, String name, int baseCost) {
     AnvilUpdateEvent e = new AnvilUpdateEvent(left, right, name, baseCost);
     if (MinecraftForge.EVENT_BUS.post(e)) return false;
     if (e.getOutput().isEmpty()) return true;

@@ -1,6 +1,5 @@
-package com.tfar.extraanvils.gold;
+package com.tfar.extraanvils.generic;
 
-import com.tfar.extraanvils.ExtraAnvils;
 import com.tfar.extraanvils.network.PacketAnvilRename;
 import com.tfar.extraanvils.network.PacketHandler;
 import net.minecraft.client.Minecraft;
@@ -23,18 +22,22 @@ import org.lwjgl.input.Keyboard;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 @SideOnly(Side.CLIENT)
-public class GuiGoldAnvil extends GuiContainer implements IContainerListener {
-  private static final ResourceLocation anvilResource = new ResourceLocation(ExtraAnvils.MODID,"textures/gui/gold_anvil.png");
-  private ContainerGoldAnvil anvil;
+public class GuiGenericAnvil extends GuiContainer implements IContainerListener {
+  private static final ResourceLocation anvilResource = new ResourceLocation("textures/gui/container/anvil.png");
+  private ContainerGenericAnvil anvil;
   private GuiTextField nameField;
   private final InventoryPlayer playerInventory;
+  public static Map<String, ResourceLocation> anvilTextures = new HashMap<>();
 
-  public GuiGoldAnvil(InventoryPlayer inventoryIn, World worldIn) {
-    super(new ContainerGoldAnvil(inventoryIn, worldIn, Minecraft.getMinecraft().player));
+
+  public GuiGenericAnvil(InventoryPlayer inventoryIn, World worldIn, BlockGenericAnvil genericAnvil) {
+    super(new ContainerGenericAnvil(inventoryIn, worldIn, Minecraft.getMinecraft().player, genericAnvil));
     this.playerInventory = inventoryIn;
-    this.anvil = (ContainerGoldAnvil) this.inventorySlots;
+    this.anvil = (ContainerGenericAnvil) this.inventorySlots;
   }
 
   @Override
@@ -148,6 +151,11 @@ public class GuiGoldAnvil extends GuiContainer implements IContainerListener {
     if ((this.anvil.getSlot(0).getHasStack() || this.anvil.getSlot(1).getHasStack()) && !this.anvil.getSlot(2).getHasStack()) {
       this.drawTexturedModalRect(i + 99, j + 45, this.xSize, 0, 28, 21);
     }
+
+    anvilTextures.putIfAbsent(anvil.name, new ResourceLocation("extraanvils:textures/gui/"+anvil.name+".png"));
+
+    this.mc.getTextureManager().bindTexture(anvilTextures.get(anvil.name));
+    drawModalRectWithCustomSizedTexture(i+25, j+7, 0, 0, 22, 22, 22, 22);
   }
 
   @Override
