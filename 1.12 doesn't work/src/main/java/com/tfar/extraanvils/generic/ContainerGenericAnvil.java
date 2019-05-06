@@ -123,7 +123,7 @@ public class ContainerGenericAnvil extends Container {
         //damage the anvil
         if (!playerIn.capabilities.isCreativeMode && !worldIn.isRemote && iblockstate.getBlock() instanceof BlockGenericAnvil && playerIn.getRNG().nextFloat() < breakChance) {
 
-          ((BlockGenericAnvil)(iblockstate.getBlock())).damage(iblockstate,worldIn,blockPosIn);
+          BlockGenericAnvil.damage(iblockstate);
         } else if (!worldIn.isRemote) {
           worldIn.playEvent(1030, blockPosIn, 0);
         }

@@ -27,6 +27,19 @@ public class CommonProxy {
 
   public void init(FMLInitializationEvent e){
       NetworkRegistry.INSTANCE.registerGuiHandler(ExtraAnvils.instance, new GuiHandler());
+
+      for (BlockGenericAnvil anvil : ExtraAnvils.anvils){
+switch (anvil.variant) {
+  case NORMAL:ExtraAnvils.anvilDamageMap
+          .put(anvil,(BlockGenericAnvil)ForgeRegistries
+                  .BLOCKS.getValue(new ResourceLocation(anvil.getRegistryName()+"_chipped")));break;
+  case CHIPPED:ExtraAnvils.anvilDamageMap
+          .put(anvil,(BlockGenericAnvil)ForgeRegistries
+                  .BLOCKS.getValue(new ResourceLocation(anvil.getRegistryName().toString()
+                          .replace(EnumVariants.CHIPPED.getString(), "")+EnumVariants.DAMAGED.getString())));break;
+  case DAMAGED:ExtraAnvils.anvilDamageMap.put(anvil,null);break;
+}
+      }
     }
 
   @SubscribeEvent

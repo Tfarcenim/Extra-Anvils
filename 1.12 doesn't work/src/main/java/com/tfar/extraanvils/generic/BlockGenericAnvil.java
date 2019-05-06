@@ -74,7 +74,7 @@ public class BlockGenericAnvil extends BlockFalling {
 
   @Override
   public void onEndFalling(World worldIn, BlockPos pos, IBlockState p_176502_3_, IBlockState p_176502_4_) {
-    DamageHelper.itsAnvilTime(worldIn,pos,this);
+    worldIn.playEvent(1031, pos, 0);
   }
 
   /**
@@ -117,14 +117,13 @@ public class BlockGenericAnvil extends BlockFalling {
     return true;
   }
 
-  public void damage(IBlockState state, World world,BlockPos pos) {
+  public static IBlockState damage(IBlockState state) {
     BlockGenericAnvil block = (BlockGenericAnvil) state.getBlock();
     EnumFacing enumfacing = state.getValue(FACING);
     switch (block.variant){
-      case NORMAL:world.setBlockState(pos,ForgeRegistries.BLOCKS.getValue(new ResourceLocation(getRegistryName()+"_chipped")).getDefaultState().withProperty(FACING,enumfacing));world.playEvent(1030,pos, 0);return;
-      case CHIPPED:world.setBlockState(pos,ForgeRegistries.BLOCKS.getValue(new ResourceLocation(getRegistryName().toString().replace(EnumVariants.CHIPPED.getString(), "")+EnumVariants.DAMAGED.getString())).getDefaultState().withProperty(FACING,enumfacing));world.playEvent(1030,pos, 0);return;
-      case DAMAGED:world.setBlockToAir(pos);world.playEvent(1029, pos, 0);
-
+      case NORMAL:return ExtraAnvils.anvilDamageMap.get(block).getDefaultState().withProperty(FACING,enumfacing);
+      case CHIPPED:return ExtraAnvils.anvilDamageMap.get(block).getDefaultState().withProperty(FACING,enumfacing);
+      case DAMAGED:default:return null;
     }
   }
 
