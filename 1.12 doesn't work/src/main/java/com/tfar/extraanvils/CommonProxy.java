@@ -36,7 +36,7 @@ public class CommonProxy {
 
     for (EnumVariants variant : EnumVariants.values()) {
       registry.register(new BlockGenericAnvil(
-              new AnvilProperties("stone", 20, .8,1, .25), variant));
+              new AnvilProperties("stone", 20, .8,.5, .25), variant));
     }
 
     for (EnumVariants variant : EnumVariants.values()) {
@@ -46,7 +46,7 @@ public class CommonProxy {
 
     for (EnumVariants variant : EnumVariants.values()) {
       registry.register(new BlockGenericAnvil(
-              new AnvilProperties("diamond", Integer.MAX_VALUE, .5,1, 64), variant));
+              new AnvilProperties("diamond", Integer.MAX_VALUE, .5,10, 64,1,true), variant));
     }
 
     }
@@ -58,18 +58,5 @@ public class CommonProxy {
 
     for (BlockGenericAnvil anvil : ExtraAnvils.anvils)
       registry.register(new ItemBlock(anvil).setRegistryName(anvil.getRegistryName()));
-
-  /*  registry.register(new ItemBlock(VanillaAnvils.blockDiamondAnvil).setRegistryName(VanillaAnvils.blockDiamondAnvil.getRegistryName()));
-    registry.register(new ItemBlock(VanillaAnvils.blockDiamondAnvilChipped).setRegistryName(VanillaAnvils.blockDiamondAnvilChipped.getRegistryName()));
-    registry.register(new ItemBlock(VanillaAnvils.blockDiamondAnvilDamaged).setRegistryName(VanillaAnvils.blockDiamondAnvilDamaged.getRegistryName()));
-
-    registry.register(new ItemBlock(VanillaAnvils.blockGoldAnvil).setRegistryName(VanillaAnvils.blockGoldAnvil.getRegistryName()));
-    registry.register(new ItemBlock(VanillaAnvils.blockGoldAnvilChipped).setRegistryName(VanillaAnvils.blockGoldAnvilChipped.getRegistryName()));
-    registry.register(new ItemBlock(VanillaAnvils.blockGoldAnvilDamaged).setRegistryName(VanillaAnvils.blockGoldAnvilDamaged.getRegistryName()));
-
-    registry.register(new ItemBlock(VanillaAnvils.blockStoneAnvil).setRegistryName(VanillaAnvils.blockStoneAnvil.getRegistryName()));
-    registry.register(new ItemBlock(VanillaAnvils.blockStoneAnvilChipped).setRegistryName(VanillaAnvils.blockStoneAnvilChipped.getRegistryName()));
-    registry.register(new ItemBlock(VanillaAnvils.blockStoneAnvilDamaged).setRegistryName(VanillaAnvils.blockStoneAnvilDamaged.getRegistryName()));*/
-
   }
 }
