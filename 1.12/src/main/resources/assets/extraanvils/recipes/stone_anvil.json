@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+
+  "pattern": [
+    "III",
+    " i ",
+    "iii"
+  ],
+  "key": {
+    "i": {
+      "item": "minecraft:stone_slab",
+      "data": 0
+    },
+    "I": {
+      "item": "minecraft:stone",
+      "data": 0
+    }
+  },
+  "result": {
+    "item": "extraanvils:stone_anvil"
+  }
+}

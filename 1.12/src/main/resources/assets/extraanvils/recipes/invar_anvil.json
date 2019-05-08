@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "III",
+    " i ",
+    "iii"
+  ],
+  "key": {
+    "i": {
+      "type": "forge:ore_dict",
+      "ore": "ingotInvar"
+    },
+
+    "I": {
+      "type": "forge:ore_dict",
+      "ore": "blockInvar"
+    }
+  },
+  "result": {
+    "item": "extraanvils:invar_anvil"
+  }
+}

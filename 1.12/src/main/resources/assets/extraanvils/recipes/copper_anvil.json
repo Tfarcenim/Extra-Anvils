@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "III",
+    " i ",
+    "iii"
+  ],
+  "key": {
+    "i": {
+      "type": "forge:ore_dict",
+      "ore": "ingotCopper"
+    },
+
+    "I": {
+      "type": "forge:ore_dict",
+      "ore": "blockCopper"
+    }
+  },
+  "result": {
+    "item": "extraanvils:copper_anvil"
+  }
+}

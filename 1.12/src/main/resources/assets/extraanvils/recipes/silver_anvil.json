@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "III",
+    " i ",
+    "iii"
+  ],
+  "key": {
+    "i": {
+      "type": "forge:ore_dict",
+      "ore": "ingotSilver"
+    },
+
+    "I": {
+      "type": "forge:ore_dict",
+      "ore": "blockSilver"
+    }
+  },
+  "result": {
+    "item": "extraanvils:silver_anvil"
+  }
+}
