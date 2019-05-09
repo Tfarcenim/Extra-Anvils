@@ -1,5 +1,6 @@
 package com.tfar.extraanvils;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 import java.io.File;
@@ -9,6 +10,15 @@ import java.util.Map;
 import static com.tfar.extraanvils.ExtraAnvils.MODID;
 
 public class Scripts {
+
+  private static JsonArray pattern = new JsonArray();
+  private static String[] recipe =  {"III", " i ", "iii"};
+
+      static {
+        for (String line : recipe){
+         pattern.add(line);
+        }
+      }
 
        public static void scripts() {
 
@@ -58,6 +68,41 @@ public class Scripts {
                FileWriter writer2 = new FileWriter(file2);
                writer2.write(Materials.prettyJson(blockmodel));
                writer2.flush();
+
+               if (damage != EnumVariants.NORMAL)continue;
+
+               File file3 = new File("jsons/recipes/" + material + damage.getString() + ".json");
+
+               JsonObject recipes = new JsonObject();
+
+               JsonObject key = new JsonObject();
+
+               JsonObject I = new JsonObject();
+
+               I.addProperty("type","forge:ore_dict");
+               I.addProperty("ore","block"+material.substring(0,1).toUpperCase()+material.substring(1));
+
+               JsonObject i = new JsonObject();
+
+               i.addProperty("type","forge:ore_dict");
+               i.addProperty("ore","ingot"+material.substring(0,1).toUpperCase()+material.substring(1));
+
+               key.add("I",I);
+               key.add("i",i);
+
+               recipes.add("pattern",pattern);
+
+               recipes.addProperty("type","minecraft:crafting_shaped");
+               recipes.add("key",key);
+
+               JsonObject result = new JsonObject();
+               result.addProperty("item","extraanvils:"+material+"_anvil");
+
+               recipes.add("result",result);
+
+               FileWriter writer3 = new FileWriter(file3);
+               writer3.write(Materials.prettyJson(recipes));
+               writer3.flush();
              }
            }
          } catch (Exception oof) {

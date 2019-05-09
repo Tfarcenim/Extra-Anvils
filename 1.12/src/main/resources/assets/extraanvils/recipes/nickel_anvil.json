@@ -1,0 +1,21 @@
+{
+  "pattern": [
+    "III",
+    " i ",
+    "iii"
+  ],
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "I": {
+      "type": "forge:ore_dict",
+      "ore": "blockNickel"
+    },
+    "i": {
+      "type": "forge:ore_dict",
+      "ore": "ingotNickel"
+    }
+  },
+  "result": {
+    "item": "extraanvils:nickel_anvil"
+  }
+}
