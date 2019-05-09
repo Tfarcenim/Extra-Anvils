@@ -42,7 +42,6 @@ public class EntityFallingAnvil extends EntityFallingBlock implements IEntityAdd
   public int fallTime;
   public boolean shouldDropItem = true;
   private boolean dontSetBlock;
-  private boolean causesPlayerDamage;
   private boolean hurtEntities;
   private int fallHurtMax = Integer.MAX_VALUE;
   private double fallResistance;

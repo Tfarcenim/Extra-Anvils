@@ -4,7 +4,7 @@ import com.tfar.extraanvils.ExtraAnvils;
 import com.tfar.extraanvils.generic.BlockGenericAnvil;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
-public class VanillaAnvils {
+public class ObjectHolders {
   @GameRegistry.ObjectHolder("extraanvils:stone_anvil")
   public static BlockGenericAnvil blockStoneAnvil;
 

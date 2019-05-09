@@ -1,0 +1,8 @@
+{
+  "parent": "block/anvil",
+  "textures": {
+    "particle": "extraanvils:blocks/inferium_anvil_top",
+    "body": "extraanvils:blocks/inferium_anvil_top",
+    "top": "extraanvils:blocks/inferium_anvil_top_damaged"
+  }
+}

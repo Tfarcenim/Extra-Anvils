@@ -69,6 +69,7 @@ public class BlockGenericAnvil extends BlockFalling {
   }
 
   @Override
+  @Nonnull
   public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos)
   {
     EnumFacing enumfacing = state.getValue(FACING);
@@ -81,6 +82,7 @@ public class BlockGenericAnvil extends BlockFalling {
   }
 
   @Override
+  @Nonnull
   public BlockFaceShape getBlockFaceShape(IBlockAccess worldIn, IBlockState state, BlockPos pos, EnumFacing face) {
 return BlockFaceShape.UNDEFINED;
   }
@@ -90,6 +92,7 @@ return BlockFaceShape.UNDEFINED;
    * IBlockstate
    */
   @Override
+  @Nonnull
   public IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer)
   {
     EnumFacing enumfacing = placer.getHorizontalFacing().rotateY();
@@ -222,9 +225,11 @@ return BlockFaceShape.UNDEFINED;
   }
 
   @Override
+  @SideOnly(Side.CLIENT)
   public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
     if (worldIn == null)return;
     tooltip.add("Level Cap: "+this.properties.cap);
+    tooltip.add("Durability Multiplier: "+this.properties.durabilityMultiplier);
   }
 
   @SideOnly(Side.CLIENT)

@@ -30,6 +30,8 @@ public class GuiDiamondAnvil extends GuiContainer implements IContainerListener 
   private GuiTextField nameField;
   private final InventoryPlayer playerInventory;
 
+
+
   public GuiDiamondAnvil(InventoryPlayer inventoryIn, World worldIn) {
     super(new ContainerDiamondAnvil(inventoryIn, worldIn, Minecraft.getInstance().player));
     this.playerInventory = inventoryIn;

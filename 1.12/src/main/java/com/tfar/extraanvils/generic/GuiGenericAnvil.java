@@ -1,5 +1,6 @@
 package com.tfar.extraanvils.generic;
 
+import com.tfar.extraanvils.ExtraAnvils;
 import com.tfar.extraanvils.network.PacketAnvilRename;
 import com.tfar.extraanvils.network.PacketHandler;
 import net.minecraft.client.Minecraft;
@@ -31,7 +32,7 @@ public class GuiGenericAnvil extends GuiContainer implements IContainerListener 
   private ContainerGenericAnvil anvil;
   private GuiTextField nameField;
   private final InventoryPlayer playerInventory;
-  public static Map<String, ResourceLocation> anvilTextures = new HashMap<>();
+  private static final ResourceLocation hammer = new ResourceLocation(ExtraAnvils.MODID, "textures/gui/hammer.png");
 
 
   public GuiGenericAnvil(InventoryPlayer inventoryIn, World worldIn, BlockGenericAnvil genericAnvil) {
@@ -143,19 +144,19 @@ public class GuiGenericAnvil extends GuiContainer implements IContainerListener 
   protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
     GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
     this.mc.getTextureManager().bindTexture(anvilResource);
-    int i = (this.width - this.xSize) / 2;
-    int j = (this.height - this.ySize) / 2;
-    this.drawTexturedModalRect(i, j, 0, 0, this.xSize, this.ySize);
+    int i = (width - xSize) / 2;
+    int j = (height - ySize) / 2;
+    this.drawTexturedModalRect(i, j, 0, 0, xSize, ySize);
     this.drawTexturedModalRect(i + 59, j + 20, 0, this.ySize + (this.anvil.getSlot(0).getHasStack() ? 0 : 16), 110, 16);
 
     if ((this.anvil.getSlot(0).getHasStack() || this.anvil.getSlot(1).getHasStack()) && !this.anvil.getSlot(2).getHasStack()) {
       this.drawTexturedModalRect(i + 99, j + 45, this.xSize, 0, 28, 21);
     }
 
-    anvilTextures.putIfAbsent(anvil.name, new ResourceLocation("extraanvils:textures/gui/"+anvil.name+".png"));
-
-    this.mc.getTextureManager().bindTexture(anvilTextures.get(anvil.name));
-    drawModalRectWithCustomSizedTexture(i+25, j+7, 0, 0, 22, 22, 22, 22);
+    mc.getTextureManager().bindTexture(hammer);
+    EnumAnvilType.getType(anvil.name).color.setColor();
+    drawModalRectWithCustomSizedTexture(i + 25, j + 7, 0, 0, 22, 22, 22, 22);
+    Color.reset();
   }
 
   @Override
@@ -181,5 +182,71 @@ public class GuiGenericAnvil extends GuiContainer implements IContainerListener 
 
   @Override
   public void sendAllWindowProperties(@Nonnull Container containerIn, @Nonnull IInventory inventory) {
+  }
+
+  public enum EnumAnvilType {
+    //if this color is seen, this is a missed color and should be filled in asap
+    ERROR(new Color(0,0,0)),
+
+    ALUMINUM(new Color(220,220,220)),
+    ARDITE(new Color(255,95,0)),
+    BRONZE(new Color(0,12,255)),
+    COBALT(new Color(0,12,255)),
+    COPPER(new Color(255,127,0)),
+    DIAMOND(new Color(0,255,225)),
+    ELECTRUM(new Color(255,255,155)),
+    ENDSTEEL(new Color(255,255,200)),
+    GOLD(new Color(255,245,0)),
+    INFERIUM(new Color(50,255,10)),
+    INTERMEDIUM(new Color(255,120,0)),
+    INVAR(new Color(150,150,150)),
+    IRIDIUM(new Color(194,192,216)),
+    LEAD(new Color(124,138,181)),
+    MANYULLYN(new Color(165,0,255)),
+    NICKEL(new Color(255,255,185)),
+    PLATINUM(new Color(10, 220, 255)),
+    PRUDENTIUM(new Color(0,255,0)),
+    STELLAR(new Color(250,250,250)),
+    SILVER(new Color(185,235,255)),
+    STEEL(new Color(60,60,60)),
+    STONE(new Color(130,130,130)),
+    SUPERIUM(new Color(0,0,255)),
+    SUPREMIUM(new Color(255,0,0)),
+    TIN(new Color(171,192,201)),
+
+    ;
+
+    public final Color color;
+
+    EnumAnvilType(Color color) {
+      this.color = color;
+    }
+
+    public static EnumAnvilType getType(String s){
+      try {
+        return EnumAnvilType.valueOf(s.toUpperCase());
+      } catch (IllegalArgumentException ignored){
+        //it isn't there
+        return ERROR;
+      }
+    }
+  }
+  public static class Color {
+    public final int r,g,b,a;
+
+    Color(int red, int green, int blue) {
+      this(red, green, blue, 255);
+    }
+
+    Color(int red, int green, int blue, int alpha) {
+      r = red; g = green; b = blue; a = alpha;
+    }
+
+    public void setColor() {
+      GlStateManager.color(r/255f,g/255f,b/255f,a/255f);
+    }
+    public static void reset(){
+      GlStateManager.color(1,1,1,1);
+    }
   }
 }
