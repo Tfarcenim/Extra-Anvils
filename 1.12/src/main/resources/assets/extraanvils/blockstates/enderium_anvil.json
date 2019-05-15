@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing\u003dsouth": {
+      "model": "extraanvils:enderium_anvil"
+    },
+    "facing\u003dwest": {
+      "model": "extraanvils:enderium_anvil",
+      "y": 90
+    },
+    "facing\u003dnorth": {
+      "model": "extraanvils:enderium_anvil",
+      "y": 180
+    },
+    "facing\u003deast": {
+      "model": "extraanvils:enderium_anvil",
+      "y": 270
+    }
+  }
+}

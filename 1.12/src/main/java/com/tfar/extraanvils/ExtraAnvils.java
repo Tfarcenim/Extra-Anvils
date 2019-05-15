@@ -3,11 +3,17 @@ package com.tfar.extraanvils;
 import com.google.gson.JsonObject;
 import com.tfar.extraanvils.generic.BlockGenericAnvil;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
+import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.oredict.ShapedOreRecipe;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -48,6 +54,9 @@ public class ExtraAnvils
     @Mod.EventHandler
     public void preInit(final FMLPreInitializationEvent event) {
 
+
+
+
         boolean doJson = false;
 
         if (doJson) {
@@ -60,5 +69,9 @@ public class ExtraAnvils
     @Mod.EventHandler
     public void init(final FMLInitializationEvent event) {
         proxy.init(event);
+
+    //    for (Item item : ForgeRegistries.ITEMS){
+    //        if (item instanceof ItemArmor)System.out.println(item.getRegistryName().toString() +" "+ item.getItemEnchantability());
+    //    }
     }
 }

@@ -69,7 +69,7 @@ public class GuiGenericAnvil extends GuiContainer implements IContainerListener 
     GlStateManager.disableBlend();
     this.fontRenderer.drawString(I18n.format("container.repair"), 60, 6, 4210752);
 
-    if (this.anvil.maximumCost > 0) {
+    if (this.anvil.maximumCost >= 0) {
       int i = 8453920;
       boolean flag = true;
       String s = I18n.format("container.repair.cost", this.anvil.maximumCost);

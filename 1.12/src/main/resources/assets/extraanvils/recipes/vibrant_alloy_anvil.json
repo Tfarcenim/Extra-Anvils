@@ -1,0 +1,21 @@
+{
+  "pattern": [
+    "III",
+    " i ",
+    "iii"
+  ],
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "I": {
+      "type": "forge:ore_dict",
+      "ore": "blockVibrantAlloy"
+    },
+    "i": {
+      "type": "forge:ore_dict",
+      "ore": "ingotVibrantAlloy"
+    }
+  },
+  "result": {
+    "item": "extraanvils:vibrant_alloy_anvil"
+  }
+}

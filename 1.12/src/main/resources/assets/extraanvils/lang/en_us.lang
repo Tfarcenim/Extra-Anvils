@@ -74,4 +74,17 @@ tile.extraanvils:bronze_anvil.name=Bronze Anvil
 tile.extraanvils:bronze_anvil_chipped.name=Chipped Bronze Anvil
 tile.extraanvils:bronze_anvil_damaged.name=Damaged Bronze Anvil
 
+tile.extraanvils:vibrant_alloy_anvil.name=Vibrant Alloy Anvil
+tile.extraanvils:vibrant_alloy_anvil_chipped.name=Chipped Vibrant Alloy Anvil
+tile.extraanvils:vibrant_alloy_anvil_damaged.name=Damaged Vibrant Alloy Anvil
+tile.extraanvils:energetic_alloy_anvil.name=Energetic Alloy Anvil
+tile.extraanvils:energetic_alloy_anvil_chipped.name=Chipped Energetic Alloy Anvil
+tile.extraanvils:energetic_alloy_anvil_damaged.name=Damaged Energetic Alloy Anvil
+tile.extraanvils:signalum_anvil.name=Signalum Anvil
+tile.extraanvils:signalum_anvil_chipped.name=Chipped Signalum Anvil
+tile.extraanvils:signalum_anvil_damaged.name=Damaged Signalum Anvil
+tile.extraanvils:enderium_anvil.name=Enderium Anvil
+tile.extraanvils:enderium_anvil_chipped.name=Chipped Enderium Anvil
+tile.extraanvils:enderium_anvil_damaged.name=Damaged Enderium Anvil
+
 itemGroup.extraanvils=Extra Anvils

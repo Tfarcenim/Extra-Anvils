@@ -21,45 +21,46 @@ import net.minecraftforge.registries.IForgeRegistry;
 public class CommonProxy {
 
   @SubscribeEvent
-  public static void registerEntity(RegistryEvent.Register<EntityEntry> e){
+  public static void registerEntity(RegistryEvent.Register<EntityEntry> e) {
 
     final ResourceLocation resourceLocation = new ResourceLocation(ExtraAnvils.MODID, "falling_anvil");
 
     e.getRegistry().register(
-			EntityEntryBuilder.create()
-				.entity(EntityFallingAnvil.class)
-				.id(resourceLocation, 0)
-				.name(resourceLocation.getPath())
-				.tracker(64, 1, true)
-				.build());
+            EntityEntryBuilder.create()
+                    .entity(EntityFallingAnvil.class)
+                    .id(resourceLocation, 0)
+                    .name(resourceLocation.getPath())
+                    .tracker(64, 1, true)
+                    .build());
   }
 
-  public void preInit(FMLPreInitializationEvent e){
+  public void preInit(FMLPreInitializationEvent e) {
 
     PacketHandler.registerMessages(ExtraAnvils.MODID);
   }
 
-  public void init(FMLInitializationEvent e){
-      NetworkRegistry.INSTANCE.registerGuiHandler(ExtraAnvils.instance, new GuiHandler());
+  public void init(FMLInitializationEvent e) {
+    NetworkRegistry.INSTANCE.registerGuiHandler(ExtraAnvils.instance, new GuiHandler());
 
-      for (BlockGenericAnvil anvil : ExtraAnvils.anvils){
-switch (anvil.variant) {
-  case NORMAL:ExtraAnvils.anvilDamageMap
-          .put(anvil,(BlockGenericAnvil)ForgeRegistries
-                  .BLOCKS.getValue(new ResourceLocation(anvil.getRegistryName()+"_chipped")));break;
-  case CHIPPED:ExtraAnvils.anvilDamageMap
-          .put(anvil,(BlockGenericAnvil)ForgeRegistries
-                  .BLOCKS.getValue(new ResourceLocation(anvil.getRegistryName().toString()
-                          .replace(EnumVariants.CHIPPED.getString(), "")+EnumVariants.DAMAGED.getString())));break;
-  case DAMAGED:ExtraAnvils.anvilDamageMap.put(anvil,null);break;
-}
+    for (BlockGenericAnvil anvil : ExtraAnvils.anvils) {
+      switch (anvil.variant) {
+        case NORMAL:
+          ExtraAnvils.anvilDamageMap
+                  .put(anvil, (BlockGenericAnvil) ForgeRegistries
+                          .BLOCKS.getValue(new ResourceLocation(anvil.getRegistryName() + "_chipped")));
+          break;
+        case CHIPPED:
+          ExtraAnvils.anvilDamageMap
+                  .put(anvil, (BlockGenericAnvil) ForgeRegistries
+                          .BLOCKS.getValue(new ResourceLocation(anvil.getRegistryName().toString()
+                                  .replace(EnumVariants.CHIPPED.getString(), "") + EnumVariants.DAMAGED.getString())));
+          break;
+        case DAMAGED:
+          ExtraAnvils.anvilDamageMap.put(anvil, null);
+          break;
       }
     }
-
-
-
-
-
+  }
 
 
   @SubscribeEvent

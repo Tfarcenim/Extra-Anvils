@@ -37,6 +37,7 @@ public class ContainerGenericAnvil extends Container {
    * The maximum cost of repairing/renaming in the anvil.
    */
   public int maximumCost;
+  public double enchantability;
   /**
    * The cap for the maximum cost, varies by Anvil.
    */
@@ -72,6 +73,7 @@ public class ContainerGenericAnvil extends Container {
     this.theWorld = worldIn;
     this.thePlayer = player;
     this.maximumCap = genericAnvil.properties.cap;
+    this.enchantability = Math.max(genericAnvil.properties.enchantability,0.001);
     this.durMultiplier = genericAnvil.properties.durabilityMultiplier;
     this.name = genericAnvil.properties.material;
     this.addSlotToContainer(new Slot(this.inputSlots, 0, 27, 47));
@@ -90,7 +92,7 @@ public class ContainerGenericAnvil extends Container {
        */
       @Override
       public boolean canTakeStack(EntityPlayer playerIn) {
-        return (playerIn.capabilities.isCreativeMode || playerIn.experienceLevel >= ContainerGenericAnvil.this.maximumCost) && ContainerGenericAnvil.this.maximumCost > 0 && this.getHasStack();
+        return (playerIn.capabilities.isCreativeMode || playerIn.experienceLevel >= ContainerGenericAnvil.this.maximumCost) && ContainerGenericAnvil.this.maximumCost >= 0 && this.getHasStack();
       }
 
       @Override
@@ -131,7 +133,7 @@ public class ContainerGenericAnvil extends Container {
       }
 
       public double getBreakChance(EntityPlayer playerIn, ItemStack stack){
-        if (genericAnvil.properties.costMulti == -1)return -1;
+        if (genericAnvil.properties.enchantability == -1)return -1;
         return ForgeHooks.onAnvilRepair(playerIn, stack, ContainerGenericAnvil.this.inputSlots.getStackInSlot(0), ContainerGenericAnvil.this.inputSlots.getStackInSlot(1)) / durMultiplier;
       }
     });
@@ -303,6 +305,8 @@ public class ContainerGenericAnvil extends Container {
         this.maximumCost = this.maximumCap - 1;
       }
 
+      this.maximumCost /= this.enchantability;
+
       if (this.maximumCost >= this.maximumCap && !this.thePlayer.capabilities.isCreativeMode) {
         itemstack1 = ItemStack.EMPTY;
       }
@@ -315,7 +319,7 @@ public class ContainerGenericAnvil extends Container {
         }
 
         if (k != i) {
-          i2 = i2 * 2 + 1;
+          i2 = (int) (i2 * (1 + 1/enchantability));
         }
 
         itemstack1.setRepairCost(i2);
@@ -349,15 +353,11 @@ public class ContainerGenericAnvil extends Container {
     super.onContainerClosed(playerIn);
 
     if (!this.theWorld.isRemote) {
-      for (int i = 0; i < this.inputSlots.getSizeInventory(); ++i) {
-        ItemStack itemstack = this.inputSlots.removeStackFromSlot(i);
+      this.clearContainer(playerIn, this.theWorld, this.inputSlots);
 
-        if (!itemstack.isEmpty()) {
-          playerIn.dropItem(itemstack, false);
-        }
       }
     }
-  }
+
 
   /**
    * Determines whether supplied player can use this container

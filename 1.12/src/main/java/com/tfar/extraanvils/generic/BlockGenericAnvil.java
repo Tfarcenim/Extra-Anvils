@@ -8,6 +8,7 @@ import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockFaceShape;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
@@ -31,6 +32,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.lwjgl.input.Keyboard;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -220,6 +222,8 @@ return BlockFaceShape.UNDEFINED;
   {
     if (!worldIn.isRemote)
     {
+      if ((this.properties.material.equals("energetic_alloy")|| this.properties.material.equals("signalum")) && worldIn.isBlockPowered(pos))
+      return;
       this.checkFallable(worldIn, pos);
     }
   }
@@ -228,8 +232,14 @@ return BlockFaceShape.UNDEFINED;
   @SideOnly(Side.CLIENT)
   public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
     if (worldIn == null)return;
+
+    if(!Keyboard.isKeyDown(Keyboard.KEY_LSHIFT))return;
+
     tooltip.add("Level Cap: "+this.properties.cap);
     tooltip.add("Durability Multiplier: "+this.properties.durabilityMultiplier);
+    tooltip.add("Enchantability: "+this.properties.enchantability);
+    if (this.properties.causesPlayerDamage)tooltip.add("Causes Player Damage");
+
   }
 
   @SideOnly(Side.CLIENT)

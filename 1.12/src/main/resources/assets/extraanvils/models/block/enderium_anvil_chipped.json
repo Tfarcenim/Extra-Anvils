@@ -1,0 +1,8 @@
+{
+  "parent": "block/anvil",
+  "textures": {
+    "particle": "extraanvils:blocks/enderium_anvil_top",
+    "body": "extraanvils:blocks/enderium_anvil_top",
+    "top": "extraanvils:blocks/enderium_anvil_top_chipped"
+  }
+}

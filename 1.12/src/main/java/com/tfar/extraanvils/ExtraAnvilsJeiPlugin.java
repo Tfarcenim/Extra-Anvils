@@ -8,6 +8,7 @@ import mezz.jei.api.recipe.VanillaRecipeCategoryUid;
 import net.minecraft.item.ItemStack;
 
 @JEIPlugin
+@SuppressWarnings("unused")
 public class ExtraAnvilsJeiPlugin implements IModPlugin {
   @Override
   public void register(IModRegistry registry) {

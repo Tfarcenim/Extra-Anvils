@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing\u003dsouth": {
+      "model": "extraanvils:vibrant_alloy_anvil_damaged"
+    },
+    "facing\u003dwest": {
+      "model": "extraanvils:vibrant_alloy_anvil_damaged",
+      "y": 90
+    },
+    "facing\u003dnorth": {
+      "model": "extraanvils:vibrant_alloy_anvil_damaged",
+      "y": 180
+    },
+    "facing\u003deast": {
+      "model": "extraanvils:vibrant_alloy_anvil_damaged",
+      "y": 270
+    }
+  }
+}

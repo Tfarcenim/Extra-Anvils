@@ -26,7 +26,7 @@ public class Scripts {
 
          try {
            for (EnumVariants damage : EnumVariants.values()) {
-             for (Map.Entry<String, String[]> ore : Materials.MATERIAL_TO_MODID.entrySet()) {
+             for (Map.Entry<String, String[]> ore : Setup.MATERIAL_TO_MODID.entrySet()) {
                String material = ore.getKey();
 
                if (material.equals("gold") || material.equals("stone") || material.equals("diamond")) continue;
@@ -45,14 +45,14 @@ public class Scripts {
                JsonObject blockstates = new JsonObject();
                blockstates.add("variants", variants);
                FileWriter writer = new FileWriter(file);
-               writer.write(Materials.prettyJson(blockstates));
+               writer.write(Setup.prettyJson(blockstates));
                writer.flush();
                //handle itemblocks
                File file1 = new File("jsons/models/item/" + material + damage.getString() + ".json");
                JsonObject parent = new JsonObject();
                parent.addProperty("parent", MODID + ":block/" + material + damage.getString());
                FileWriter writer1 = new FileWriter(file1);
-               writer1.write(Materials.prettyJson(parent));
+               writer1.write(Setup.prettyJson(parent));
                writer1.flush();
 
 
@@ -66,7 +66,7 @@ public class Scripts {
                blockmodel.addProperty("parent", "block/anvil");
                blockmodel.add("textures", textures);
                FileWriter writer2 = new FileWriter(file2);
-               writer2.write(Materials.prettyJson(blockmodel));
+               writer2.write(Setup.prettyJson(blockmodel));
                writer2.flush();
 
                if (damage != EnumVariants.NORMAL)continue;
@@ -101,7 +101,7 @@ public class Scripts {
                recipes.add("result",result);
 
                FileWriter writer3 = new FileWriter(file3);
-               writer3.write(Materials.prettyJson(recipes));
+               writer3.write(Setup.prettyJson(recipes));
                writer3.flush();
              }
            }
