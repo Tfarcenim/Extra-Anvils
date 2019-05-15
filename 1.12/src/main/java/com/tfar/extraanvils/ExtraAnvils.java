@@ -55,8 +55,6 @@ public class ExtraAnvils
     public void preInit(final FMLPreInitializationEvent event) {
 
 
-
-
         boolean doJson = false;
 
         if (doJson) {
