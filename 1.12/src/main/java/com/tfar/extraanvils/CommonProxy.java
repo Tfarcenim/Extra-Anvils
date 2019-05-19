@@ -24,12 +24,22 @@ public class CommonProxy {
   public static void registerEntity(RegistryEvent.Register<EntityEntry> e) {
 
     final ResourceLocation resourceLocation = new ResourceLocation(ExtraAnvils.MODID, "falling_anvil");
+    final ResourceLocation resourceLocation2 = new ResourceLocation(ExtraAnvils.MODID, "aether_anvil");
+
 
     e.getRegistry().register(
             EntityEntryBuilder.create()
                     .entity(EntityFallingAnvil.class)
                     .id(resourceLocation, 0)
                     .name(resourceLocation.getPath())
+                    .tracker(64, 1, true)
+                    .build());
+
+    e.getRegistry().register(
+            EntityEntryBuilder.create()
+                    .entity(EntityAetherAnvil.class)
+                    .id(resourceLocation2, 1)
+                    .name(resourceLocation2.getPath())
                     .tracker(64, 1, true)
                     .build());
   }

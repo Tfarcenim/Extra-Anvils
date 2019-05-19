@@ -51,7 +51,7 @@ public class GuiGenericAnvil extends GuiContainer implements IContainerListener 
     this.nameField.setTextColor(-1);
     this.nameField.setDisabledTextColour(-1);
     this.nameField.setEnableBackgroundDrawing(false);
-    this.nameField.setMaxStringLength(35);
+    this.nameField.setMaxStringLength(Integer.MAX_VALUE);
     this.inventorySlots.removeListener(this);
     this.inventorySlots.addListener(this);
   }

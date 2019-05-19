@@ -57,8 +57,6 @@ public class BlockGenericAnvil extends BlockFalling {
     setHardness(5.0F);
     setSoundType(SoundType.ANVIL);
     setResistance(2000.0F);
-    setRegistryName(properties.material+variant.getString());
-    setTranslationKey(getRegistryName().toString());
     this.properties = properties;
     this.variant = variant;
     ExtraAnvils.anvils.add(this);

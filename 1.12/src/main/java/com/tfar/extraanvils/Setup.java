@@ -2,6 +2,7 @@ package com.tfar.extraanvils;
 
 import com.google.gson.*;
 import com.tfar.extraanvils.generic.AnvilProperties;
+import com.tfar.extraanvils.generic.BlockAetherAnvil;
 import com.tfar.extraanvils.generic.BlockGenericAnvil;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -112,6 +113,9 @@ public class Setup {
 
     String[] vibrant_alloy = {ENDER_IO};
     MATERIAL_TO_MODID.put("vibrant_alloy", vibrant_alloy);
+
+    String[] zanite = {"minecraft"};
+    MATERIAL_TO_MODID.put("zanite", zanite);
   }
 
   public static void writeConfig() {
@@ -188,7 +192,14 @@ public class Setup {
           if (flag && checkModlist(material)) {
             ExtraAnvils.logger.info("registering " + material + " anvil");
             for (EnumVariants variant : EnumVariants.values()) {
-              registry.register(new BlockGenericAnvil(new AnvilProperties(material, obj.get("level cap").getAsInt(), obj.get("weight").getAsDouble(), 1, obj.get("durability multiplier").getAsDouble(), obj.get("enchantability").getAsDouble(), obj.get("player damage").getAsBoolean()), variant));
+              BlockGenericAnvil anvil = null;
+              if (!material.equals("zanite"))
+              anvil = new BlockGenericAnvil(new AnvilProperties(material, obj.get("level cap").getAsInt(), obj.get("weight").getAsDouble(), 1, obj.get("durability multiplier").getAsDouble(), obj.get("enchantability").getAsDouble(), obj.get("player damage").getAsBoolean()), variant);
+              else anvil = new BlockAetherAnvil(new AnvilProperties(material, obj.get("level cap").getAsInt(), obj.get("weight").getAsDouble(), 1, obj.get("durability multiplier").getAsDouble(), obj.get("enchantability").getAsDouble(), obj.get("player damage").getAsBoolean()), variant);
+
+              anvil.setRegistryName(anvil.properties.material+variant.getString());
+              anvil.setTranslationKey(anvil.getRegistryName().toString());
+              registry.register(anvil);
 
             }
           } else {
