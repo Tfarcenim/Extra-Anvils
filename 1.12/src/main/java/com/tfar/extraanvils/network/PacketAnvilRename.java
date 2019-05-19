@@ -14,7 +14,6 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
 public class PacketAnvilRename implements IMessage {
   private String name;
-  private int length;
 
   public PacketAnvilRename() {}
 

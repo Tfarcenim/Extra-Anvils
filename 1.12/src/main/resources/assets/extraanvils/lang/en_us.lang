@@ -85,6 +85,9 @@ tile.extraanvils:signalum_anvil_chipped.name=Chipped Signalum Anvil
 tile.extraanvils:signalum_anvil_damaged.name=Damaged Signalum Anvil
 tile.extraanvils:enderium_anvil.name=Enderium Anvil
 tile.extraanvils:enderium_anvil_chipped.name=Chipped Enderium Anvil
-tile.extraanvils:enderium_anvil_damaged.name=Damaged Enderium Anvil
+
+tile.extraanvils:zanite_anvil.name=Zanite Anvil
+tile.extraanvils:zanite_anvil_chipped.name=Chipped Zanite Anvil
+tile.extraanvils:zanite_anvil_damaged.name=Damaged Zanite Anvil
 
 itemGroup.extraanvils=Extra Anvils

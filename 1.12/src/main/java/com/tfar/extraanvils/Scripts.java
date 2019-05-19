@@ -22,11 +22,11 @@ public class Scripts {
 
        public static void scripts() {
 
-         String[] compass = {"south", "west", "north", "east"};
+    /*     String[] compass = {"south", "west", "north", "east"};
 
          try {
            for (EnumVariants damage : EnumVariants.values()) {
-             for (Map.Entry<String, String[]> ore : Setup.MATERIAL_TO_MODID.entrySet()) {
+             for (Map.Entry<String, String[]> ore : Setup.anvils.entrySet()) {
                String material = ore.getKey();
 
                if (material.equals("gold") || material.equals("stone") || material.equals("diamond")) continue;
@@ -108,6 +108,6 @@ public class Scripts {
          } catch (Exception oof) {
            oof.printStackTrace();
          }
-
+*/
        }
 }

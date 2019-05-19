@@ -1,28 +1,18 @@
 package com.tfar.extraanvils;
 
-import com.google.gson.JsonObject;
 import com.tfar.extraanvils.generic.BlockGenericAnvil;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.registry.ForgeRegistries;
-import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.oredict.ShapedOreRecipe;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.io.File;
-import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Mod(modid = ExtraAnvils.MODID,name = ExtraAnvils.NAME, version = ExtraAnvils.MODVERSION/*, dependencies = "required-after:forge@[14.23.5.2796)"*/)
 public class ExtraAnvils
@@ -34,8 +24,6 @@ public class ExtraAnvils
     public static final HashMap<BlockGenericAnvil,BlockGenericAnvil> anvilDamageMap = new HashMap<>();
 
     public static final List<BlockGenericAnvil> anvils = new ArrayList<>();
-
-    public static ArrayList<String> strings = new ArrayList<>();
 
     public static CreativeTabs creativeTab = new CreativeTabs(MODID) {
         @Override

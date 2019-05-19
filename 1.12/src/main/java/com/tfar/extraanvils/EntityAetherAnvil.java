@@ -11,7 +11,6 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.MoverType;
-import net.minecraft.entity.item.EntityFallingBlock;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTBase;
@@ -21,14 +20,12 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.EntityDamageSource;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.common.util.FakePlayerFactory;
-import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -62,7 +59,7 @@ public class EntityAetherAnvil extends EntityFallingAnvil {
 
   private static final String anvilDamageName = "anvildamage";
 
-  /** what happens when the block is done falling*/
+  /** what happens when the block is done falling; this doesn't fire for some reason and I don't know why*/
   @Override
   public void fall(float distance, float damageMultiplier) {
     BlockAetherAnvil block = (BlockAetherAnvil) this.fallTile.getBlock();
