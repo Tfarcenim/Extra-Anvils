@@ -23,8 +23,9 @@ import java.util.Map;
 @Mod.EventBusSubscriber
 public class Setup {
 
-  public static final String[] array = {"durability multiplier","level cap","weight","enchantability","player damage"};
+  public static final String[] array = {"durability multiplier", "level cap", "weight", "enchantability", "player damage"};
 
+  public static Gson g = new Gson();
 
   public static void writeConfig() {
 
@@ -39,29 +40,29 @@ public class Setup {
     try {
       s = IOUtils.toString(in, Charset.defaultCharset());
     } catch (IOException e) {
-      throw new RuntimeException("The default config is broken, report to mod author asap!",e);
+      throw new RuntimeException("The default config is broken, report to mod author asap!", e);
     }
 
-    JsonObject convertedObject = new Gson().fromJson(s, JsonObject.class);
-    JsonObject jsonRead = (JsonObject) convertedObject.get("anvils");
+
+    JsonObject jsonRead = g.fromJson(s, JsonObject.class).get("anvils").getAsJsonObject();
     JsonObject jsonWrite = new JsonObject();
     JsonObject writeAnvil = new JsonObject();
 
-    for (Map.Entry<String,JsonElement> ore: jsonRead.entrySet()) {
+    for (Map.Entry<String, JsonElement> ore : jsonRead.entrySet()) {
 
       JsonElement readAnvil = ore.getValue();
       JsonObject temp = new JsonObject();
-      temp.add("enabled",new JsonPrimitive(true));
+      temp.add("enabled", new JsonPrimitive(true));
 
-      for (String prop : array){
-       temp.add(prop,readAnvil.getAsJsonObject().get(prop));
+      for (String prop : array) {
+        temp.add(prop, readAnvil.getAsJsonObject().get(prop));
       }
-      writeAnvil.add(ore.getKey(),temp);
+      writeAnvil.add(ore.getKey(), temp);
     }
 
-    jsonWrite.add("anvils",writeAnvil);
+    jsonWrite.add("anvils", writeAnvil);
 
-      String s1 = prettyJson(jsonWrite);
+    String s1 = prettyJson(jsonWrite);
 
     try {
       FileWriter writer = new FileWriter(file);
@@ -69,7 +70,7 @@ public class Setup {
       writer.flush();
     } catch (IOException ugh) {
       //I expect this from a user, but you?!
-      throw new RuntimeException("The default config is broken, report to mod author asap!",ugh);
+      throw new RuntimeException("The default config is broken, report to mod author asap!", ugh);
     }
   }
 
@@ -78,6 +79,7 @@ public class Setup {
     return gson.toJson(j);
   }
 
+  //some people say incode recipes are bad, but this is 1.12 so it doesn't matter yet
   @SubscribeEvent
   public static void registerRecipes(RegistryEvent.Register<IRecipe> event) {
     IForgeRegistry<IRecipe> registry = event.getRegistry();
@@ -113,28 +115,25 @@ public class Setup {
       try {
         s = IOUtils.toString(in, Charset.defaultCharset());
       } catch (IOException e) {
-        throw new RuntimeException("The default config is broken, report to mod author asap!",e);
+        throw new RuntimeException("The default config is broken, report to mod author asap!", e);
       }
+      //hardcoded
+      JsonObject jsonRead = (JsonObject) g.fromJson(s, JsonObject.class).get("anvils");
 
-      JsonObject convertedObject = new Gson().fromJson(s, JsonObject.class);
-      JsonObject jsonRead = (JsonObject) convertedObject.get("anvils");
+      JsonObject json = (JsonObject) new JsonParser().parse(reader).getAsJsonObject().get("anvils");
 
-      JsonObject object = (JsonObject) new JsonParser().parse(reader);
-
-      JsonObject json = (JsonObject)object.get("anvils");
-
-      for (Map.Entry<String,JsonElement> ore: json.entrySet()) {
+      for (Map.Entry<String, JsonElement> ore : json.entrySet()) {
         String material = ore.getKey();
-
+        //might be null
         JsonObject modids = jsonRead.getAsJsonObject(material);
         boolean flag = checkModlist(modids);
-        JsonObject entry = (JsonObject)ore.getValue();
-          JsonElement enabled = entry.get("enabled");
-          String s1 = enabled == null ? "custom ":"";
-          boolean flag2 = enabled == null || enabled.getAsBoolean();
+        JsonObject entry = (JsonObject) ore.getValue();
+        JsonElement enabled = entry.get("enabled");
+        String s1 = enabled == null ? "custom " : "";
+        boolean flag2 = enabled == null || enabled.getAsBoolean();
         try {
           if (flag && flag2) {
-            ExtraAnvils.logger.info("registering "+s1+ material + " anvil");
+            ExtraAnvils.logger.info("registering " + s1 + material + " anvil");
             for (EnumVariants variant : EnumVariants.values()) {
               BlockGenericAnvil anvil;
               if ("zanite".equals(material))
@@ -148,7 +147,7 @@ public class Setup {
               registry.register(anvil);
             }
           } else {
-            ExtraAnvils.logger.info("skipping " + material + " anvil");
+            ExtraAnvils.logger.info("skipping " + material + " anvil" + ((flag) ? "" : " due to missing mod(s)") + (flag2 ? "" : " because it's disabled"));
           }
           // eat the exception
         } catch (Exception ignored) {
@@ -165,7 +164,7 @@ public class Setup {
 
     JsonArray array = s.getAsJsonArray("modid");
 
-    if (array ==  null)return true;
+    if (array == null) return true;
 
     for (JsonElement mod : array) {
       if (Loader.isModLoaded(mod.getAsString())) return true;
