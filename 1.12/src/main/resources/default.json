@@ -1,7 +1,6 @@
 {
   "anvils": {
     "diamond": {
-      "enabled": true,
       "durability multiplier": 32,
       "level cap": 32767,
       "weight": 1,
@@ -9,7 +8,6 @@
       "player damage": true
     },
     "gold": {
-      "enabled": true,
       "durability multiplier": 4,
       "level cap": 160,
       "weight": 2.5,
@@ -17,7 +15,6 @@
       "player damage": false
     },
     "stone": {
-      "enabled": true,
       "durability multiplier": -1,
       "level cap": 20,
       "weight": 0.7,
@@ -25,7 +22,6 @@
       "player damage": false
     },
     "inferium": {
-      "enabled": true,
       "durability multiplier": 4,
       "level cap": 80,
       "weight": 1,
@@ -36,7 +32,6 @@
       ]
     },
     "intermedium": {
-      "enabled": true,
       "durability multiplier": 16,
       "level cap": 320,
       "weight": 1,
@@ -47,7 +42,6 @@
       ]
     },
     "prudentium": {
-      "enabled": true,
       "durability multiplier": 64,
       "level cap": 1280,
       "weight": 1,
@@ -58,7 +52,6 @@
       ]
     },
     "superium": {
-      "enabled": true,
       "durability multiplier": 256,
       "level cap": 5120,
       "weight": 1,
@@ -69,7 +62,6 @@
       ]
     },
     "supremium": {
-      "enabled": true,
       "durability multiplier": 1024,
       "level cap": 20480,
       "weight": 1,
@@ -80,7 +72,6 @@
       ]
     },
     "aluminum": {
-      "enabled": true,
       "durability multiplier": 1,
       "level cap": 1,
       "weight": 0.34,
@@ -92,7 +83,6 @@
       ]
     },
     "ardite": {
-      "enabled": true,
       "durability multiplier": 6,
       "level cap": 200,
       "weight": 1,
@@ -103,7 +93,6 @@
       ]
     },
     "bronze": {
-      "enabled": true,
       "durability multiplier": 1.5,
       "level cap": 60,
       "weight": 1.2,
@@ -119,7 +108,6 @@
       ]
     },
     "cobalt": {
-      "enabled": true,
       "durability multiplier": 12,
       "level cap": 300,
       "weight": 1.2,
@@ -130,7 +118,6 @@
       ]
     },
     "copper": {
-      "enabled": true,
       "durability multiplier": 1,
       "level cap": 40,
       "weight": 1.3,
@@ -148,7 +135,6 @@
       ]
     },
     "electrum": {
-      "enabled": true,
       "durability multiplier": 3,
       "level cap": 120,
       "weight": 2,
@@ -165,7 +151,6 @@
       ]
     },
     "endsteel": {
-      "enabled": true,
       "durability multiplier": 25,
       "level cap": 200,
       "weight": 1.1,
@@ -176,7 +161,6 @@
       ]
     },
     "enderium": {
-      "enabled": true,
       "durability multiplier": 25,
       "level cap": 200,
       "weight": 2.1,
@@ -187,7 +171,6 @@
       ]
     },
     "energetic_alloy": {
-      "enabled": true,
       "durability multiplier": 25,
       "level cap": 200,
       "weight": 2.5,
@@ -198,7 +181,6 @@
       ]
     },
     "invar": {
-      "enabled": true,
       "durability multiplier": 2,
       "level cap": 80,
       "weight": 1.3,
@@ -209,7 +191,6 @@
       ]
     },
     "iridium": {
-      "enabled": true,
       "durability multiplier": 16,
       "level cap": 640,
       "weight": 2.5,
@@ -221,7 +202,6 @@
       ]
     },
     "lead": {
-      "enabled": true,
       "durability multiplier": 1.5,
       "level cap": 30,
       "weight": 1.5,
@@ -233,7 +213,6 @@
       ]
     },
     "manyullyn": {
-      "enabled": true,
       "durability multiplier": 16,
       "level cap": 400,
       "weight": 1,
@@ -244,7 +223,6 @@
       ]
     },
     "nickel": {
-      "enabled": true,
       "durability multiplier": 2,
       "level cap": 60,
       "weight": 1,
@@ -255,7 +233,6 @@
       ]
     },
     "platinum": {
-      "enabled": true,
       "durability multiplier": 16,
       "level cap": 400,
       "weight": 2.5,
@@ -266,7 +243,6 @@
       ]
     },
     "signalum": {
-      "enabled": true,
       "durability multiplier": 4,
       "level cap": 400,
       "weight": 2.1,
@@ -277,7 +253,6 @@
       ]
     },
     "silver": {
-      "enabled": true,
       "durability multiplier": 2,
       "level cap": 100,
       "weight": 1.5,
@@ -290,7 +265,6 @@
       ]
     },
     "steel": {
-      "enabled": true,
       "durability multiplier": 2.5,
       "level cap": 80,
       "weight": 1.1,
@@ -303,7 +277,6 @@
       ]
     },
     "stellar": {
-      "enabled": true,
       "durability multiplier": 250,
       "level cap": 2000,
       "weight": 3,
@@ -314,7 +287,6 @@
       ]
     },
     "tin": {
-      "enabled": true,
       "durability multiplier": 1,
       "level cap": 40,
       "weight": 1,
@@ -332,7 +304,6 @@
       ]
     },
     "vibrant_alloy": {
-      "enabled": true,
       "durability multiplier": 4,
       "level cap": 400,
       "weight": 2.6,
@@ -343,7 +314,6 @@
       ]
     },
     "zanite": {
-      "enabled": true,
       "durability multiplier": 1,
       "level cap": 40,
       "weight": 1,

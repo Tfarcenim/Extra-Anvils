@@ -59,7 +59,6 @@ public class BlockGenericAnvil extends BlockFalling {
     setResistance(2000.0F);
     this.properties = properties;
     this.variant = variant;
-    ExtraAnvils.anvils.add(this);
   }
 
   @Override

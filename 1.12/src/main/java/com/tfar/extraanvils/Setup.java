@@ -23,31 +23,53 @@ import java.util.Map;
 @Mod.EventBusSubscriber
 public class Setup {
 
+  public static final String[] array = {"durability multiplier","level cap","weight","enchantability","player damage"};
+
+
   public static void writeConfig() {
+
+    //this writes the entire file, I need to fix that
 
     File file = new File("config/extraanvils.json");
     if (file.exists()) return;
 
     BufferedInputStream in = new BufferedInputStream(Setup.class.
             getResourceAsStream("/default.json"));
-    String s = null;
+    String s;
     try {
       s = IOUtils.toString(in, Charset.defaultCharset());
     } catch (IOException e) {
-      e.printStackTrace();
+      throw new RuntimeException("The default config is broken, report to mod author asap!",e);
     }
 
     JsonObject convertedObject = new Gson().fromJson(s, JsonObject.class);
+    JsonObject jsonRead = (JsonObject) convertedObject.get("anvils");
+    JsonObject jsonWrite = new JsonObject();
+    JsonObject writeAnvil = new JsonObject();
 
-    String s1 = prettyJson(convertedObject);
+    for (Map.Entry<String,JsonElement> ore: jsonRead.entrySet()) {
+
+      JsonElement readAnvil = ore.getValue();
+      JsonObject temp = new JsonObject();
+      temp.add("enabled",new JsonPrimitive(true));
+
+      for (String prop : array){
+       temp.add(prop,readAnvil.getAsJsonObject().get(prop));
+      }
+      writeAnvil.add(ore.getKey(),temp);
+    }
+
+    jsonWrite.add("anvils",writeAnvil);
+
+      String s1 = prettyJson(jsonWrite);
 
     try {
       FileWriter writer = new FileWriter(file);
       writer.write(s1);
       writer.flush();
     } catch (IOException ugh) {
-      //it be like that sometimes
-      ugh.printStackTrace();
+      //I expect this from a user, but you?!
+      throw new RuntimeException("The default config is broken, report to mod author asap!",ugh);
     }
   }
 
@@ -80,11 +102,23 @@ public class Setup {
   public static void registerBlocks(RegistryEvent.Register<Block> event) {
     writeConfig();
 
-
     IForgeRegistry<Block> registry = event.getRegistry();
     try {
 
       FileReader reader = new FileReader("config/extraanvils.json");
+
+      BufferedInputStream in = new BufferedInputStream(Setup.class.
+              getResourceAsStream("/default.json"));
+      String s;
+      try {
+        s = IOUtils.toString(in, Charset.defaultCharset());
+      } catch (IOException e) {
+        throw new RuntimeException("The default config is broken, report to mod author asap!",e);
+      }
+
+      JsonObject convertedObject = new Gson().fromJson(s, JsonObject.class);
+      JsonObject jsonRead = (JsonObject) convertedObject.get("anvils");
+
       JsonObject object = (JsonObject) new JsonParser().parse(reader);
 
       JsonObject json = (JsonObject)object.get("anvils");
@@ -92,12 +126,15 @@ public class Setup {
       for (Map.Entry<String,JsonElement> ore: json.entrySet()) {
         String material = ore.getKey();
 
+        JsonObject modids = jsonRead.getAsJsonObject(material);
+        boolean flag = checkModlist(modids);
         JsonObject entry = (JsonObject)ore.getValue();
+          JsonElement enabled = entry.get("enabled");
+          String s1 = enabled == null ? "custom ":"";
+          boolean flag2 = enabled == null || enabled.getAsBoolean();
         try {
-          boolean flag = entry.get("enabled").getAsBoolean();
-
-          if (flag && checkModlist(entry.getAsJsonArray("modid"))) {
-            ExtraAnvils.logger.info("registering " + material + " anvil");
+          if (flag && flag2) {
+            ExtraAnvils.logger.info("registering "+s1+ material + " anvil");
             for (EnumVariants variant : EnumVariants.values()) {
               BlockGenericAnvil anvil;
               if ("zanite".equals(material))
@@ -105,6 +142,7 @@ public class Setup {
               else
                 anvil = new BlockGenericAnvil(new AnvilProperties(material, entry.get("level cap").getAsInt(), entry.get("weight").getAsDouble(), 1, entry.get("durability multiplier").getAsDouble(), entry.get("enchantability").getAsDouble(), entry.get("player damage").getAsBoolean()), variant);
 
+              ExtraAnvils.anvils.add(anvil);
               anvil.setRegistryName(anvil.properties.material + variant.getString());
               anvil.setTranslationKey(anvil.getRegistryName().toString());
               registry.register(anvil);
@@ -122,10 +160,14 @@ public class Setup {
     }
   }
 
-  public static boolean checkModlist(JsonArray s) {
-
+  public static boolean checkModlist(JsonObject s) {
     if (s == null) return true;
-    for (JsonElement mod : s) {
+
+    JsonArray array = s.getAsJsonArray("modid");
+
+    if (array ==  null)return true;
+
+    for (JsonElement mod : array) {
       if (Loader.isModLoaded(mod.getAsString())) return true;
     }
     return false;
