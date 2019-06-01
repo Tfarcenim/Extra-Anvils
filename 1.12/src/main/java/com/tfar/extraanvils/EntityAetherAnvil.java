@@ -42,19 +42,19 @@ public class EntityAetherAnvil extends EntityFallingAnvil {
   private int fallHurtMax = Integer.MAX_VALUE;
   private double fallHurtAmount; // Damage multiplier
 
-  public EntityAetherAnvil(World worldIn, double x, double y, double z, IBlockState fallingBlockState)
-  {
-    super(worldIn,x,y,z,fallingBlockState);
-   // this.setPosition(x, y + 0/*(1 - this.height) / 2*/, z);
+  public EntityAetherAnvil(World worldIn, double x, double y, double z, IBlockState fallingBlockState) {
+    super(worldIn, x, y, z, fallingBlockState);
+    // this.setPosition(x, y + 0/*(1 - this.height) / 2*/, z);
     this.fallTile = fallingBlockState;
-    this.fallHurtAmount= ((BlockGenericAnvil)fallingBlockState.getBlock()).properties.weight * 2;
+    this.fallHurtAmount = ((BlockGenericAnvil) fallingBlockState.getBlock()).properties.weight * 2;
   }
-
 
 
   private static final String anvilDamageName = "anvildamage";
 
-  /** what happens when the block is done falling; this doesn't fire for some reason and I don't know why*/
+  /**
+   * what happens when the block is done falling; this doesn't fire for some reason and I don't know why
+   */
   @Override
   public void fall(float distance, float damageMultiplier) {
     BlockAetherAnvil block = (BlockAetherAnvil) this.fallTile.getBlock();
@@ -70,7 +70,7 @@ public class EntityAetherAnvil extends EntityFallingAnvil {
 
         float amount = Math.min(MathHelper.floor(i * this.fallHurtAmount), this.fallHurtMax);
         for (Entity entity : list) {
-          if (entity instanceof EntityLivingBase)shouldDamage=false;
+          if (entity instanceof EntityLivingBase) shouldDamage = false;
           if (flag)
             entity.attackEntityFrom(new EntityDamageSource(anvilDamageName, fakePlayer), amount);
           else
@@ -79,50 +79,41 @@ public class EntityAetherAnvil extends EntityFallingAnvil {
 
         //check to damage anvil
         if (shouldDamage && rand.nextFloat() < .05 * (i + 1)) {
-            IBlockState iblockstate = BlockGenericAnvil.damage(this.fallTile);
-            if (iblockstate == null) this.dontSetBlock = true;
-            else this.fallTile = iblockstate;
-          }
+          IBlockState iblockstate = BlockGenericAnvil.damage(this.fallTile);
+          if (iblockstate == null) this.dontSetBlock = true;
+          else this.fallTile = iblockstate;
         }
       }
     }
+  }
 
   /**
    * Called to update the entity's position/logic.
    */
   @Override
-  public void onUpdate()
-  {
+  public void onUpdate() {
 
     Block block = this.fallTile.getBlock();
 
-    if (this.fallTile.getMaterial() == Material.AIR)
-    {
+    if (this.fallTile.getMaterial() == Material.AIR) {
       this.setDead();
-    }
-    else
-    {
+    } else {
       this.prevPosX = this.posX;
       this.prevPosY = this.posY;
       this.prevPosZ = this.posZ;
 
-      if (this.fallTime++ == 0)
-      {
+      if (this.fallTime++ == 0) {
         BlockPos blockpos = new BlockPos(this);
 
-        if (this.world.getBlockState(blockpos).getBlock() == block)
-        {
+        if (this.world.getBlockState(blockpos).getBlock() == block) {
           this.world.setBlockToAir(blockpos);
-        }
-        else if (!this.world.isRemote)
-        {
+        } else if (!this.world.isRemote) {
           this.setDead();
           return;
         }
       }
 
-      if (!this.hasNoGravity())
-      {
+      if (!this.hasNoGravity()) {
         this.motionY += 0.04;
       }
 
@@ -199,20 +190,18 @@ public class EntityAetherAnvil extends EntityFallingAnvil {
    * (abstract) Protected helper method to write subclass entity data to NBT.
    */
   @Override
-  protected void writeEntityToNBT(NBTTagCompound compound)
-  {
+  protected void writeEntityToNBT(NBTTagCompound compound) {
     Block block = this.fallTile != null ? this.fallTile.getBlock() : Blocks.AIR;
     ResourceLocation resourcelocation = Block.REGISTRY.getNameForObject(block);
     compound.setString("Block", resourcelocation.toString());
-    compound.setByte("Data", (byte)block.getMetaFromState(this.fallTile));
+    compound.setByte("Data", (byte) block.getMetaFromState(this.fallTile));
     compound.setInteger("Time", this.fallTime);
     compound.setBoolean("DropItem", this.shouldDropItem);
     compound.setBoolean("HurtEntities", this.hurtEntities);
     compound.setFloat("FallHurtAmount", (float) this.fallHurtAmount);
     compound.setInteger("FallHurtMax", this.fallHurtMax);
 
-    if (this.tileEntityData != null)
-    {
+    if (this.tileEntityData != null) {
       compound.setTag("TileEntityData", this.tileEntityData);
     }
   }
@@ -221,57 +210,44 @@ public class EntityAetherAnvil extends EntityFallingAnvil {
    * (abstract) Protected helper method to read subclass entity data from NBT.
    */
   @Override
-  protected void readEntityFromNBT(NBTTagCompound compound)
-  {
+  protected void readEntityFromNBT(NBTTagCompound compound) {
     int i = compound.getByte("Data") & 255;
 
-    if (compound.hasKey("Block", 8))
-    {
+    if (compound.hasKey("Block", 8)) {
       this.fallTile = Block.getBlockFromName(compound.getString("Block")).getStateFromMeta(i);
-    }
-    else if (compound.hasKey("TileID", 99))
-    {
+    } else if (compound.hasKey("TileID", 99)) {
       this.fallTile = Block.getBlockById(compound.getInteger("TileID")).getStateFromMeta(i);
-    }
-    else
-    {
+    } else {
       this.fallTile = Block.getBlockById(compound.getByte("Tile") & 255).getStateFromMeta(i);
     }
 
     this.fallTime = compound.getInteger("Time");
     Block block = this.fallTile.getBlock();
 
-    if (compound.hasKey("HurtEntities", 99))
-    {
+    if (compound.hasKey("HurtEntities", 99)) {
       this.hurtEntities = compound.getBoolean("HurtEntities");
       this.fallHurtAmount = compound.getFloat("FallHurtAmount");
       this.fallHurtMax = compound.getInteger("FallHurtMax");
-    }
-    else if (block == Blocks.ANVIL)
-    {
+    } else if (block == Blocks.ANVIL) {
       this.hurtEntities = true;
     }
 
-    if (compound.hasKey("DropItem", 99))
-    {
+    if (compound.hasKey("DropItem", 99)) {
       this.shouldDropItem = compound.getBoolean("DropItem");
     }
 
-    if (compound.hasKey("TileEntityData", 10))
-    {
+    if (compound.hasKey("TileEntityData", 10)) {
       this.tileEntityData = compound.getCompoundTag("TileEntityData");
     }
 
-    if (block.getDefaultState().getMaterial() == Material.AIR)
-    {
+    if (block.getDefaultState().getMaterial() == Material.AIR) {
       this.fallTile = Blocks.SAND.getDefaultState();
     }
   }
 
   @Override
   @Nullable
-  public IBlockState getBlock()
-  {
+  public IBlockState getBlock() {
     return fallTile;
   }
 
@@ -290,6 +266,7 @@ public class EntityAetherAnvil extends EntityFallingAnvil {
   public void writeSpawnData(ByteBuf buffer) {
     buffer.writeLong(this.getPosition().toLong());
   }
+
   /**
    * Called by the client when it receives a Entity spawn packet.
    * Data should be read out of the stream in the same way as it was written.
