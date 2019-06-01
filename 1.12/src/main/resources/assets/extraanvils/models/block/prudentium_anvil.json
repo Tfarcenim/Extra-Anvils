@@ -1,8 +1,8 @@
 {
   "parent": "block/anvil",
   "textures": {
-    "particle": "extraanvils:blocks/prudentium_anvil_top",
-    "body": "extraanvils:blocks/prudentium_anvil_top",
+    "particle": "extraanvils:blocks/prudentium_anvil_base",
+    "body": "extraanvils:blocks/prudentium_anvil_base",
     "top": "extraanvils:blocks/prudentium_anvil_top"
   }
 }

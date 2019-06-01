@@ -1,1 +1,3 @@
-{"parent":"extraanvils:block/copper_anvil"}
+{
+  "parent": "extraanvils:block/copper_anvil"
+}

@@ -1,1 +1,8 @@
-{"parent":"block/anvil","textures":{"particle":"extraanvils:blocks/aluminum_anvil_top","body":"extraanvils:blocks/aluminum_anvil_top","top":"extraanvils:blocks/aluminum_anvil_top_damaged"}}
+{
+  "parent": "block/anvil",
+  "textures": {
+    "particle": "extraanvils:blocks/aluminum_anvil_base",
+    "body": "extraanvils:blocks/aluminum_anvil_base",
+    "top": "extraanvils:blocks/aluminum_anvil_top_damaged"
+  }
+}

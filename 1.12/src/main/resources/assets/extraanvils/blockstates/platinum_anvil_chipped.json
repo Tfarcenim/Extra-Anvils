@@ -1,1 +1,19 @@
-{"variants":{"facing=south":{"model":"extraanvils:platinum_anvil_chipped"},"facing=west":{"model":"extraanvils:platinum_anvil_chipped","y":90},"facing=north":{"model":"extraanvils:platinum_anvil_chipped","y":180},"facing=east":{"model":"extraanvils:platinum_anvil_chipped","y":270}}}
+{
+  "variants": {
+    "facing=south": {
+      "model": "extraanvils:platinum_anvil_chipped"
+    },
+    "facing=west": {
+      "model": "extraanvils:platinum_anvil_chipped",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "extraanvils:platinum_anvil_chipped",
+      "y": 180
+    },
+    "facing=east": {
+      "model": "extraanvils:platinum_anvil_chipped",
+      "y": 270
+    }
+  }
+}

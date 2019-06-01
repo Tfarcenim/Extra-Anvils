@@ -1,1 +1,3 @@
-{"parent":"extraanvils:block/invar_anvil_damaged"}
+{
+  "parent": "extraanvils:block/invar_anvil_damaged"
+}

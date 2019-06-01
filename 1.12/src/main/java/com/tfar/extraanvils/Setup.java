@@ -8,43 +8,47 @@ import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.*;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.registries.IForgeRegistry;
 import org.apache.commons.io.IOUtils;
 
 import java.io.*;
 import java.nio.charset.Charset;
+import java.util.Arrays;
 import java.util.Map;
 
 @Mod.EventBusSubscriber
 public class Setup {
 
-  public static final String[] array = {"durability multiplier", "level cap", "weight", "enchantability", "player damage"};
+  private static final String[] array = {"durability", "cap", "weight", "enchantability", "playerDamage"};
 
-  public static Gson g = new Gson();
+  public static Gson g = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
+  private static boolean error = false;
+  private static File configFile = new File("config/extraanvils.json");
+  private static BufferedInputStream in = new BufferedInputStream(Setup.class.getResourceAsStream("/default.json"));
+  private static String s;
+  //hardcoded into the mod, used for oredict, jsons and modids
+  static JsonObject jsonRead;
 
-  public static void writeConfig() {
-
-    //this writes the entire file, I need to fix that
-
-    File file = new File("config/extraanvils.json");
-    if (file.exists()) return;
-
-    BufferedInputStream in = new BufferedInputStream(Setup.class.
-            getResourceAsStream("/default.json"));
-    String s;
+  static {
     try {
       s = IOUtils.toString(in, Charset.defaultCharset());
     } catch (IOException e) {
       throw new RuntimeException("The default config is broken, report to mod author asap!", e);
     }
+    jsonRead = g.fromJson(s, JsonObject.class).get("anvils").getAsJsonObject();
+  }
 
+  public static void writeConfig() {
 
-    JsonObject jsonRead = g.fromJson(s, JsonObject.class).get("anvils").getAsJsonObject();
+    if (configFile.exists()) return;
+
     JsonObject jsonWrite = new JsonObject();
     JsonObject writeAnvil = new JsonObject();
 
@@ -57,16 +61,19 @@ public class Setup {
       for (String prop : array) {
         temp.add(prop, readAnvil.getAsJsonObject().get(prop));
       }
+
+      JsonArray traits = (JsonArray) readAnvil.getAsJsonObject().get("traits");
+
+      if (traits != null) temp.add("traits", traits);
+
       writeAnvil.add(ore.getKey(), temp);
     }
 
     jsonWrite.add("anvils", writeAnvil);
 
-    String s1 = prettyJson(jsonWrite);
-
     try {
-      FileWriter writer = new FileWriter(file);
-      writer.write(s1);
+      FileWriter writer = new FileWriter(configFile);
+      writer.write(g.toJson(jsonWrite));
       writer.flush();
     } catch (IOException ugh) {
       //I expect this from a user, but you?!
@@ -74,31 +81,31 @@ public class Setup {
     }
   }
 
-  public static String prettyJson(JsonObject j) {
-    Gson gson = new GsonBuilder().setPrettyPrinting().create();
-    return gson.toJson(j);
-  }
 
   //some people say incode recipes are bad, but this is 1.12 so it doesn't matter yet
   @SubscribeEvent
   public static void registerRecipes(RegistryEvent.Register<IRecipe> event) {
-    IForgeRegistry<IRecipe> registry = event.getRegistry();
 
+    IForgeRegistry<IRecipe> registry = event.getRegistry();
     for (BlockGenericAnvil anvil : ExtraAnvils.anvils) {
-      if (anvil.variant != EnumVariants.NORMAL || anvil.properties.material.equals("vibrant_alloy") || anvil.properties.material.equals("energetic_alloy"))
+      if (anvil.variant != EnumVariants.NORMAL)
         continue;
-      IRecipe recipe = new ShapedOreRecipe(new ResourceLocation(ExtraAnvils.MODID, anvil.properties.material + "anvil"), new ItemStack(anvil),
+
+      Ores ores = g.fromJson(jsonRead.get(anvil.material), Ores.class);
+      if (ores == null) continue;
+
+      IRecipe recipe = new ShapedOreRecipe(new ResourceLocation(ExtraAnvils.MODID, anvil.material + "anvil"), new ItemStack(anvil),
 
               "bbb",
               " i ",
-              "iii", 'b', "block" + anvil.properties.material.substring(0, 1).toUpperCase() + anvil.properties.material.substring(1),
-              'i', "ingot" + anvil.properties.material.substring(0, 1).toUpperCase() + anvil.properties.material.substring(1));
+              "iii",
+              'b', ores.ore1,
+              'i', ores.ore2);
 
-      recipe.setRegistryName(new ResourceLocation(ExtraAnvils.MODID, anvil.properties.material + "anvil"));
+      recipe.setRegistryName(new ResourceLocation(ExtraAnvils.MODID, anvil.material + "anvil"));
       registry.register(recipe);
     }
   }
-
 
   @SubscribeEvent
   public static void registerBlocks(RegistryEvent.Register<Block> event) {
@@ -109,49 +116,38 @@ public class Setup {
 
       FileReader reader = new FileReader("config/extraanvils.json");
 
-      BufferedInputStream in = new BufferedInputStream(Setup.class.
-              getResourceAsStream("/default.json"));
-      String s;
-      try {
-        s = IOUtils.toString(in, Charset.defaultCharset());
-      } catch (IOException e) {
-        throw new RuntimeException("The default config is broken, report to mod author asap!", e);
-      }
-      //hardcoded
-      JsonObject jsonRead = (JsonObject) g.fromJson(s, JsonObject.class).get("anvils");
-
+      //config configFile
       JsonObject json = (JsonObject) new JsonParser().parse(reader).getAsJsonObject().get("anvils");
-
       for (Map.Entry<String, JsonElement> ore : json.entrySet()) {
         String material = ore.getKey();
-        //might be null
-        JsonObject modids = jsonRead.getAsJsonObject(material);
-        boolean flag = checkModlist(modids);
-        JsonObject entry = (JsonObject) ore.getValue();
-        JsonElement enabled = entry.get("enabled");
-        String s1 = enabled == null ? "custom " : "";
-        boolean flag2 = enabled == null || enabled.getAsBoolean();
+        JsonElement element = ore.getValue();
+        AnvilProperties entry = g.fromJson(element,AnvilProperties.class);
+        boolean enabled = entry.enabled;
+        JsonObject builtin = jsonRead.getAsJsonObject(material);
+        String[] modids = builtin == null ? null : g.fromJson(builtin.get("modid"), String[].class);
+        boolean hasMods = checkModlist(modids);
         try {
-          if (flag && flag2) {
-            ExtraAnvils.logger.info("registering " + s1 + material + " anvil");
+          if (hasMods && enabled) {
+            ExtraAnvils.logger.info("registering " + material + " anvil");
             for (EnumVariants variant : EnumVariants.values()) {
               BlockGenericAnvil anvil;
-              if ("zanite".equals(material))
-                anvil = new BlockAetherAnvil(new AnvilProperties(material, entry.get("level cap").getAsInt(), entry.get("weight").getAsDouble(), 1, entry.get("durability multiplier").getAsDouble(), entry.get("enchantability").getAsDouble(), entry.get("player damage").getAsBoolean()), variant);
-              else
-                anvil = new BlockGenericAnvil(new AnvilProperties(material, entry.get("level cap").getAsInt(), entry.get("weight").getAsDouble(), 1, entry.get("durability multiplier").getAsDouble(), entry.get("enchantability").getAsDouble(), entry.get("player damage").getAsBoolean()), variant);
 
-              ExtraAnvils.anvils.add(anvil);
-              anvil.setRegistryName(anvil.properties.material + variant.getString());
+              if (entry.traits != null && Arrays.asList(entry.traits).contains("reverse"))
+                anvil = new BlockAetherAnvil(material, entry, variant);
+              else
+                anvil = new BlockGenericAnvil(material, entry, variant);
+               ExtraAnvils.anvils.add(anvil);
+              anvil.setRegistryName(anvil.material + variant.getString());
               anvil.setTranslationKey(anvil.getRegistryName().toString());
               registry.register(anvil);
             }
           } else {
-            ExtraAnvils.logger.info("skipping " + material + " anvil" + ((flag) ? "" : " due to missing mod(s)") + (flag2 ? "" : " because it's disabled"));
+            ExtraAnvils.logger.info("skipping " + material + " anvil" + ((hasMods) ? "" : " due to missing mod(s)") + (enabled ? "" : " because it's disabled"));
           }
-          // eat the exception
-        } catch (Exception ignored) {
-          ExtraAnvils.logger.error("Error registering " + material + ", skipping");
+          //in case of exceptions
+        } catch (Exception e) {
+          ExtraAnvils.logger.error("Error registering " + material + " anvil, skipping", e);
+          error = true;
         }
       }
     } catch (IOException ofcourse) {
@@ -159,16 +155,23 @@ public class Setup {
     }
   }
 
-  public static boolean checkModlist(JsonObject s) {
-    if (s == null) return true;
+  public static boolean checkModlist(String[] s) {
+    return s == null || Arrays.stream(s).anyMatch(Loader::isModLoaded);
+  }
 
-    JsonArray array = s.getAsJsonArray("modid");
-
-    if (array == null) return true;
-
-    for (JsonElement mod : array) {
-      if (Loader.isModLoaded(mod.getAsString())) return true;
+  @SubscribeEvent
+  public static void onPlayerJoin(PlayerEvent.PlayerLoggedInEvent e) {
+    if (error) {
+      ITextComponent component = new TextComponentString(TextFormatting.WHITE + "[")
+              .appendSibling(new TextComponentTranslation("extraanvils.name").setStyle(new Style().setColor(TextFormatting.AQUA)))
+              .appendSibling(new TextComponentString("]: ").setStyle(new Style().setColor(TextFormatting.WHITE)))
+              .appendSibling(new TextComponentTranslation("extraanvils.error")).setStyle(new Style().setColor(TextFormatting.RED));
+      e.player.sendMessage(component);
     }
-    return false;
+  }
+
+  public static class Ores {
+    public String ore1;
+    public String ore2;
   }
 }

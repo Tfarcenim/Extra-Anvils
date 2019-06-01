@@ -1,1 +1,19 @@
-{"variants":{"facing=south":{"model":"extraanvils:lead_anvil"},"facing=west":{"model":"extraanvils:lead_anvil","y":90},"facing=north":{"model":"extraanvils:lead_anvil","y":180},"facing=east":{"model":"extraanvils:lead_anvil","y":270}}}
+{
+  "variants": {
+    "facing=south": {
+      "model": "extraanvils:lead_anvil"
+    },
+    "facing=west": {
+      "model": "extraanvils:lead_anvil",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "extraanvils:lead_anvil",
+      "y": 180
+    },
+    "facing=east": {
+      "model": "extraanvils:lead_anvil",
+      "y": 270
+    }
+  }
+}

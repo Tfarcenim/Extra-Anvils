@@ -1,17 +1,17 @@
 {
   "variants": {
-    "facing\u003dsouth": {
+    "facing=south": {
       "model": "extraanvils:stellar_anvil_damaged"
     },
-    "facing\u003dwest": {
+    "facing=west": {
       "model": "extraanvils:stellar_anvil_damaged",
       "y": 90
     },
-    "facing\u003dnorth": {
+    "facing=north": {
       "model": "extraanvils:stellar_anvil_damaged",
       "y": 180
     },
-    "facing\u003deast": {
+    "facing=east": {
       "model": "extraanvils:stellar_anvil_damaged",
       "y": 270
     }

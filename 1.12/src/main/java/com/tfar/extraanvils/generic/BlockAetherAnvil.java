@@ -42,43 +42,14 @@ import java.util.Random;
 
 public class BlockAetherAnvil extends BlockGenericAnvil {
 
-  public BlockAetherAnvil(AnvilProperties properties, EnumVariants variant) {
-
-    super(properties,variant);
+  public BlockAetherAnvil(String material,AnvilProperties properties, EnumVariants variant) {
+    super(material,properties,variant);
   }
 
   @Override
   public void onEndFalling(World worldIn, BlockPos pos, IBlockState p_176502_3_, IBlockState p_176502_4_) {
     worldIn.playEvent(1031, pos, 0);
   }
-
-
-  /**
-   * Called when the block is right clicked by a player.
-   */
-  public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
-  {
-    if (!worldIn.isRemote) {
-      playerIn.openGui(ExtraAnvils.instance, 0, worldIn, pos.getX(), pos.getY(), pos.getZ());
-    }
-    return true;
-  }
-
- /* public static IBlockState damage(IBlockState state) {
-    BlockAetherAnvil block = (BlockAetherAnvil) state.getBlock();
-    EnumFacing enumfacing = state.getValue(FACING);
-    switch (block.variant){
-      case NORMAL:return ExtraAnvils.anvilDamageMap.get(block).getDefaultState().withProperty(FACING,enumfacing);
-      case CHIPPED:return ExtraAnvils.anvilDamageMap.get(block).getDefaultState().withProperty(FACING,enumfacing);
-      case DAMAGED:default:return null;
-    }
-  }*/
-
-  /**
-   * Convert the BlockState into the correct metadata value
-   */
-
-
 
 @Override
   protected void onStartFalling(EntityFallingBlock fallingEntity)
@@ -89,7 +60,6 @@ public class BlockAetherAnvil extends BlockGenericAnvil {
   private void onStartFall(EntityAetherAnvil anvil){
     anvil.setHurtEntities(true);
   }
-
 
   private void checkFallable(World worldIn, BlockPos pos)
   {
@@ -126,11 +96,12 @@ public class BlockAetherAnvil extends BlockGenericAnvil {
   }
 
   @Override
-  public void updateTick(World worldIn, @Nonnull BlockPos pos, IBlockState state, Random rand)
+  public void updateTick(World world, @Nonnull BlockPos pos, IBlockState state, Random rand)
   {
-    if (!worldIn.isRemote)
+    if (!world.isRemote)
     {
-      this.checkFallable(worldIn, pos);
+      if (this.hasTrait("redstone") && world.isBlockPowered(pos))return;
+      this.checkFallable(world, pos);
     }
   }
 }

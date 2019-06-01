@@ -1,1 +1,3 @@
-{"parent":"extraanvils:block/diamond_anvil_damaged"}
+{
+  "parent": "extraanvils:block/diamond_anvil_damaged"
+}

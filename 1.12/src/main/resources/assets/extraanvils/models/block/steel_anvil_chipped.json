@@ -1,1 +1,8 @@
-{"parent":"block/anvil","textures":{"particle":"extraanvils:blocks/steel_anvil_base","body":"extraanvils:blocks/steel_anvil_base","top":"extraanvils:blocks/steel_anvil_top_chipped"}}
+{
+  "parent": "block/anvil",
+  "textures": {
+    "particle": "extraanvils:blocks/steel_anvil_base",
+    "body": "extraanvils:blocks/steel_anvil_base",
+    "top": "extraanvils:blocks/steel_anvil_top_chipped"
+  }
+}

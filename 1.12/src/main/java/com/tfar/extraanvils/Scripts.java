@@ -1,74 +1,47 @@
 package com.tfar.extraanvils;
 
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import net.minecraft.launchwrapper.Launch;
 
 import java.io.File;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Map;
 
 import static com.tfar.extraanvils.ExtraAnvils.MODID;
+import static com.tfar.extraanvils.Setup.*;
 
 public class Scripts {
 
   private static JsonArray pattern = new JsonArray();
-  private static String[] recipe =  {"III", " i ", "iii"};
+  private static String[] recipe = {"III", " i ", "iii"};
+  private static final boolean developerEnvironment = (boolean) Launch.blackboard.get("fml.deobfuscatedEnvironment");
 
-      static {
-        for (String line : recipe){
-         pattern.add(line);
-        }
-      }
+  static {
+    for (String line : recipe) {
+      pattern.add(line);
+    }
+  }
 
-       public static void scripts() {
+  public static void scripts() {
 
-    /*     String[] compass = {"south", "west", "north", "east"};
+    if (!developerEnvironment) return;
 
-         try {
-           for (EnumVariants damage : EnumVariants.values()) {
-             for (Map.Entry<String, String[]> ore : Setup.anvils.entrySet()) {
-               String material = ore.getKey();
+    try {
+      for (EnumVariants damage : EnumVariants.values()) {
+        for (Map.Entry<String, JsonElement> entry : jsonRead.entrySet()) {
+          String material = entry.getKey();
 
-               if (material.equals("gold") || material.equals("stone") || material.equals("diamond")) continue;
-
-               //strings.add(material);
-
-               //handle blockstates
-               File file = new File("jsons/blockstates/" + material + damage.getString() + ".json");
-               JsonObject variants = new JsonObject();
-               for (int i = 0; i < 4; i++) {
-                 JsonObject element = new JsonObject();
-                 element.addProperty("model", MODID + ":" + material + damage.getString());
-                 if (i != 0) element.addProperty("y", i * 90);
-                 variants.add("facing=" + compass[i], element);
-               }
-               JsonObject blockstates = new JsonObject();
-               blockstates.add("variants", variants);
-               FileWriter writer = new FileWriter(file);
-               writer.write(Setup.prettyJson(blockstates));
-               writer.flush();
-               //handle itemblocks
-               File file1 = new File("jsons/models/item/" + material + damage.getString() + ".json");
-               JsonObject parent = new JsonObject();
-               parent.addProperty("parent", MODID + ":block/" + material + damage.getString());
-               FileWriter writer1 = new FileWriter(file1);
-               writer1.write(Setup.prettyJson(parent));
-               writer1.flush();
+          if ("diamond".equals(material) || "gold".equals(material) || "stone".equals(material)) continue;
+          //handle blockstates
+          blockstates(material, damage);
+          block(material, damage);
+          item(material, damage);
 
 
-               File file2 = new File("jsons/models/block/" + material + damage.getString() + ".json");
-
-               JsonObject textures = new JsonObject();
-               textures.addProperty("particle", MODID + ":blocks/" + material + EnumVariants.NORMAL.getString() + "_top");
-               textures.addProperty("body", MODID + ":blocks/" + material + EnumVariants.NORMAL.getString() + "_top");
-               textures.addProperty("top", MODID + ":blocks/" + material + "_anvil_top" + damage.getString().substring(6));
-               JsonObject blockmodel = new JsonObject();
-               blockmodel.addProperty("parent", "block/anvil");
-               blockmodel.add("textures", textures);
-               FileWriter writer2 = new FileWriter(file2);
-               writer2.write(Setup.prettyJson(blockmodel));
-               writer2.flush();
-
+          /*
                if (damage != EnumVariants.NORMAL)continue;
 
                File file3 = new File("jsons/recipes/" + material + damage.getString() + ".json");
@@ -103,11 +76,67 @@ public class Scripts {
                FileWriter writer3 = new FileWriter(file3);
                writer3.write(Setup.prettyJson(recipes));
                writer3.flush();
-             }
-           }
-         } catch (Exception oof) {
-           oof.printStackTrace();
-         }
-*/
-       }
+               */
+        }
+      }
+    } catch (Exception oof) {
+      oof.printStackTrace();
+    }
+  }
+
+  private static void item(String material, EnumVariants damage) {
+    JsonObject parent = new JsonObject();
+    parent.addProperty("parent", MODID + ":block/" + material + damage.getString());
+    File file = new File("C:\\Users\\xluser\\Documents\\MinecraftMods\\mods\\Extra Anvils\\1.12\\src\\main\\resources\\assets\\extraanvils\\models\\item\\" + material + damage.getString() + ".json");
+    try {
+
+      FileWriter writer1 = new FileWriter(file);
+      writer1.write(g.toJson(parent));
+      writer1.flush();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
+
+  private static void block(String material, EnumVariants damage) {
+
+    JsonObject textures = new JsonObject();
+    textures.addProperty("particle", MODID + ":blocks/" + material + EnumVariants.NORMAL.getString() + "_base");
+    textures.addProperty("body", MODID + ":blocks/" + material + EnumVariants.NORMAL.getString() + "_base");
+    textures.addProperty("top", MODID + ":blocks/" + material + "_anvil_top" + damage.getString().substring(6));
+    JsonObject blockmodel = new JsonObject();
+    blockmodel.addProperty("parent", "block/anvil");
+    blockmodel.add("textures", textures);
+    File file = new File("C:\\Users\\xluser\\Documents\\MinecraftMods\\mods\\Extra Anvils\\1.12\\src\\main\\resources\\assets\\extraanvils\\models\\block\\" + material + damage.getString() + ".json");
+    try {
+      FileWriter writer2 = new FileWriter(file);
+      writer2.write(g.toJson(blockmodel));
+      writer2.flush();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
+
+  public static void blockstates(String material, EnumVariants damage) {
+    String[] compass = {"south", "west", "north", "east"};
+    File configFile = new File("C:\\Users\\xluser\\Documents\\MinecraftMods\\mods\\Extra Anvils\\1.12\\src\\main\\resources\\assets\\extraanvils\\blockstates\\" + material + damage.getString() + ".json");
+    if (configFile.exists()) return;
+    JsonObject facing = new JsonObject();
+    for (int i = 0; i < 4; i++) {
+      String model = MODID + ":" + material + damage.getString();
+      JsonObject obj = new JsonObject();
+      obj.addProperty("model", model);
+      if (i != 0) obj.addProperty("y", i * 90);
+      facing.add("facing=" + compass[i], obj);
+    }
+    JsonObject blockstates = new JsonObject();
+    blockstates.add("variants", facing);
+    try {
+      FileWriter writer = new FileWriter(configFile);
+      writer.write(g.toJson(blockstates));
+      writer.flush();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
 }

@@ -1,22 +1,28 @@
 package com.tfar.extraanvils.generic;
 
+import javax.annotation.Nullable;
+
 public class AnvilProperties {
 
-  public final String material;
+  public final boolean enabled;
   public final int cap;
   public final double weight;
-  public final double fallResistance;
-  public final double durabilityMultiplier;
+  public final double durability;
   public final double enchantability;
-  public final boolean causesPlayerDamage;
+  public final boolean playerDamage;
+  public final String[] traits;
 
-  public AnvilProperties(String materialName, int maxLevelCap, double weight, double fallResistance, double durabilityMultiplier, double costMultiplier,boolean causesPlayerDamage){
-    this.material = materialName;
-    this.cap = maxLevelCap;
+  public AnvilProperties(int cap, double weight, double durability, double enchantability, boolean playerDamage){
+    this(true,cap, weight, durability, enchantability, playerDamage, null);
+  }
+
+  public AnvilProperties(boolean enabled, int cap, double weight, double durability, double enchantability, boolean playerDamage, @Nullable String[] traits){
+    this.enabled = enabled;
+    this.cap = cap;
     this.weight = weight;
-    this.fallResistance = fallResistance;
-    this.durabilityMultiplier = durabilityMultiplier;
-    this.enchantability = costMultiplier;
-    this.causesPlayerDamage = causesPlayerDamage;
+    this.durability = durability;
+    this.enchantability = enchantability;
+    this.playerDamage = playerDamage;
+    this.traits = traits;
   }
 }

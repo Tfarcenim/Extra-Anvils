@@ -1,1 +1,8 @@
-{"parent":"block/anvil","textures":{"particle":"extraanvils:blocks/copper_anvil_top","body":"extraanvils:blocks/copper_anvil_top","top":"extraanvils:blocks/copper_anvil_top"}}
+{
+  "parent": "block/anvil",
+  "textures": {
+    "particle": "extraanvils:blocks/copper_anvil_base",
+    "body": "extraanvils:blocks/copper_anvil_base",
+    "top": "extraanvils:blocks/copper_anvil_top"
+  }
+}

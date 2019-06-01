@@ -37,14 +37,10 @@ public class EntityAetherAnvil extends EntityFallingAnvil {
   }
 
   private IBlockState fallTile;
-  public int fallTime;
-  public boolean shouldDropItem = true;
   private boolean dontSetBlock;
   private boolean hurtEntities;
   private int fallHurtMax = Integer.MAX_VALUE;
-  private double fallResistance;
   private double fallHurtAmount; // Damage multiplier
-  public NBTTagCompound tileEntityData;
 
   public EntityAetherAnvil(World worldIn, double x, double y, double z, IBlockState fallingBlockState)
   {
@@ -52,7 +48,6 @@ public class EntityAetherAnvil extends EntityFallingAnvil {
    // this.setPosition(x, y + 0/*(1 - this.height) / 2*/, z);
     this.fallTile = fallingBlockState;
     this.fallHurtAmount= ((BlockGenericAnvil)fallingBlockState.getBlock()).properties.weight * 2;
-    this.fallResistance = ((BlockGenericAnvil)fallingBlockState.getBlock()).properties.fallResistance;
   }
 
 
@@ -69,7 +64,7 @@ public class EntityAetherAnvil extends EntityFallingAnvil {
 
       if (i > 0) {
         List<Entity> list = Lists.newArrayList(this.world.getEntitiesWithinAABBExcludingEntity(this, this.getEntityBoundingBox()));
-        boolean flag = block.properties.causesPlayerDamage && i > 20;
+        boolean flag = block.properties.playerDamage && i > 20;
         boolean shouldDamage = true;
         FakePlayer fakePlayer = (flag) ? FakePlayerFactory.getMinecraft((WorldServer) world) : null;
 
@@ -82,9 +77,8 @@ public class EntityAetherAnvil extends EntityFallingAnvil {
             entity.attackEntityFrom(DamageSource.ANVIL, amount);
         }
 
-
         //check to damage anvil
-        if (shouldDamage && rand.nextFloat() * fallResistance < .05 * (i + 1)) {
+        if (shouldDamage && rand.nextFloat() < .05 * (i + 1)) {
             IBlockState iblockstate = BlockGenericAnvil.damage(this.fallTile);
             if (iblockstate == null) this.dontSetBlock = true;
             else this.fallTile = iblockstate;

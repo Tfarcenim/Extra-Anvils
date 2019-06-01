@@ -67,10 +67,10 @@ public class GuiGenericAnvil extends GuiContainer implements IContainerListener 
   protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
     GlStateManager.disableLighting();
     GlStateManager.disableBlend();
-    this.fontRenderer.drawString(I18n.format("container.repair"), 60, 6, 4210752);
+    this.fontRenderer.drawString(I18n.format("container.repair"), 60, 6, 0x404040);
 
     if (this.anvil.maximumCost >= 0) {
-      int i = 8453920;
+      int i = 0x80ff20;
       boolean flag = true;
       String s = I18n.format("container.repair.cost", this.anvil.maximumCost);
 
@@ -80,17 +80,17 @@ public class GuiGenericAnvil extends GuiContainer implements IContainerListener 
       } else if (!this.anvil.getSlot(2).getHasStack()) {
         flag = false;
       } else if (!this.anvil.getSlot(2).canTakeStack(this.playerInventory.player)) {
-        i = 16736352;
+        i = 0xff6060;
       }
 
       if (flag) {
-        int j = -16777216 | (i & 16579836) >> 2 | i & -16777216;
+        int j = 0xff000000 | (i & 0xfcfcfc) >> 2 | i & 0xff000000;
         int k = this.xSize - 8 - this.fontRenderer.getStringWidth(s);
         int l = 67;
 
         if (this.fontRenderer.getUnicodeFlag()) {
-          drawRect(k - 3, l - 2, this.xSize - 7, l + 10, -16777216);
-          drawRect(k - 2, l - 1, this.xSize - 8, l + 9, -12895429);
+          drawRect(k - 3, l - 2, this.xSize - 7, l + 10, 0xff000000);
+          drawRect(k - 2, l - 1, this.xSize - 8, l + 9, 0xff3b3b3b);
         } else {
           this.fontRenderer.drawString(s, k, l + 1, j);
           this.fontRenderer.drawString(s, k + 1, l, j);
@@ -142,7 +142,7 @@ public class GuiGenericAnvil extends GuiContainer implements IContainerListener 
 
   @Override
   protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
-    GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+    GlStateManager.color(1, 1, 1, 1);
     this.mc.getTextureManager().bindTexture(anvilResource);
     int i = (width - xSize) / 2;
     int j = (height - ySize) / 2;

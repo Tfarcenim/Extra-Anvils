@@ -1,17 +1,17 @@
 {
   "variants": {
-    "facing\u003dsouth": {
+    "facing=south": {
       "model": "extraanvils:intermedium_anvil"
     },
-    "facing\u003dwest": {
+    "facing=west": {
       "model": "extraanvils:intermedium_anvil",
       "y": 90
     },
-    "facing\u003dnorth": {
+    "facing=north": {
       "model": "extraanvils:intermedium_anvil",
       "y": 180
     },
-    "facing\u003deast": {
+    "facing=east": {
       "model": "extraanvils:intermedium_anvil",
       "y": 270
     }

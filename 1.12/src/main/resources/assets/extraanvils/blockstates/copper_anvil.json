@@ -1,8 +1,19 @@
 {
-  "variants":{
-    "facing=south":{
-      "model":"extraanvils:copper_anvil"},
-    "facing=west":{
-      "model":"extraanvils:copper_anvil","y":90},
-    "facing=north":{"model":"extraanvils:copper_anvil","y":180},
-    "facing=east":{"model":"extraanvils:copper_anvil","y":270}}}
+  "variants": {
+    "facing=south": {
+      "model": "extraanvils:copper_anvil"
+    },
+    "facing=west": {
+      "model": "extraanvils:copper_anvil",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "extraanvils:copper_anvil",
+      "y": 180
+    },
+    "facing=east": {
+      "model": "extraanvils:copper_anvil",
+      "y": 270
+    }
+  }
+}

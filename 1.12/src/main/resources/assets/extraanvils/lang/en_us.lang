@@ -86,9 +86,14 @@ tile.extraanvils:signalum_anvil_damaged.name=Damaged Signalum Anvil
 tile.extraanvils:enderium_anvil.name=Enderium Anvil
 tile.extraanvils:enderium_anvil_chipped.name=Chipped Enderium Anvil
 tile.extraanvils:enderium_anvil_damaged.name=Damaged Enderium Anvil
-
 tile.extraanvils:zanite_anvil.name=Zanite Anvil
 tile.extraanvils:zanite_anvil_chipped.name=Chipped Zanite Anvil
 tile.extraanvils:zanite_anvil_damaged.name=Damaged Zanite Anvil
+tile.extraanvils:neutronium_anvil.name=Neutronium Anvil
+tile.extraanvils:neutronium_anvil_chipped.name=Chipped Neutronium Anvil
+tile.extraanvils:neutronium_anvil_damaged.name=Damaged Neutronium Anvil
 
 itemGroup.extraanvils=Extra Anvils
+
+extraanvils.error=Warning, one or more errors occured during registration, check log for more details.
+extraanvils.name=Extra Anvils

@@ -11,7 +11,6 @@ public class PacketHandler {
   public PacketHandler() {
   }
 
-
   public static void registerMessages(String channelName) {
     INSTANCE = NetworkRegistry.INSTANCE.newSimpleChannel(channelName);
     registerMessages();

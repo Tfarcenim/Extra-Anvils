@@ -1,0 +1,8 @@
+{
+  "parent": "block/anvil",
+  "textures": {
+    "particle": "extraanvils:blocks/neutronium_anvil_base",
+    "body": "extraanvils:blocks/neutronium_anvil_base",
+    "top": "extraanvils:blocks/neutronium_anvil_top"
+  }
+}

@@ -1,8 +1,19 @@
 {
   "variants": {
-    "facing=north": { "model": "extraanvils:gold_anvil_chipped" },
-    "facing=west": { "model": "extraanvils:gold_anvil_chipped", "y": 90 },
-    "facing=south": { "model": "extraanvils:gold_anvil_chipped", "y": 180 },
-    "facing=east": { "model": "extraanvils:gold_anvil_chipped", "y": 270 }
+    "facing=south": {
+      "model": "extraanvils:gold_anvil_chipped"
+    },
+    "facing=west": {
+      "model": "extraanvils:gold_anvil_chipped",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "extraanvils:gold_anvil_chipped",
+      "y": 180
+    },
+    "facing=east": {
+      "model": "extraanvils:gold_anvil_chipped",
+      "y": 270
+    }
   }
 }

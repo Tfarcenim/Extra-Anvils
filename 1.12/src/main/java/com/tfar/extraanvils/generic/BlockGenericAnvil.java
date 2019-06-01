@@ -4,11 +4,9 @@ import com.tfar.extraanvils.*;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyDirection;
-import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockFaceShape;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
@@ -20,14 +18,12 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.NonNullList;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.*;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.logging.log4j.LogManager;
@@ -36,8 +32,7 @@ import org.lwjgl.input.Keyboard;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 public class BlockGenericAnvil extends BlockFalling {
 
@@ -45,10 +40,11 @@ public class BlockGenericAnvil extends BlockFalling {
   protected static final AxisAlignedBB X_AXIS_AABB = new AxisAlignedBB(0.0D, 0.0D, 0.125D, 1.0D, 1.0D, 0.875D);
   protected static final AxisAlignedBB Z_AXIS_AABB = new AxisAlignedBB(0.125D, 0.0D, 0.0D, 0.875D, 1.0D, 1.0D);
   protected static final Logger LOGGER = LogManager.getLogger();
+  public String material;
   public AnvilProperties properties;
   public EnumVariants variant;
 
-  public BlockGenericAnvil(AnvilProperties properties,EnumVariants variant) {
+  public BlockGenericAnvil(String material, AnvilProperties properties, EnumVariants variant) {
 
     super(Material.ANVIL);
     setDefaultState(blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH));
@@ -57,20 +53,19 @@ public class BlockGenericAnvil extends BlockFalling {
     setHardness(5.0F);
     setSoundType(SoundType.ANVIL);
     setResistance(2000.0F);
+    this.material = material;
     this.properties = properties;
     this.variant = variant;
   }
 
   @Override
-  public boolean isFullCube(IBlockState state)
-  {
+  public boolean isFullCube(IBlockState state) {
     return false;
   }
 
   @Override
   @Nonnull
-  public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos)
-  {
+  public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
     EnumFacing enumfacing = state.getValue(FACING);
     return enumfacing.getAxis() == EnumFacing.Axis.X ? X_AXIS_AABB : Z_AXIS_AABB;
   }
@@ -83,7 +78,7 @@ public class BlockGenericAnvil extends BlockFalling {
   @Override
   @Nonnull
   public BlockFaceShape getBlockFaceShape(IBlockAccess worldIn, IBlockState state, BlockPos pos, EnumFacing face) {
-return BlockFaceShape.UNDEFINED;
+    return BlockFaceShape.UNDEFINED;
   }
 
   /**
@@ -92,24 +87,14 @@ return BlockFaceShape.UNDEFINED;
    */
   @Override
   @Nonnull
-  public IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer)
-  {
+  public IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer) {
     EnumFacing enumfacing = placer.getHorizontalFacing().rotateY();
 
-    try
-    {
+    try {
       return super.getStateForPlacement(worldIn, pos, facing, hitX, hitY, hitZ, meta, placer).withProperty(FACING, enumfacing);
-    }
-    catch (IllegalArgumentException var11)
-    {
-      if (!worldIn.isRemote)
-      {
-        LOGGER.warn(String.format("Invalid damage property for anvil at %s. Found %d, must be in [0, 1, 2]", pos, meta >> 2));
-
-        if (placer instanceof EntityPlayer)
-        {
-          placer.sendMessage(new TextComponentTranslation("Invalid damage property. Please pick in [0, 1, 2]"));
-        }
+    } catch (IllegalArgumentException var11) {
+      if (!worldIn.isRemote) {
+        var11.printStackTrace();
       }
 
       return super.getStateForPlacement(worldIn, pos, facing, hitX, hitY, hitZ, 0, placer).withProperty(FACING, enumfacing);
@@ -119,22 +104,19 @@ return BlockFaceShape.UNDEFINED;
   /**
    * Called when the block is right clicked by a player.
    */
-  public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
-  {
+  public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
     if (!worldIn.isRemote) {
       playerIn.openGui(ExtraAnvils.instance, 0, worldIn, pos.getX(), pos.getY(), pos.getZ());
     }
     return true;
   }
 
+  @Nullable
   public static IBlockState damage(IBlockState state) {
     BlockGenericAnvil block = (BlockGenericAnvil) state.getBlock();
     EnumFacing enumfacing = state.getValue(FACING);
-    switch (block.variant){
-      case NORMAL:return ExtraAnvils.anvilDamageMap.get(block).getDefaultState().withProperty(FACING,enumfacing);
-      case CHIPPED:return ExtraAnvils.anvilDamageMap.get(block).getDefaultState().withProperty(FACING,enumfacing);
-      case DAMAGED:default:return null;
-    }
+    BlockGenericAnvil damagedBlock = ExtraAnvils.anvilDamageMap.get(block);
+    return damagedBlock == null ? null : damagedBlock.getDefaultState().withProperty(FACING, enumfacing);
   }
 
   @Override
@@ -158,18 +140,17 @@ return BlockFaceShape.UNDEFINED;
   public int getMetaFromState(IBlockState state) {
     return state.getValue(FACING).getHorizontalIndex();
   }
-@Override
-  protected void onStartFalling(EntityFallingBlock fallingEntity)
-  {
-    onStartFall((EntityFallingAnvil)fallingEntity);
+
+  @Override
+  protected void onStartFalling(EntityFallingBlock fallingEntity) {
+    onStartFall((EntityFallingAnvil) fallingEntity);
   }
 
-  private void onStartFall(EntityFallingAnvil anvil){
+  private void onStartFall(EntityFallingAnvil anvil) {
     anvil.setHurtEntities(true);
   }
 
-  public boolean isOpaqueCube(IBlockState state)
-  {
+  public boolean isOpaqueCube(IBlockState state) {
     return false;
   }
 
@@ -180,34 +161,26 @@ return BlockFaceShape.UNDEFINED;
     return new BlockStateContainer(this, FACING);
   }
 
-  private void checkFallable(World worldIn, BlockPos pos)
-  {
-    if ((worldIn.isAirBlock(pos.down()) || canFallThrough(worldIn.getBlockState(pos.down()))) && pos.getY() >= 0)
-    {
+  private void checkFallable(World worldIn, BlockPos pos) {
+    if ((worldIn.isAirBlock(pos.down()) || canFallThrough(worldIn.getBlockState(pos.down()))) && pos.getY() >= 0 || this.hasTrait("dense")) {
       int i = 32;
 
-      if (!fallInstantly && worldIn.isAreaLoaded(pos.add(-i, -i, -i), pos.add(i, i, i)))
-      {
-        if (!worldIn.isRemote)
-        {
-          EntityFallingAnvil entityfallinganvil = new EntityFallingAnvil(worldIn, (double)pos.getX() + 0.5D, (double)pos.getY(), (double)pos.getZ() + 0.5D, worldIn.getBlockState(pos));
+      if (!fallInstantly && worldIn.isAreaLoaded(pos.add(-i, -i, -i), pos.add(i, i, i))) {
+        if (!worldIn.isRemote) {
+          EntityFallingAnvil entityfallinganvil = new EntityFallingAnvil(worldIn, (double) pos.getX() + 0.5D, (double) pos.getY(), (double) pos.getZ() + 0.5D, worldIn.getBlockState(pos));
           this.onStartFalling(entityfallinganvil);
           worldIn.spawnEntity(entityfallinganvil);
         }
-      }
-      else
-      {
+      } else {
         IBlockState state = worldIn.getBlockState(pos);
         worldIn.setBlockToAir(pos);
         BlockPos blockpos;
 
-        for (blockpos = pos.down(); (worldIn.isAirBlock(blockpos) || canFallThrough(worldIn.getBlockState(blockpos))) && blockpos.getY() > 0; blockpos = blockpos.down())
-        {
+        for (blockpos = pos.down(); (worldIn.isAirBlock(blockpos) || canFallThrough(worldIn.getBlockState(blockpos))) && blockpos.getY() > 0; blockpos = blockpos.down()) {
           ;
         }
 
-        if (blockpos.getY() > 0)
-        {
+        if (blockpos.getY() > 0) {
           worldIn.setBlockState(blockpos.up(), state); //Forge: Fix loss of state information during world gen.
         }
       }
@@ -215,32 +188,48 @@ return BlockFaceShape.UNDEFINED;
   }
 
   @Override
-  public void updateTick(World worldIn, @Nonnull BlockPos pos, IBlockState state, Random rand)
-  {
-    if (!worldIn.isRemote)
-    {
-      if ((this.properties.material.equals("energetic_alloy")|| this.properties.material.equals("signalum")) && worldIn.isBlockPowered(pos))
-      return;
-      this.checkFallable(worldIn, pos);
+  public void updateTick(World world, @Nonnull BlockPos pos, IBlockState state, Random rand) {
+    if (!world.isRemote) {
+      if (this.hasTrait("redstone") && world.isBlockPowered(pos))
+        return;
+      this.checkFallable(world, pos);
     }
+  }
+
+  public boolean hasTrait(String s) {
+    return this.properties.traits != null && Arrays.asList(properties.traits).contains(s);
   }
 
   @Override
   @SideOnly(Side.CLIENT)
   public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
-    if (worldIn == null)return;
-
-    if(!Keyboard.isKeyDown(Keyboard.KEY_LSHIFT))return;
-
-    tooltip.add("Level Cap: "+this.properties.cap);
-    tooltip.add("Durability Multiplier: "+this.properties.durabilityMultiplier);
-    tooltip.add("Enchantability: "+this.properties.enchantability);
-    if (this.properties.causesPlayerDamage)tooltip.add("Causes Player Damage");
-
+    super.addInformation(stack, worldIn, tooltip, flagIn);
+    if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
+      tooltip.add("Level Cap: " + this.properties.cap);
+      tooltip.add("Durability Multiplier: " + this.properties.durability);
+      tooltip.add("Enchantability: " + this.properties.enchantability);
+      if (this.properties.playerDamage) tooltip.add("Causes Player Damage");
+    }
+    if (this.properties.traits != null) {
+      for (String trait : properties.traits) {
+        tooltip.add(TextColors.colors.get(trait) + trait.substring(0,1).toUpperCase()+trait.substring(1));
+      }
+    }
   }
 
   @SideOnly(Side.CLIENT)
   public void registerModel() {
     ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(this), 0, new ModelResourceLocation(getRegistryName(), "inventory"));
+  }
+
+  public static class TextColors {
+    public static Map<String, TextFormatting> colors = new HashMap<>();
+
+    static {
+      colors.put("dense", TextFormatting.BLACK);
+      colors.put("redstone", TextFormatting.DARK_RED);
+      colors.put("teleporting", TextFormatting.GREEN);
+      colors.put("reverse", TextFormatting.DARK_PURPLE);
+    }
   }
 }

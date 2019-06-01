@@ -1,8 +1,19 @@
 {
   "variants": {
-    "facing=north": { "model": "extraanvils:diamond_anvil_damaged" },
-    "facing=west": { "model": "extraanvils:diamond_anvil_damaged", "y": 90 },
-    "facing=south": { "model": "extraanvils:diamond_anvil_damaged", "y": 180 },
-    "facing=east": { "model": "extraanvils:diamond_anvil_damaged", "y": 270 }
+    "facing=south": {
+      "model": "extraanvils:diamond_anvil_damaged"
+    },
+    "facing=west": {
+      "model": "extraanvils:diamond_anvil_damaged",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "extraanvils:diamond_anvil_damaged",
+      "y": 180
+    },
+    "facing=east": {
+      "model": "extraanvils:diamond_anvil_damaged",
+      "y": 270
+    }
   }
 }
