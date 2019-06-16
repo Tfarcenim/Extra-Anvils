@@ -1,0 +1,8 @@
+{
+  "variants": {
+    "facing=north": { "model": "extraanvils:block/gold_anvil_chipped" },
+    "facing=west": { "model": "extraanvils:block/gold_anvil_chipped", "y": 90 },
+    "facing=south": { "model": "extraanvils:block/gold_anvil_chipped", "y": 180 },
+    "facing=east": { "model": "extraanvils:block/gold_anvil_chipped", "y": 270 }
+  }
+}

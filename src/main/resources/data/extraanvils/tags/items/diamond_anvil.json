@@ -1,0 +1,8 @@
+{
+  "replace": false,
+  "values": [
+    "extraanvils:diamond_anvil",
+    "extraanvils:diamond_anvil_chipped",
+    "extraanvils:diamond_anvil_damaged"
+  ]
+}
