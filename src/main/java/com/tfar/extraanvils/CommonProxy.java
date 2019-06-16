@@ -1,12 +1,12 @@
 package com.tfar.extraanvils;
 
 
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.world.World;
 
 public class CommonProxy {
 
-  public EntityPlayer getClientPlayer() {
+  public PlayerEntity getClientPlayer() {
     return null;
   }
 

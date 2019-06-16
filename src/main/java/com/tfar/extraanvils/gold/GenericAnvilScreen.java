@@ -1,39 +1,34 @@
 package com.tfar.extraanvils.gold;
 
+import com.mojang.blaze3d.platform.GlStateManager;
 import com.tfar.extraanvils.ExtraAnvils;
-import com.tfar.extraanvils.network.PacketAnvilRename;
-import com.tfar.extraanvils.network.Message;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiTextField;
+import net.minecraft.client.gui.screen.inventory.ContainerScreen;
+import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.gui.IGuiEventListener;
-import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.Container;
-import net.minecraft.inventory.IContainerListener;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.Slot;
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.container.Container;
+import net.minecraft.inventory.container.IContainerListener;
+import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.World;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nonnull;
 
 @OnlyIn(Dist.CLIENT)
-public class GuiGoldAnvil extends GuiContainer implements IContainerListener {
+public class GenericAnvilScreen extends ContainerScreen<GenericAnvilContainer> implements IContainerListener {
   private static final ResourceLocation anvilResource = new ResourceLocation(ExtraAnvils.MODID, "textures/gui/gold_anvil.png");
-  private final ContainerGoldAnvil anvil;
-  private GuiTextField nameField;
-  private final InventoryPlayer playerInventory;
+  private TextFieldWidget nameField;
+  private final PlayerInventory playerInventory;
 
-  public GuiGoldAnvil(InventoryPlayer inventoryIn, World worldIn) {
-    super(new ContainerGoldAnvil(inventoryIn, worldIn, Minecraft.getInstance().player));
+  public GenericAnvilScreen(GenericAnvilContainer container, PlayerInventory inventoryIn, ITextComponent text) {
+    super(container,inventoryIn, text);
     this.playerInventory = inventoryIn;
-    this.anvil = (ContainerGoldAnvil) this.inventorySlots;
   }
 
   @Override
@@ -42,76 +37,81 @@ public class GuiGoldAnvil extends GuiContainer implements IContainerListener {
   }
 
   @Override
-  public void initGui() {
-    super.initGui();
-    this.mc.keyboardListener.enableRepeatEvents(true);
+  public void init() {
+    super.init();
+    this.minecraft.keyboardListener.enableRepeatEvents(true);
     int i = (this.width - this.xSize) / 2;
     int j = (this.height - this.ySize) / 2;
-    this.nameField = new GuiTextField(0, this.fontRenderer, i + 62, j + 24, 103, 12);
+    this.nameField = new TextFieldWidget(this.font, i + 62, j + 24, 103, 12, I18n.format("container.repair"));
+    this.nameField.setCanLoseFocus(false);
+    this.nameField.changeFocus(true);
     this.nameField.setTextColor(-1);
     this.nameField.setDisabledTextColour(-1);
     this.nameField.setEnableBackgroundDrawing(false);
     this.nameField.setMaxStringLength(35);
-    this.nameField.setTextAcceptHandler(this::syncPacket);
+    this.nameField.func_212954_a(this::syncPacket);
     this.children.add(this.nameField);
-    this.inventorySlots.removeListener(this);
-    this.inventorySlots.addListener(this);
+    this.container.addListener(this);
+    this.func_212928_a(this.nameField);
   }
 
   /**
    * Called when the GUI is resized in order to update the world and the resolution
    */
   @Override
-  public void onResize(@Nonnull Minecraft mcIn, int w, int h) {
+  public void resize(@Nonnull Minecraft mc, int w, int h) {
     String s = this.nameField.getText();
-    this.setWorldAndResolution(mcIn, w, h);
+    this.init(mc, w, h);
     this.nameField.setText(s);
   }
 
   @Override
-  public void onGuiClosed() {
-    super.onGuiClosed();
-    this.mc.keyboardListener.enableRepeatEvents(false);
-    this.inventorySlots.removeListener(this);
+  public void removed() {
+    super.removed();
+    this.minecraft.keyboardListener.enableRepeatEvents(false);
+    this.container.removeListener(this);
   }
 
-  @Override
+  /**
+   * Draw the foreground layer for the GuiContainer (everything in front of the items)
+   */
   protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
     GlStateManager.disableLighting();
     GlStateManager.disableBlend();
-    this.fontRenderer.drawString(I18n.format("container.repair"), 60, 6, 4210752);
-    if (this.anvil.maximumCost > 0) {
-      int i = 8453920;
+    this.font.drawString(this.title.getFormattedText(), 60.0F, 6.0F, 4210752);
+    int i = this.container.func_216976_f();
+    if (i > 0) {
+      int j = 8453920;
       boolean flag = true;
-      String s = I18n.format("container.repair.cost", this.anvil.maximumCost);
-      if (this.anvil.maximumCost >= this.anvil.maximumCap && !this.mc.player.abilities.isCreativeMode) {
+      String s = I18n.format("container.repair.cost", i);
+      if (i >= 40 && !this.minecraft.player.abilities.isCreativeMode) {
         s = I18n.format("container.repair.expensive");
-        i = 16736352;
-      } else if (!this.anvil.getSlot(2).getHasStack()) {
+        j = 16736352;
+      } else if (!this.container.getSlot(2).getHasStack()) {
         flag = false;
-      } else if (!this.anvil.getSlot(2).canTakeStack(this.playerInventory.player)) {
-        i = 16736352;
+      } else if (!this.container.getSlot(2).canTakeStack(this.playerInventory.player)) {
+        j = 16736352;
       }
 
       if (flag) {
-        int j = this.xSize - 8 - this.fontRenderer.getStringWidth(s) - 2;
-        int k = 69;
-        drawRect(j - 2, 67, this.xSize - 8, 79, 1325400064);
-        this.fontRenderer.drawStringWithShadow(s, (float) j, 69, i);
+        int k = this.xSize - 8 - this.font.getStringWidth(s) - 2;
+        int l = 69;
+        fill(k - 2, 67, this.xSize - 8, 79, 1325400064);
+        this.font.drawStringWithShadow(s, (float)k, 69.0F, j);
       }
     }
 
     GlStateManager.enableLighting();
   }
 
-  private void syncPacket(int unused, String name) {
+  private void syncPacket(String name) {
     if (!name.isEmpty()) {
       String s = name;
-      Slot slot = this.anvil.getSlot(0);
+      Slot slot = this.container.getSlot(0);
       if (slot.getHasStack() && !slot.getStack().hasDisplayName() && name.equals(slot.getStack().getDisplayName().getString())) {
         s = "";
       }
-      this.anvil.updateItemName(s);
+      this.container.updateItemName(s);
     //  Message.INSTANCE.sendToServer(new PacketAnvilRename(s));
     }
   }
@@ -119,14 +119,14 @@ public class GuiGoldAnvil extends GuiContainer implements IContainerListener {
   @Override
   protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
     GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-    this.mc.getTextureManager().bindTexture(anvilResource);
+    this.minecraft.getTextureManager().bindTexture(anvilResource);
     int i = (this.width - this.xSize) / 2;
     int j = (this.height - this.ySize) / 2;
-    this.drawTexturedModalRect(i, j, 0, 0, this.xSize, this.ySize);
-    this.drawTexturedModalRect(i + 59, j + 20, 0, this.ySize + (this.anvil.getSlot(0).getHasStack() ? 0 : 16), 110, 16);
+    this.blit(i, j, 0, 0, this.xSize, this.ySize);
+    this.blit(i + 59, j + 20, 0, this.ySize + (this.container.getSlot(0).getHasStack() ? 0 : 16), 110, 16);
 
-    if ((this.anvil.getSlot(0).getHasStack() || this.anvil.getSlot(1).getHasStack()) && !this.anvil.getSlot(2).getHasStack()) {
-      this.drawTexturedModalRect(i + 99, j + 45, this.xSize, 0, 28, 21);
+    if ((this.container.getSlot(0).getHasStack() || this.container.getSlot(1).getHasStack()) && !this.container.getSlot(2).getHasStack()) {
+      this.blit(i + 99, j + 45, this.xSize, 0, 28, 21);
     }
   }
 
@@ -150,19 +150,16 @@ public class GuiGoldAnvil extends GuiContainer implements IContainerListener {
 
   @Override
   public void render(int mouseX, int mouseY, float partialTicks) {
-    this.drawDefaultBackground();
+    this.renderBackground();
     super.render(mouseX, mouseY, partialTicks);
     this.renderHoveredToolTip(mouseX, mouseY);
     GlStateManager.disableLighting();
     GlStateManager.disableBlend();
-    this.nameField.drawTextField(mouseX, mouseY, partialTicks);
+    this.nameField.render(mouseX, mouseY, partialTicks);
   }
 
   @Override
   public void sendWindowProperty(@Nonnull Container containerIn, int varToUpdate, int newValue) {
   }
 
-  @Override
-  public void sendAllWindowProperties(@Nonnull Container containerIn, @Nonnull IInventory inventory) {
-  }
 }
