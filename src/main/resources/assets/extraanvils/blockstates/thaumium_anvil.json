@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=south": {
+      "model": "extraanvils:thaumium_anvil"
+    },
+    "facing=west": {
+      "model": "extraanvils:thaumium_anvil",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "extraanvils:thaumium_anvil",
+      "y": 180
+    },
+    "facing=east": {
+      "model": "extraanvils:thaumium_anvil",
+      "y": 270
+    }
+  }
+}

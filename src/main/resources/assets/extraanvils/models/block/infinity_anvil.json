@@ -1,0 +1,8 @@
+{
+  "parent": "block/anvil",
+  "textures": {
+    "particle": "extraanvils:blocks/infinity_anvil_base",
+    "body": "extraanvils:blocks/infinity_anvil_base",
+    "top": "extraanvils:blocks/infinity_anvil_base"
+  }
+}
