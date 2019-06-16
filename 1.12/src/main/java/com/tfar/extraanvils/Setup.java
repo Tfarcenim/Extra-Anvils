@@ -2,7 +2,6 @@ package com.tfar.extraanvils;
 
 import com.google.gson.*;
 import com.tfar.extraanvils.generic.AnvilProperties;
-import com.tfar.extraanvils.generic.BlockAetherAnvil;
 import com.tfar.extraanvils.generic.BlockGenericAnvil;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
@@ -32,11 +31,11 @@ public class Setup {
   private static boolean error = false;
   private static File configFile = new File("config/extraanvils.json");
   private static BufferedInputStream in = new BufferedInputStream(Setup.class.getResourceAsStream("/default.json"));
-  private static String s;
   //hardcoded into the mod, used for oredict, jsons and modids
   static JsonObject jsonRead;
 
   static {
+    String s;
     try {
       s = IOUtils.toString(in, Charset.defaultCharset());
     } catch (IOException e) {
@@ -133,7 +132,7 @@ public class Setup {
               BlockGenericAnvil anvil;
 
               if (entry.traits != null && Arrays.asList(entry.traits).contains("reverse"))
-                anvil = new BlockAetherAnvil(material, entry, variant);
+                anvil = new com.tfar.extraanvils.aether.BlockAetherAnvil(material, entry, variant);
               else
                 anvil = new BlockGenericAnvil(material, entry, variant);
                ExtraAnvils.anvils.add(anvil);

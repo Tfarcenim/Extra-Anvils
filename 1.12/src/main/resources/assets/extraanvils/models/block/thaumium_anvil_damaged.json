@@ -1,0 +1,8 @@
+{
+  "parent": "block/anvil",
+  "textures": {
+    "particle": "extraanvils:blocks/thaumium_anvil_base",
+    "body": "extraanvils:blocks/thaumium_anvil_base",
+    "top": "extraanvils:blocks/thaumium_anvil_top_damaged"
+  }
+}

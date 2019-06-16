@@ -1,6 +1,6 @@
-package com.tfar.extraanvils.generic;
+package com.tfar.extraanvils.infinity;
 
-import com.tfar.extraanvils.ExtraAnvils;
+import com.tfar.extraanvils.generic.BlockGenericAnvil;
 import com.tfar.extraanvils.network.PacketAnvilRename;
 import com.tfar.extraanvils.network.PacketHandler;
 import net.minecraft.client.Minecraft;
@@ -15,7 +15,6 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -24,19 +23,20 @@ import org.lwjgl.input.Keyboard;
 import javax.annotation.Nonnull;
 import java.io.IOException;
 
+import static com.tfar.extraanvils.generic.GuiGenericAnvil.anvilResource;
+import static com.tfar.extraanvils.generic.GuiGenericAnvil.hammer;
+
 @SideOnly(Side.CLIENT)
-public class GuiGenericAnvil extends GuiContainer implements IContainerListener {
-  public static final ResourceLocation anvilResource = new ResourceLocation("textures/gui/container/anvil.png");
-  private ContainerGenericAnvil anvil;
+public class GuiInfinityAnvil extends GuiContainer implements IContainerListener {
+  private ContainerInfinityAnvil anvil;
   private GuiTextField nameField;
   private final InventoryPlayer playerInventory;
-  public static final ResourceLocation hammer = new ResourceLocation(ExtraAnvils.MODID, "textures/gui/hammer.png");
 
 
-  public GuiGenericAnvil(InventoryPlayer inventoryIn, World worldIn, BlockGenericAnvil genericAnvil) {
-    super(new ContainerGenericAnvil(inventoryIn, worldIn, Minecraft.getMinecraft().player, genericAnvil));
+  public GuiInfinityAnvil(InventoryPlayer inventoryIn, World worldIn, BlockGenericAnvil genericAnvil) {
+    super(new ContainerInfinityAnvil(inventoryIn, worldIn, Minecraft.getMinecraft().player, genericAnvil));
     this.playerInventory = inventoryIn;
-    this.anvil = (ContainerGenericAnvil) this.inventorySlots;
+    this.anvil = (ContainerInfinityAnvil) this.inventorySlots;
   }
 
   @Override
@@ -186,32 +186,7 @@ public class GuiGenericAnvil extends GuiContainer implements IContainerListener 
     //if this color is seen, this is a missed color and should be filled in asap
     ERROR(new Color(0,0,0)),
 
-    ALUMINUM(new Color(220,220,220)),
-    ARDITE(new Color(255,95,0)),
-    BRONZE(new Color(0,12,255)),
-    COBALT(new Color(0,12,255)),
-    COPPER(new Color(255,127,0)),
-    DIAMOND(new Color(0,255,225)),
-    ELECTRUM(new Color(255,255,155)),
-    ENDSTEEL(new Color(255,255,200)),
-    GOLD(new Color(255,245,0)),
-    INFERIUM(new Color(50,255,10)),
-    INTERMEDIUM(new Color(255,120,0)),
-    INVAR(new Color(150,150,150)),
-    IRIDIUM(new Color(194,192,216)),
-    LEAD(new Color(124,138,181)),
-    MANYULLYN(new Color(165,0,255)),
-    NICKEL(new Color(255,255,185)),
-    PLATINUM(new Color(10, 220, 255)),
-    PRUDENTIUM(new Color(0,255,0)),
-    STELLAR(new Color(250,250,250)),
-    SILVER(new Color(185,235,255)),
-    STEEL(new Color(60,60,60)),
-    STONE(new Color(130,130,130)),
-    SUPERIUM(new Color(0,0,255)),
-    SUPREMIUM(new Color(255,0,0)),
-    TIN(new Color(171,192,201)),
-
+    INFINITY(new Color(255,200,200)),
     ;
 
     public final Color color;

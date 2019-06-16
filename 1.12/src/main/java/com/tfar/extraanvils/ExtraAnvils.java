@@ -1,6 +1,8 @@
 package com.tfar.extraanvils;
 
+import com.tfar.extraanvils.aether.EntityAetherAnvil;
 import com.tfar.extraanvils.generic.BlockGenericAnvil;
+import com.tfar.extraanvils.generic.EntityFallingAnvil;
 import com.tfar.extraanvils.network.PacketHandler;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;

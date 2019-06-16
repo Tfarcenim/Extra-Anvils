@@ -88,6 +88,7 @@ public class Scripts {
     JsonObject parent = new JsonObject();
     parent.addProperty("parent", MODID + ":block/" + material + damage.getString());
     File file = new File("C:\\Users\\xluser\\Documents\\MinecraftMods\\mods\\Extra Anvils\\1.12\\src\\main\\resources\\assets\\extraanvils\\models\\item\\" + material + damage.getString() + ".json");
+    if (file.exists())return;
     try {
 
       FileWriter writer1 = new FileWriter(file);
@@ -108,6 +109,7 @@ public class Scripts {
     blockmodel.addProperty("parent", "block/anvil");
     blockmodel.add("textures", textures);
     File file = new File("C:\\Users\\xluser\\Documents\\MinecraftMods\\mods\\Extra Anvils\\1.12\\src\\main\\resources\\assets\\extraanvils\\models\\block\\" + material + damage.getString() + ".json");
+    if (file.exists())return;
     try {
       FileWriter writer2 = new FileWriter(file);
       writer2.write(g.toJson(blockmodel));
@@ -119,8 +121,8 @@ public class Scripts {
 
   public static void blockstates(String material, EnumVariants damage) {
     String[] compass = {"south", "west", "north", "east"};
-    File configFile = new File("C:\\Users\\xluser\\Documents\\MinecraftMods\\mods\\Extra Anvils\\1.12\\src\\main\\resources\\assets\\extraanvils\\blockstates\\" + material + damage.getString() + ".json");
-    if (configFile.exists()) return;
+    File blockstate = new File("C:\\Users\\xluser\\Documents\\MinecraftMods\\mods\\Extra Anvils\\1.12\\src\\main\\resources\\assets\\extraanvils\\blockstates\\" + material + damage.getString() + ".json");
+    if (blockstate.exists()) return;
     JsonObject facing = new JsonObject();
     for (int i = 0; i < 4; i++) {
       String model = MODID + ":" + material + damage.getString();
@@ -132,7 +134,7 @@ public class Scripts {
     JsonObject blockstates = new JsonObject();
     blockstates.add("variants", facing);
     try {
-      FileWriter writer = new FileWriter(configFile);
+      FileWriter writer = new FileWriter(blockstate);
       writer.write(g.toJson(blockstates));
       writer.flush();
     } catch (IOException e) {

@@ -7,6 +7,7 @@ import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.state.BlockFaceShape;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
@@ -106,7 +107,10 @@ public class BlockGenericAnvil extends BlockFalling {
    */
   public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
     if (!worldIn.isRemote) {
+      if (!"infinity".equals(this.material))
       playerIn.openGui(ExtraAnvils.instance, 0, worldIn, pos.getX(), pos.getY(), pos.getZ());
+      else playerIn.openGui(ExtraAnvils.instance, 1, worldIn, pos.getX(), pos.getY(), pos.getZ());
+
     }
     return true;
   }
@@ -150,6 +154,7 @@ public class BlockGenericAnvil extends BlockFalling {
     anvil.setHurtEntities(true);
   }
 
+  @Override
   public boolean isOpaqueCube(IBlockState state) {
     return false;
   }
@@ -161,27 +166,27 @@ public class BlockGenericAnvil extends BlockFalling {
     return new BlockStateContainer(this, FACING);
   }
 
-  private void checkFallable(World worldIn, BlockPos pos) {
-    if ((worldIn.isAirBlock(pos.down()) || canFallThrough(worldIn.getBlockState(pos.down()))) && pos.getY() >= 0 || this.hasTrait("dense")) {
+  private void checkFallable(World world, BlockPos pos) {
+    if ((world.isAirBlock(pos.down()) || canFallThrough(world.getBlockState(pos.down()))) && pos.getY() >= 0 || this.hasTrait("dense") && world.getBlockState(pos.down()).getBlockHardness(world,pos.down()) <100 && world.getBlockState(pos.down()).getBlockHardness(world, pos.down()) >= 0) {
       int i = 32;
 
-      if (!fallInstantly && worldIn.isAreaLoaded(pos.add(-i, -i, -i), pos.add(i, i, i))) {
-        if (!worldIn.isRemote) {
-          EntityFallingAnvil entityfallinganvil = new EntityFallingAnvil(worldIn, (double) pos.getX() + 0.5D, (double) pos.getY(), (double) pos.getZ() + 0.5D, worldIn.getBlockState(pos));
+      if (!fallInstantly && world.isAreaLoaded(pos.add(-i, -i, -i), pos.add(i, i, i))) {
+        if (!world.isRemote) {
+          EntityFallingAnvil entityfallinganvil = new EntityFallingAnvil(world, (double) pos.getX() + 0.5D, (double) pos.getY(), (double) pos.getZ() + 0.5D, world.getBlockState(pos));
           this.onStartFalling(entityfallinganvil);
-          worldIn.spawnEntity(entityfallinganvil);
+          world.spawnEntity(entityfallinganvil);
         }
       } else {
-        IBlockState state = worldIn.getBlockState(pos);
-        worldIn.setBlockToAir(pos);
+        IBlockState state = world.getBlockState(pos);
+        world.setBlockToAir(pos);
         BlockPos blockpos;
 
-        for (blockpos = pos.down(); (worldIn.isAirBlock(blockpos) || canFallThrough(worldIn.getBlockState(blockpos))) && blockpos.getY() > 0; blockpos = blockpos.down()) {
+        for (blockpos = pos.down(); (world.isAirBlock(blockpos) || canFallThrough(world.getBlockState(blockpos))) && blockpos.getY() > 0; blockpos = blockpos.down()) {
           ;
         }
 
         if (blockpos.getY() > 0) {
-          worldIn.setBlockState(blockpos.up(), state); //Forge: Fix loss of state information during world gen.
+          world.setBlockState(blockpos.up(), state); //Forge: Fix loss of state information during world gen.
         }
       }
     }
@@ -206,7 +211,7 @@ public class BlockGenericAnvil extends BlockFalling {
     super.addInformation(stack, worldIn, tooltip, flagIn);
     if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
       tooltip.add("Level Cap: " + this.properties.cap);
-      tooltip.add("Durability Multiplier: " + this.properties.durability);
+      tooltip.add("Durability Multiplier: " + (this.properties.durability >= 0 ? this.properties.durability : "Infinite"));
       tooltip.add("Enchantability: " + this.properties.enchantability);
       if (this.properties.playerDamage) tooltip.add("Causes Player Damage");
     }
@@ -215,6 +220,33 @@ public class BlockGenericAnvil extends BlockFalling {
         tooltip.add(TextColors.colors.get(trait) + trait.substring(0,1).toUpperCase()+trait.substring(1));
       }
     }
+    if ("infinity".equals(this.material))tooltip.add(stringToRainbow(material));
+  }
+
+  public static String stringToRainbow(String parString)
+  {
+    int stringLength = parString.length();
+    if (stringLength < 1)
+    {
+      return "";
+    }
+    String outputString = "";
+    TextFormatting[] colorChar =
+            {
+                    TextFormatting.RED,
+                    TextFormatting.GOLD,
+                    TextFormatting.YELLOW,
+                    TextFormatting.GREEN,
+                    TextFormatting.AQUA,
+                    TextFormatting.BLUE,
+                    TextFormatting.DARK_PURPLE,
+                    TextFormatting.LIGHT_PURPLE,
+            };
+    for (int i = 0; i < stringLength; i++)
+    {
+      outputString = outputString+colorChar[(i +(int) (Minecraft.getSystemTime() / 50)) % 8]+parString.substring(i, i+1);
+    }
+    return outputString;
   }
 
   @SideOnly(Side.CLIENT)

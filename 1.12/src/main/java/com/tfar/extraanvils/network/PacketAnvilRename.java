@@ -1,6 +1,7 @@
 package com.tfar.extraanvils.network;
 
 import com.tfar.extraanvils.generic.ContainerGenericAnvil;
+import com.tfar.extraanvils.infinity.ContainerInfinityAnvil;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;
@@ -50,6 +51,9 @@ public class PacketAnvilRename implements IMessage {
         mainThread.addScheduledTask(() -> {
           if (container instanceof ContainerGenericAnvil){
             ContainerGenericAnvil anvil = (ContainerGenericAnvil) ctx.getServerHandler().player.openContainer;
+            anvil.updateItemName(message.name);
+          } else if (container instanceof ContainerInfinityAnvil){
+            ContainerInfinityAnvil anvil = (ContainerInfinityAnvil) ctx.getServerHandler().player.openContainer;
             anvil.updateItemName(message.name);
           }
         });

@@ -92,7 +92,12 @@ tile.extraanvils:zanite_anvil_damaged.name=Damaged Zanite Anvil
 tile.extraanvils:neutronium_anvil.name=Neutronium Anvil
 tile.extraanvils:neutronium_anvil_chipped.name=Chipped Neutronium Anvil
 tile.extraanvils:neutronium_anvil_damaged.name=Damaged Neutronium Anvil
-
+tile.extraanvils:infinity_anvil.name=Infinity Anvil
+tile.extraanvils:infinity_anvil_chipped.name=Chipped Infinity Anvil
+tile.extraanvils:infinity_anvil_damaged.name=Damaged Infinity Anvil
+tile.extraanvils:thaumium_anvil.name=Thaumium Anvil
+tile.extraanvils:thaumium_anvil_chipped.name=Chipped Thaumium Anvil
+tile.extraanvils:thaumium_anvil_damaged.name=Damaged Thaumium Anvil
 itemGroup.extraanvils=Extra Anvils
 
 extraanvils.error=Warning, one or more errors occured during registration, check log for more details.

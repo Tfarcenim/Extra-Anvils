@@ -19,7 +19,7 @@
       "ore2": "ingotGold"
     },
     "stone": {
-      "durability": -1,
+      "durability": 0,
       "cap": 20,
       "weight": 0.7,
       "enchantability": 0.5,
@@ -398,6 +398,30 @@
       "ore1": "blockCosmicNeutronium",
       "ore2": "ingotCosmicNeutronium",
       "traits": ["dense"],
+      "modid": [
+        "avaritia"
+      ]
+    },
+    "thaumium": {
+      "durability": 2,
+      "cap": 80,
+      "weight": 1.5,
+      "enchantability": 2,
+      "playerDamage": false,
+      "ore1": "blockThaumium",
+      "ore2": "ingotThaumium",
+      "modid": [
+        "thaumcraft"
+      ]
+    },
+    "infinity": {
+      "durability": -1,
+      "cap": 2000000000,
+      "weight": 100,
+      "enchantability": 100,
+      "playerDamage": false,
+      "ore1": "blockInfinity",
+      "ore2": "ingotInfinity",
       "modid": [
         "avaritia"
       ]

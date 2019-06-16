@@ -1,5 +1,6 @@
-package com.tfar.extraanvils.generic;
+package com.tfar.extraanvils.infinity;
 
+import com.tfar.extraanvils.generic.BlockGenericAnvil;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -21,7 +22,7 @@ import org.apache.commons.lang3.StringUtils;
 import javax.annotation.Nonnull;
 import java.util.Map;
 
-public class ContainerGenericAnvil extends Container {
+public class ContainerInfinityAnvil extends Container {
   /**
    * Here comes out item you merged and/or renamed.
    */
@@ -55,18 +56,18 @@ public class ContainerGenericAnvil extends Container {
   public String name;
 
   @SideOnly(Side.CLIENT)
-  public ContainerGenericAnvil(InventoryPlayer playerInventory, World worldIn, EntityPlayer player,BlockGenericAnvil anvil)
+  public ContainerInfinityAnvil(InventoryPlayer playerInventory, World worldIn, EntityPlayer player, BlockGenericAnvil anvil)
   {
     this(playerInventory, worldIn, BlockPos.ORIGIN, player,anvil);
   }
 
-  public ContainerGenericAnvil(InventoryPlayer playerInventory, final World world, final BlockPos pos, EntityPlayer player,BlockGenericAnvil genericAnvil) {
+  public ContainerInfinityAnvil(InventoryPlayer playerInventory, final World world, final BlockPos pos, EntityPlayer player, BlockGenericAnvil genericAnvil) {
     this.outputSlot = new InventoryCraftResult();
     this.inputSlots = new InventoryBasic("Repair", true, 2) {
       @Override
       public void markDirty() {
         super.markDirty();
-        ContainerGenericAnvil.this.onCraftMatrixChanged(this);
+        ContainerInfinityAnvil.this.onCraftMatrixChanged(this);
       }
     };
     this.selfPosition = pos;
@@ -92,34 +93,34 @@ public class ContainerGenericAnvil extends Container {
        */
       @Override
       public boolean canTakeStack(EntityPlayer playerIn) {
-        return (playerIn.capabilities.isCreativeMode || playerIn.experienceLevel >= ContainerGenericAnvil.this.maximumCost) && ContainerGenericAnvil.this.maximumCost >= 0 && this.getHasStack();
+        return (playerIn.capabilities.isCreativeMode || playerIn.experienceLevel >= ContainerInfinityAnvil.this.maximumCost) && ContainerInfinityAnvil.this.maximumCost >= 0 && this.getHasStack();
       }
 
       @Override
       @Nonnull
       public ItemStack onTake(EntityPlayer playerIn, @Nonnull ItemStack stack) {
         if (!playerIn.capabilities.isCreativeMode) {
-          playerIn.addExperienceLevel(-ContainerGenericAnvil.this.maximumCost);
+          playerIn.addExperienceLevel(-ContainerInfinityAnvil.this.maximumCost);
         }
 
         double breakChance = getBreakChance(playerIn, stack);
 
-        ContainerGenericAnvil.this.inputSlots.setInventorySlotContents(0, ItemStack.EMPTY);
+        ContainerInfinityAnvil.this.inputSlots.setInventorySlotContents(0, ItemStack.EMPTY);
 
-        if (ContainerGenericAnvil.this.materialCost > 0) {
-          ItemStack itemstack = ContainerGenericAnvil.this.inputSlots.getStackInSlot(1);
+        if (ContainerInfinityAnvil.this.materialCost > 0) {
+          ItemStack itemstack = ContainerInfinityAnvil.this.inputSlots.getStackInSlot(1);
 
-          if (!itemstack.isEmpty() && itemstack.getCount() > ContainerGenericAnvil.this.materialCost) {
-            itemstack.shrink(ContainerGenericAnvil.this.materialCost);
-            ContainerGenericAnvil.this.inputSlots.setInventorySlotContents(1, itemstack);
+          if (!itemstack.isEmpty() && itemstack.getCount() > ContainerInfinityAnvil.this.materialCost) {
+            itemstack.shrink(ContainerInfinityAnvil.this.materialCost);
+            ContainerInfinityAnvil.this.inputSlots.setInventorySlotContents(1, itemstack);
           } else {
-            ContainerGenericAnvil.this.inputSlots.setInventorySlotContents(1, ItemStack.EMPTY);
+            ContainerInfinityAnvil.this.inputSlots.setInventorySlotContents(1, ItemStack.EMPTY);
           }
         } else {
-          ContainerGenericAnvil.this.inputSlots.setInventorySlotContents(1, ItemStack.EMPTY);
+          ContainerInfinityAnvil.this.inputSlots.setInventorySlotContents(1, ItemStack.EMPTY);
         }
 
-        ContainerGenericAnvil.this.maximumCost = 0;
+        ContainerInfinityAnvil.this.maximumCost = 0;
         IBlockState iblockstate = world.getBlockState(pos);
 
         //damage the anvil
@@ -135,7 +136,7 @@ public class ContainerGenericAnvil extends Container {
       public double getBreakChance(EntityPlayer playerIn, ItemStack stack){
         if (genericAnvil.properties.durability == 0)return 0;
         if (genericAnvil.properties.durability < 0)return -1;
-        return ForgeHooks.onAnvilRepair(playerIn, stack, ContainerGenericAnvil.this.inputSlots.getStackInSlot(0), ContainerGenericAnvil.this.inputSlots.getStackInSlot(1)) / durMultiplier;
+        return ForgeHooks.onAnvilRepair(playerIn, stack, ContainerInfinityAnvil.this.inputSlots.getStackInSlot(0), ContainerInfinityAnvil.this.inputSlots.getStackInSlot(1)) / durMultiplier;
       }
     });
 
@@ -177,7 +178,7 @@ public class ContainerGenericAnvil extends Container {
     } else {
       ItemStack itemstack1 = itemstack.copy();
       ItemStack itemstack2 = this.inputSlots.getStackInSlot(1);
-      Map<Enchantment, Integer> map = EnchantmentHelper.getEnchantments(itemstack1);
+      Map<Enchantment, Integer> enchantmentlistandlevel = EnchantmentHelper.getEnchantments(itemstack1);
       j = j + itemstack.getRepairCost() + (itemstack2.isEmpty() ? 0 : itemstack2.getRepairCost());
       this.materialCost = 0;
       boolean flag = false;
@@ -229,54 +230,43 @@ public class ContainerGenericAnvil extends Container {
             }
           }
 
-          Map<Enchantment, Integer> map1 = EnchantmentHelper.getEnchantments(itemstack2);
+          Map<Enchantment, Integer> enchantmentmap2 = EnchantmentHelper.getEnchantments(itemstack2);
 
-          for (Enchantment enchantment1 : map1.keySet()) {
+          for (Enchantment enchantment1 : enchantmentmap2.keySet()) {
             if (enchantment1 != null) {
-              int i3 = map.getOrDefault(enchantment1, 0);
-              int j3 = map1.get(enchantment1);
-              j3 = i3 == j3 ? j3 + 1 : Math.max(j3, i3);
-              boolean flag1 = enchantment1.canApply(itemstack);
+              int i3 = enchantmentlistandlevel.getOrDefault(enchantment1, 0);
+              int j3 = enchantmentmap2.get(enchantment1);
+              j3 += i3;
 
-              if (this.thePlayer.capabilities.isCreativeMode || itemstack.getItem() == Items.ENCHANTED_BOOK) {
-                flag1 = true;
-              }
 
-              for (Enchantment enchantment : map.keySet()) {
+              for (Enchantment enchantment : enchantmentlistandlevel.keySet()) {
                 if (enchantment != null && enchantment != enchantment1 && !enchantment.isCompatibleWith(enchantment1)) {//func_191560_c checks if ench can apply with ench1 and vice versa
-                  flag1 = false;
                   ++i;
                 }
               }
 
-              if (flag1) {
-                if (j3 > enchantment1.getMaxLevel()) {
-                  j3 = enchantment1.getMaxLevel();
-                }
+              enchantmentlistandlevel.put(enchantment1, j3);
+              int k3 = 0;
 
-                map.put(enchantment1, j3);
-                int k3 = 0;
-
-                switch (enchantment1.getRarity()) {
-                  case COMMON:
-                    k3 = 1;
-                    break;
-                  case UNCOMMON:
-                    k3 = 2;
-                    break;
-                  case RARE:
-                    k3 = 4;
-                    break;
-                  case VERY_RARE:
-                    k3 = 8;
-                }
-
-                if (flag) {
-                  k3 = Math.max(1, k3 / 2);
-                }
-
-                i += k3 * j3;
+              switch (enchantment1.getRarity()) {
+                case COMMON:
+                  k3 = 1;
+                  break;
+                case UNCOMMON:
+                  k3 = 2;
+                  break;
+                case RARE:
+                  k3 = 4;
+                  break;
+                case VERY_RARE:
+                  k3 = 8;
               }
+
+              if (flag) {
+                k3 = Math.max(1, k3 / 2);
+              }
+
+              i += k3 * j3;
             }
           }
         }
@@ -324,7 +314,7 @@ public class ContainerGenericAnvil extends Container {
         }
 
         itemstack1.setRepairCost(i2);
-        EnchantmentHelper.setEnchantments(map, itemstack1);
+        EnchantmentHelper.setEnchantments(enchantmentlistandlevel, itemstack1);
       }
 
       this.outputSlot.setInventorySlotContents(0, itemstack1);
@@ -430,7 +420,7 @@ public class ContainerGenericAnvil extends Container {
     this.updateRepairOutput();
   }
 
-  public static boolean onAnvilChange(ContainerGenericAnvil container, ItemStack left, ItemStack right, IInventory outputSlot, String name, int baseCost) {
+  public static boolean onAnvilChange(ContainerInfinityAnvil container, ItemStack left, ItemStack right, IInventory outputSlot, String name, int baseCost) {
     AnvilUpdateEvent e = new AnvilUpdateEvent(left, right, name, baseCost);
     if (MinecraftForge.EVENT_BUS.post(e)) return false;
     if (e.getOutput().isEmpty()) return true;
