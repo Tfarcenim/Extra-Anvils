@@ -1,8 +1,0 @@
-{
-  "parent": "block/anvil",
-  "textures": {
-    "particle": "blocks/diamond_block",
-    "body": "blocks/diamond_block",
-    "top": "blocks/diamond_block"
-  }
-}

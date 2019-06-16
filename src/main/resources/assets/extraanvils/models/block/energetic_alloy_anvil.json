@@ -1,8 +1,0 @@
-{
-  "parent": "block/anvil",
-  "textures": {
-    "particle": "extraanvils:blocks/energetic_alloy_anvil_base",
-    "body": "extraanvils:blocks/energetic_alloy_anvil_base",
-    "top": "extraanvils:blocks/energetic_alloy_anvil_top"
-  }
-}
