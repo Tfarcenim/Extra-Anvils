@@ -1,8 +1,0 @@
-{
-  "parent": "block/anvil",
-  "textures": {
-    "particle": "block/gold_block",
-    "body": "block/gold_block",
-    "top": "extraanvils:blocks/gold_anvil_top_chipped"
-  }
-}
