@@ -96,6 +96,7 @@
       "ore1": "blockAluminum",
       "ore2": "ingotAluminum",
       "modid": [
+        "embers",
         "immersiveengineering",
         "thermalfoundation"
       ]
@@ -250,6 +251,7 @@
       "ore1": "blockLead",
       "ore2": "ingotLead",
       "modid": [
+        "embers",
         "nuclearcraft",
         "thermalfoundation"
       ]
@@ -275,6 +277,7 @@
       "ore1": "blockNickel",
       "ore2": "ingotNickel",
       "modid": [
+        "embers",
         "thermalfoundation"
       ]
     },
@@ -312,6 +315,7 @@
       "ore1": "blockSilver",
       "ore2": "ingotSilver",
       "modid": [
+        "embers",
         "immersiveengineering",
         "nuclearcraft",
         "thermalfoundation"
@@ -326,6 +330,8 @@
       "ore1": "blockSteel",
       "ore2": "ingotSteel",
       "modid": [
+        "embers",
+        "gadgetrymachines",
         "immersiveengineering",
         "tconstruct",
         "thermalfoundation"
