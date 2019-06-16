@@ -1,8 +1,0 @@
-{
-  "parent": "block/anvil",
-  "textures": {
-    "particle": "blocks/diamond_block",
-    "body": "blocks/diamond_block",
-    "top": "extraanvils:blocks/diamond_anvil_top_damaged"
-  }
-}

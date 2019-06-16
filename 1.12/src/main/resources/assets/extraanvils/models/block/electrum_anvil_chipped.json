@@ -1,8 +1,0 @@
-{
-  "parent": "block/anvil",
-  "textures": {
-    "particle": "extraanvils:blocks/electrum_anvil_base",
-    "body": "extraanvils:blocks/electrum_anvil_base",
-    "top": "extraanvils:blocks/electrum_anvil_top_chipped"
-  }
-}
