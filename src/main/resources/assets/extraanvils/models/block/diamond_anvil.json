@@ -1,8 +1,8 @@
 {
-  "parent": "block/anvil",
+  "parent": "extraanvils:block/tinted_anvil",
   "textures": {
-    "particle": "block/diamond_block",
-    "body": "block/diamond_block",
-    "top": "block/diamond_block"
+    "particle": "extraanvils:blocks/tinted_anvil",
+    "body": "extraanvils:blocks/tinted_anvil",
+    "top": "extraanvils:blocks/tinted_anvil"
   }
 }

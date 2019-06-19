@@ -1,7 +1,10 @@
-package com.tfar.extraanvils.gold;
+package com.tfar.extraanvils.generic;
 
 import com.mojang.blaze3d.platform.GlStateManager;
+import com.tfar.extraanvils.AnvilProperties;
 import com.tfar.extraanvils.ExtraAnvils;
+import com.tfar.extraanvils.network.Message;
+import com.tfar.extraanvils.network.PacketAnvilRename;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
@@ -14,6 +17,7 @@ import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -22,7 +26,8 @@ import javax.annotation.Nonnull;
 
 @OnlyIn(Dist.CLIENT)
 public class GenericAnvilScreen extends ContainerScreen<GenericAnvilContainer> implements IContainerListener {
-  private static final ResourceLocation anvilResource = new ResourceLocation(ExtraAnvils.MODID, "textures/gui/gold_anvil.png");
+  private static final ResourceLocation ANVIL_RESOURCE = new ResourceLocation("textures/gui/container/anvil.png");
+  private static final ResourceLocation hammer = new ResourceLocation(ExtraAnvils.MODID, "textures/gui/hammer.png");
   private TextFieldWidget nameField;
   private final PlayerInventory playerInventory;
 
@@ -35,6 +40,7 @@ public class GenericAnvilScreen extends ContainerScreen<GenericAnvilContainer> i
   public IGuiEventListener getFocused() {
     return this.nameField.isFocused() ? this.nameField : null;
   }
+
 
   @Override
   public void init() {
@@ -72,32 +78,39 @@ public class GenericAnvilScreen extends ContainerScreen<GenericAnvilContainer> i
     this.container.removeListener(this);
   }
 
+  @Override
+  public boolean keyPressed(int p_keyPressed_1_, int p_keyPressed_2_, int p_keyPressed_3_) {
+    if (p_keyPressed_1_ == 256) {
+      this.minecraft.player.closeScreen();
+    }
+    return this.nameField.keyPressed(p_keyPressed_1_, p_keyPressed_2_, p_keyPressed_3_) || this.nameField.func_212955_f() || super.keyPressed(p_keyPressed_1_, p_keyPressed_2_, p_keyPressed_3_);  }
+
   /**
    * Draw the foreground layer for the GuiContainer (everything in front of the items)
    */
   protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
     GlStateManager.disableLighting();
     GlStateManager.disableBlend();
-    this.font.drawString(this.title.getFormattedText(), 60.0F, 6.0F, 4210752);
-    int i = this.container.func_216976_f();
-    if (i > 0) {
-      int j = 8453920;
+    this.font.drawString(this.title.getFormattedText(), 60, 6, 0x404040);
+    int i = this.container.getMaxCost();
+    if (i > 0 || this.container.getSlot(2).canTakeStack(this.playerInventory.player)) {
+      int j = 0x80ff20;
       boolean flag = true;
       String s = I18n.format("container.repair.cost", i);
       if (i >= 40 && !this.minecraft.player.abilities.isCreativeMode) {
         s = I18n.format("container.repair.expensive");
-        j = 16736352;
+        j = 0xff6060;
       } else if (!this.container.getSlot(2).getHasStack()) {
         flag = false;
       } else if (!this.container.getSlot(2).canTakeStack(this.playerInventory.player)) {
-        j = 16736352;
+        j = 0xff6060;
       }
 
       if (flag) {
         int k = this.xSize - 8 - this.font.getStringWidth(s) - 2;
         int l = 69;
-        fill(k - 2, 67, this.xSize - 8, 79, 1325400064);
-        this.font.drawStringWithShadow(s, (float)k, 69.0F, j);
+        fill(k - 2, 67, this.xSize - 8, 79, 0x4f000000);
+        this.font.drawStringWithShadow(s, (float)k, 69, j);
       }
     }
 
@@ -112,14 +125,14 @@ public class GenericAnvilScreen extends ContainerScreen<GenericAnvilContainer> i
         s = "";
       }
       this.container.updateItemName(s);
-    //  Message.INSTANCE.sendToServer(new PacketAnvilRename(s));
+      Message.INSTANCE.sendToServer(new PacketAnvilRename(s));
     }
   }
 
   @Override
   protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
-    GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-    this.minecraft.getTextureManager().bindTexture(anvilResource);
+    GlStateManager.color4f(1, 1, 1, 1);
+    this.minecraft.getTextureManager().bindTexture(ANVIL_RESOURCE);
     int i = (this.width - this.xSize) / 2;
     int j = (this.height - this.ySize) / 2;
     this.blit(i, j, 0, 0, this.xSize, this.ySize);
@@ -128,7 +141,14 @@ public class GenericAnvilScreen extends ContainerScreen<GenericAnvilContainer> i
     if ((this.container.getSlot(0).getHasStack() || this.container.getSlot(1).getHasStack()) && !this.container.getSlot(2).getHasStack()) {
       this.blit(i + 99, j + 45, this.xSize, 0, 28, 21);
     }
+    this.minecraft.getTextureManager().bindTexture(hammer);
+    int[] colors = AnvilProperties.getRGB(((GenericAnvilBlock)playerInventory.player.world.getBlockState(BlockPos.fromLong(container.actualPos)).getBlock()).anvilProperties.color);
+
+    GlStateManager.color3f(colors[0]/255f,colors[1]/255f,colors[2]/255f);
+    blit(i + 25, j + 7, 0, 0, 22, 22, 22, 22);
+    GlStateManager.color3f(1,1,1);
   }
+
 
   @Override
   public void sendAllContents(@Nonnull Container containerToSend, @Nonnull NonNullList<ItemStack> itemsList) {

@@ -1,6 +1,6 @@
 package com.tfar.extraanvils.network;
 
-import com.tfar.extraanvils.gold.GenericAnvilContainer;
+import com.tfar.extraanvils.generic.GenericAnvilContainer;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.network.NetworkEvent;

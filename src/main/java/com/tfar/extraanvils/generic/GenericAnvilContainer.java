@@ -1,4 +1,4 @@
-package com.tfar.extraanvils.gold;
+package com.tfar.extraanvils.generic;
 
 import com.tfar.extraanvils.ExtraAnvils;
 import net.minecraft.block.AnvilBlock;
@@ -7,15 +7,20 @@ import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.*;
-import net.minecraft.item.Items;
-import net.minecraft.inventory.*;
+import net.minecraft.inventory.CraftResultInventory;
+import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.Inventory;
+import net.minecraft.inventory.container.Container;
+import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.EnchantedBookItem;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
+import net.minecraft.network.PacketBuffer;
 import net.minecraft.tags.BlockTags;
-import net.minecraft.util.IWorldPosCallable;
 import net.minecraft.util.IntReferenceHolder;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.MinecraftForge;
@@ -40,29 +45,34 @@ public class GenericAnvilContainer extends Container {
     }
   };
 
-
   /**The maximum cost of repairing/renaming in the anvil.*/
 
   /**The cap for the maximum cost, varies by Anvil.*/
-  public final int maximumCap = 160;
+  public int maximumCap;
   /**determined by damage of input item and stackSize of repair materials*/
   public int materialCost;
   private String repairedItemName;
   /**The player that has this container open.*/
 
   private final IntReferenceHolder maximumCost = IntReferenceHolder.single();
-  private final IWorldPosCallable iWorldPosCallable;
+  public BlockPos pos;
 
-  private final PlayerEntity player;
-  
-  public GenericAnvilContainer(int id,PlayerInventory playerInventory) {
-    this(id, playerInventory, IWorldPosCallable.DUMMY);
+  public long actualPos;
+
+  private PlayerEntity player;
+
+  private World world;
+
+  public GenericAnvilContainer(int id, PlayerInventory playerInventory, PacketBuffer buffer) {
+    this(id,playerInventory,BlockPos.ZERO, buffer.readLong());
   }
 
-  public GenericAnvilContainer(int id,PlayerInventory playerInventory,final IWorldPosCallable iWorldPosCallable) {
+  public GenericAnvilContainer(int id, PlayerInventory playerInventory, BlockPos pos, long position) {
     super(ExtraAnvils.GENERIC_ANVIL,id);
-    this.iWorldPosCallable = iWorldPosCallable;
+    this.pos = pos;
     this.player = playerInventory.player;
+    this.world = player.world;
+    this.actualPos = position;
     this.func_216958_a(this.maximumCost);
     this.addSlot(new Slot(this.inputSlots, 0, 27, 47));
     this.addSlot(new Slot(this.inputSlots, 1, 76, 47));
@@ -78,12 +88,12 @@ public class GenericAnvilContainer extends Container {
        * Return whether this slot's stack can be taken from this slot.
        */
       public boolean canTakeStack(PlayerEntity playerIn) {
-        return (playerIn.abilities.isCreativeMode || playerIn.experienceLevel >= GenericAnvilContainer.this.maximumCost.get()) && GenericAnvilContainer.this.maximumCost.get() > 0 && this.getHasStack();
+        return (playerIn.abilities.isCreativeMode || playerIn.experienceLevel >= GenericAnvilContainer.this.maximumCost.get()) && this.getHasStack();
       }
 
       public ItemStack onTake(PlayerEntity thePlayer, ItemStack stack) {
         if (!thePlayer.abilities.isCreativeMode) {
-          thePlayer.addExperienceLevel(-GenericAnvilContainer.this.maximumCost.get());
+          thePlayer.giveExperiencePoints(-xpLevelToAmount(GenericAnvilContainer.this.maximumCost.get()));
         }
 
         float breakChance = net.minecraftforge.common.ForgeHooks.onAnvilRepair(thePlayer, stack, GenericAnvilContainer.this.inputSlots.getStackInSlot(0), GenericAnvilContainer.this.inputSlots.getStackInSlot(1));
@@ -102,22 +112,19 @@ public class GenericAnvilContainer extends Container {
         }
 
         GenericAnvilContainer.this.maximumCost.set(0);
-        iWorldPosCallable.consume((id, iWorldPosCallable) -> {
-          BlockState blockstate = id.getBlockState(iWorldPosCallable);
+          BlockState blockstate = player.world.getBlockState(GenericAnvilContainer.this.pos);
           if (!thePlayer.abilities.isCreativeMode && blockstate.isIn(BlockTags.ANVIL) && thePlayer.getRNG().nextFloat() < breakChance) {
             BlockState blockstate1 = AnvilBlock.damage(blockstate);
             if (blockstate1 == null) {
-              id.removeBlock(iWorldPosCallable, false);
-              id.playEvent(1029, iWorldPosCallable, 0);
+              world.removeBlock(GenericAnvilContainer.this.pos, false);
+              world.playEvent(1029, GenericAnvilContainer.this.pos, 0);
             } else {
-              id.setBlockState(iWorldPosCallable, blockstate1, 2);
-              id.playEvent(1030, iWorldPosCallable, 0);
+              world.setBlockState(GenericAnvilContainer.this.pos, blockstate1, 2);
+              world.playEvent(1030, GenericAnvilContainer.this.pos, 0);
             }
           } else {
-            id.playEvent(1030, iWorldPosCallable, 0);
+            world.playEvent(1030, GenericAnvilContainer.this.pos, 0);
           }
-
-        });
         return stack;
       }
     });
@@ -132,6 +139,13 @@ public class GenericAnvilContainer extends Container {
       this.addSlot(new Slot(playerInventory, k, 8 + k * 18, 142));
     }
 
+  }
+
+
+  public static int xpLevelToAmount(int level){
+    if (level < 17) return level*level + 6 * level;
+    else if (level < 32) return (int)(2.5 * level*level - 40.5 * level + 360);
+   else return (int)(4.5 * level*level - 162.5 * level + 2220);
   }
 
   /**
@@ -286,7 +300,7 @@ public class GenericAnvilContainer extends Container {
       }
       if (flag && !itemstack1.isBookEnchantable(itemstack2)) itemstack1 = ItemStack.EMPTY;
 
-      this.maximumCost.set(j + i);
+      this.maximumCost.set((int)((j + i)/ ((GenericAnvilBlock)world.getBlockState(BlockPos.fromLong(actualPos)).getBlock()).anvilProperties.enchantability));
       if (i <= 0) {
         itemstack1 = ItemStack.EMPTY;
       }
@@ -294,7 +308,7 @@ public class GenericAnvilContainer extends Container {
       if (k == i && k > 0 && this.maximumCost.get() >= 40) {
         this.maximumCost.set(39);
       }
-
+//The operation cost is too high
       if (this.maximumCost.get() >= 40 && !this.player.abilities.isCreativeMode) {
         itemstack1 = ItemStack.EMPTY;
       }
@@ -327,16 +341,14 @@ public class GenericAnvilContainer extends Container {
    */
   public void onContainerClosed(PlayerEntity playerIn) {
     super.onContainerClosed(playerIn);
-    this.iWorldPosCallable.consume((p_216973_2_, p_216973_3_) -> {
-      this.clearContainer(playerIn, p_216973_2_, this.inputSlots);
-    });
+      this.clearContainer(playerIn, world, this.inputSlots);
   }
 
   /**
    * Determines whether supplied player can use this container
    */
   public boolean canInteractWith(@Nonnull PlayerEntity playerIn) {
-    return this.iWorldPosCallable.applyOrElse((world, pos) -> world.getBlockState(pos).getBlock() instanceof GenericAnvilBlock && playerIn.getDistanceSq(pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D) <= 64.0D, true);
+    return world.getBlockState(pos).getBlock() instanceof GenericAnvilBlock && playerIn.getDistanceSq(pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D) <= 64.0D;
   }
 
   /**
@@ -397,7 +409,7 @@ public class GenericAnvilContainer extends Container {
   }
 
   @OnlyIn(Dist.CLIENT)
-  public int func_216976_f() {
+  public int getMaxCost() {
     return this.maximumCost.get();
   }
 
