@@ -123,8 +123,7 @@ public class ContainerGenericAnvil extends Container {
         IBlockState iblockstate = world.getBlockState(pos);
 
         //damage the anvil
-        if (breakChance >= 0 && !playerIn.capabilities.isCreativeMode && (!world.isRemote && iblockstate.getBlock() instanceof BlockGenericAnvil && playerIn.getRNG().nextFloat() < breakChance || breakChance == 0)) {
-
+        if (breakChance >= 0 && !playerIn.capabilities.isCreativeMode && !world.isRemote && iblockstate.getBlock() instanceof BlockGenericAnvil && playerIn.getRNG().nextFloat() < breakChance) {
           BlockGenericAnvil.damage(iblockstate);
         } else if (!world.isRemote) {
           world.playEvent(1030, pos, 0);
@@ -133,7 +132,7 @@ public class ContainerGenericAnvil extends Container {
       }
 
       public double getBreakChance(EntityPlayer playerIn, ItemStack stack){
-        if (genericAnvil.properties.durability == 0)return 0;
+        if (genericAnvil.properties.durability == 0)return 1;
         if (genericAnvil.properties.durability < 0)return -1;
         return ForgeHooks.onAnvilRepair(playerIn, stack, ContainerGenericAnvil.this.inputSlots.getStackInSlot(0), ContainerGenericAnvil.this.inputSlots.getStackInSlot(1)) / durMultiplier;
       }
