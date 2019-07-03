@@ -25,20 +25,11 @@ import static com.tfar.extraanvils.Scripts.*;
 
 public class RegistryHandler {
 
-  @ObjectHolder("extraanvils:gold_anvil")
-  public static GenericAnvilBlock genericAnvilBlock;
-
-  @ObjectHolder("extraanvils:gold_anvil_chipped")
-  public static GenericAnvilBlock genericAnvilBlockChipped;
-
-  @ObjectHolder("extraanvils:gold_anvil_damaged")
-  public static GenericAnvilBlock genericAnvilBlockDamaged;
-
   private static final String[] array = {"color","durability", "cap", "weight", "enchantability", "playerDamage"};
 
   private static boolean error = false;
   private static File configFile = new File("config/extraanvils.json");
-  private static BufferedInputStream in = new BufferedInputStream(RegistryHandler.class.getResourceAsStream("/default.json"));
+  private static BufferedInputStream in = new BufferedInputStream(RegistryHandler.class.getResourceAsStream("/"+ExtraAnvils.MODID+".json"));
   //hardcoded into the mod, used for oredict, jsons and modids
   public static JsonObject jsonRead;
 
@@ -54,7 +45,7 @@ public class RegistryHandler {
 
   public static void writeConfig() {
 
-  //  if (configFile.exists()) return;
+    if (configFile.exists()) return;
 
     JsonObject jsonWrite = new JsonObject();
     JsonObject writeAnvil = new JsonObject();

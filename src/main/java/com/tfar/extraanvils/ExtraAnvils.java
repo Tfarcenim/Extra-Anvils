@@ -14,7 +14,6 @@ import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.extensions.IForgeContainerType;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -22,8 +21,6 @@ import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.minecraftforge.fml.network.NetworkRegistry;
-import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.ObjectHolder;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -39,13 +36,12 @@ public class ExtraAnvils
   public static final HashMap<GenericAnvilBlock, GenericAnvilBlock> anvilDamageMap = new HashMap<>();
   public static final String MODID = "extraanvils";
 
-    @ObjectHolder(MODID+":generic_anvil_container_type")
     public static ContainerType<GenericAnvilContainer> GENERIC_ANVIL;
 
     public static ItemGroup creativeTab = new ItemGroup(MODID) {
         @Override
         public ItemStack createIcon() {
-            return new ItemStack(RegistryHandler.genericAnvilBlock);
+            return new ItemStack(ObjectHolders.diamond_anvil);
         }
     };
 
@@ -112,5 +108,6 @@ public class ExtraAnvils
   @ObjectHolder(value = MODID)
   public static class ObjectHolders {
     public static final EntityType<FallingAnvilEntity> falling_anvil_entity = null;
+    public static final Block diamond_anvil = null;
     }
 }
