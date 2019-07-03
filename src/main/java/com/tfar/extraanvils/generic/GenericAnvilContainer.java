@@ -74,12 +74,14 @@ public class GenericAnvilContainer extends Container {
     this.world = player.world;
     this.actualPos = position;
     this.func_216958_a(this.maximumCost);
+    this.maximumCap = ((GenericAnvilBlock)world.getBlockState(BlockPos.fromLong(position)).getBlock()).anvilProperties.cap;
     this.addSlot(new Slot(this.inputSlots, 0, 27, 47));
     this.addSlot(new Slot(this.inputSlots, 1, 76, 47));
     this.addSlot(new Slot(this.outputSlot, 2, 134, 47) {
       /**
        * Check if the stack is allowed to be placed in this slot, used for armor slots as well as furnace fuel.
        */
+      @Override
       public boolean isItemValid(ItemStack stack) {
         return false;
       }
@@ -87,16 +89,25 @@ public class GenericAnvilContainer extends Container {
       /**
        * Return whether this slot's stack can be taken from this slot.
        */
+      @Override
       public boolean canTakeStack(PlayerEntity playerIn) {
         return (playerIn.abilities.isCreativeMode || playerIn.experienceLevel >= GenericAnvilContainer.this.maximumCost.get()) && this.getHasStack();
       }
 
+      @Nonnull
+      @Override
       public ItemStack onTake(PlayerEntity thePlayer, ItemStack stack) {
         if (!thePlayer.abilities.isCreativeMode) {
           thePlayer.giveExperiencePoints(-xpLevelToAmount(GenericAnvilContainer.this.maximumCost.get()));
         }
 
         float breakChance = net.minecraftforge.common.ForgeHooks.onAnvilRepair(thePlayer, stack, GenericAnvilContainer.this.inputSlots.getStackInSlot(0), GenericAnvilContainer.this.inputSlots.getStackInSlot(1));
+
+        double durability = ((GenericAnvilBlock)world.getBlockState(BlockPos.fromLong(actualPos)).getBlock()).anvilProperties.durability;
+
+        if (durability > 0)
+          breakChance /= durability;
+        else if (durability == 0)breakChance = 1;
 
         GenericAnvilContainer.this.inputSlots.setInventorySlotContents(0, ItemStack.EMPTY);
         if (GenericAnvilContainer.this.materialCost > 0) {
@@ -113,8 +124,9 @@ public class GenericAnvilContainer extends Container {
 
         GenericAnvilContainer.this.maximumCost.set(0);
           BlockState blockstate = player.world.getBlockState(GenericAnvilContainer.this.pos);
-          if (!thePlayer.abilities.isCreativeMode && blockstate.isIn(BlockTags.ANVIL) && thePlayer.getRNG().nextFloat() < breakChance) {
-            BlockState blockstate1 = AnvilBlock.damage(blockstate);
+          if (durability >= 0 && !thePlayer.abilities.isCreativeMode && blockstate.getBlock()
+                  instanceof GenericAnvilBlock && thePlayer.getRNG().nextFloat() < breakChance) {
+            BlockState blockstate1 = GenericAnvilBlock.damage(blockstate);
             if (blockstate1 == null) {
               world.removeBlock(GenericAnvilContainer.this.pos, false);
               world.playEvent(1029, GenericAnvilContainer.this.pos, 0);
@@ -151,6 +163,7 @@ public class GenericAnvilContainer extends Container {
   /**
    * Callback for when the crafting matrix is changed.
    */
+  @Override
   public void onCraftMatrixChanged(IInventory inventoryIn) {
     super.onCraftMatrixChanged(inventoryIn);
     if (inventoryIn == this.inputSlots) {
@@ -273,7 +286,7 @@ public class GenericAnvilContainer extends Container {
 
                 i += k3 * j2;
                 if (itemstack.getCount() > 1) {
-                  i = 40;
+                  i = maximumCap;
                 }
               }
             }
@@ -305,11 +318,11 @@ public class GenericAnvilContainer extends Container {
         itemstack1 = ItemStack.EMPTY;
       }
 
-      if (k == i && k > 0 && this.maximumCost.get() >= 40) {
-        this.maximumCost.set(39);
+      if (k == i && k > 0 && this.maximumCost.get() >= maximumCap) {
+        this.maximumCost.set(maximumCap - 1);
       }
 //The operation cost is too high
-      if (this.maximumCost.get() >= 40 && !this.player.abilities.isCreativeMode) {
+      if (this.maximumCost.get() >= maximumCap && !this.player.abilities.isCreativeMode) {
         itemstack1 = ItemStack.EMPTY;
       }
 
@@ -339,6 +352,7 @@ public class GenericAnvilContainer extends Container {
   /**
    * Called when the container is closed.
    */
+  @Override
   public void onContainerClosed(PlayerEntity playerIn) {
     super.onContainerClosed(playerIn);
       this.clearContainer(playerIn, world, this.inputSlots);
@@ -347,6 +361,7 @@ public class GenericAnvilContainer extends Container {
   /**
    * Determines whether supplied player can use this container
    */
+  @Override
   public boolean canInteractWith(@Nonnull PlayerEntity playerIn) {
     return world.getBlockState(pos).getBlock() instanceof GenericAnvilBlock && playerIn.getDistanceSq(pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D) <= 64.0D;
   }
@@ -355,6 +370,7 @@ public class GenericAnvilContainer extends Container {
    * Handle when the stack in slot {@code index} is shift-clicked. Normally this moves the stack between the player
    * inventory and the other inventory(s).
    */@Nonnull
+  @Override
   public ItemStack transferStackInSlot(PlayerEntity playerIn, int index) {
     ItemStack itemstack = ItemStack.EMPTY;
     Slot slot = this.inventorySlots.get(index);
@@ -408,7 +424,6 @@ public class GenericAnvilContainer extends Container {
     this.updateRepairOutput();
   }
 
-  @OnlyIn(Dist.CLIENT)
   public int getMaxCost() {
     return this.maximumCost.get();
   }

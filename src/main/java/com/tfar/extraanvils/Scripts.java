@@ -17,8 +17,8 @@ import static com.tfar.extraanvils.ExtraAnvils.MODID;
 
     private static JsonArray pattern = new JsonArray();
     private static String[] recipe = {"III", " i ", "iii"};
-    //private static final boolean developerEnvironment = (boolean) Launch.blackboard.get("fml.deobfuscatedEnvironment");
 
+}/*
     static {
       for (String line : recipe) {
         pattern.add(line);
@@ -27,7 +27,7 @@ import static com.tfar.extraanvils.ExtraAnvils.MODID;
 
     public static void scripts() {
 
-      if (!true) return;
+      if (true) return;
 
       try {
         for (GenericAnvilBlock.Variant damage : GenericAnvilBlock.Variant.values()) {
@@ -63,7 +63,7 @@ import static com.tfar.extraanvils.ExtraAnvils.MODID;
                FileWriter writer3 = new FileWriter(file3);
                writer3.write(Setup.prettyJson(recipes));
                writer3.flush();
-               */
+               *
           }
         }
       } catch (Exception oof) {
@@ -73,7 +73,7 @@ import static com.tfar.extraanvils.ExtraAnvils.MODID;
 
     private static void item(String material, GenericAnvilBlock.Variant damage) {
       JsonObject parent = new JsonObject();
-      parent.addProperty("parent", MODID + ":block/" + material + damage.getString());
+      parent.addProperty("parent", MODID + ":block/" + material + damage.s);
       File file = new File("C:\\Users\\xluser\\Documents\\MinecraftMods\\mods\\Extra Anvils\\1.12\\src\\main\\resources\\assets\\extraanvils\\models\\item\\" + material + damage.getString() + ".json");
       if (file.exists())return;
       try {
@@ -89,9 +89,9 @@ import static com.tfar.extraanvils.ExtraAnvils.MODID;
     private static void block(String material, GenericAnvilBlock.Variant damage) {
 
       JsonObject textures = new JsonObject();
-      textures.addProperty("particle", MODID + ":blocks/" + material + GenericAnvilBlock.Variant.NORMAL.getString() + "_base");
-      textures.addProperty("body", MODID + ":blocks/" + material + GenericAnvilBlock.Variant.NORMAL.getString() + "_base");
-      textures.addProperty("top", MODID + ":blocks/" + material + "_anvil_top" + damage.getString().substring(6));
+      textures.addProperty("particle", MODID + ":blocks/" + material + GenericAnvilBlock.Variant.NORMAL.s + "_base");
+      textures.addProperty("body", MODID + ":blocks/" + material + GenericAnvilBlock.Variant.NORMAL.s + "_base");
+      textures.addProperty("top", MODID + ":blocks/" + material + "_anvil_top" + damage.s.substring(6));
       JsonObject blockmodel = new JsonObject();
       blockmodel.addProperty("parent", "block/anvil");
       blockmodel.add("textures", textures);
@@ -112,7 +112,7 @@ import static com.tfar.extraanvils.ExtraAnvils.MODID;
       if (blockstate.exists()) return;
       JsonObject facing = new JsonObject();
       for (int i = 0; i < 4; i++) {
-        String model = MODID + ":" + material + damage.getString();
+        String model = MODID + ":" + material + damage.s;
         JsonObject obj = new JsonObject();
         obj.addProperty("model", model);
         if (i != 0) obj.addProperty("y", i * 90);
@@ -129,4 +129,4 @@ import static com.tfar.extraanvils.ExtraAnvils.MODID;
       }
     }
   }
-
+}*/

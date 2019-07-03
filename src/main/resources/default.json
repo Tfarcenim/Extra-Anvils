@@ -9,7 +9,7 @@
       "playerDamage": true
     },
     "gold": {
-      "color": "#FFFF00",
+      "color": "#FEE048",
       "durability": 4,
       "cap": 160,
       "weight": 2.5,

@@ -1,21 +1,18 @@
 package com.tfar.extraanvils.generic;
 
 import com.tfar.extraanvils.AnvilProperties;
+import com.tfar.extraanvils.ExtraAnvils;
 import com.tfar.extraanvils.RegistryHandler;
+import com.tfar.extraanvils.entity.FallingAnvilEntity;
 import net.minecraft.block.AnvilBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.INamedContainerProvider;
-import net.minecraft.inventory.container.SimpleNamedContainerProvider;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.util.Hand;
-import net.minecraft.util.IWorldPosCallable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.text.ITextComponent;
@@ -25,6 +22,7 @@ import net.minecraftforge.fml.network.NetworkHooks;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Random;
 
 public class GenericAnvilBlock extends AnvilBlock {
 
@@ -63,29 +61,44 @@ if (!worldIn.isRemote) NetworkHooks.openGui((ServerPlayerEntity) player, new INa
     return true;
   }
 
+  @Override
+  public void tick(BlockState state, World worldIn, BlockPos pos, Random random) {
+    if (!worldIn.isRemote) {
+      this.checkFallable(worldIn, pos);
+    }
+
+  }
+
+  private void checkFallable(World worldIn, BlockPos pos) {
+    if (worldIn.isAirBlock(pos.down()) || canFallThrough(worldIn.getBlockState(pos.down())) && pos.getY() >= 0) {
+      if (!worldIn.isRemote) {
+        FallingAnvilEntity fallingblockentity = new FallingAnvilEntity(worldIn, pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5,
+                worldIn.getBlockState(pos));
+        this.onStartFalling(fallingblockentity);
+        worldIn.addEntity(fallingblockentity);
+      }
+
+    }
+  }
+
+  protected void onStartFalling(FallingAnvilEntity fallingEntity) {
+    fallingEntity.setHurtEntities(true);
+  }
 
   @Nullable
   public static BlockState damage(BlockState state) {
-    Block block = state.getBlock();
-    if (block == RegistryHandler.genericAnvilBlock) {
-      return RegistryHandler.genericAnvilBlockChipped.getDefaultState().with(FACING, state.get(FACING));
-    } else {
-      return block == RegistryHandler.genericAnvilBlockChipped ? RegistryHandler.genericAnvilBlockDamaged.getDefaultState().with(FACING, state.get(FACING)) : null;
-    }
+    Block block = ExtraAnvils.anvilDamageMap.get(state.getBlock());
+    return block == null ? null : block.getDefaultState().with(FACING,state.get(FACING));
   }
   public enum Variant{
-    NORMAL("_anvil"),
-    CHIPPED("_anvil_chipped"),
-    DAMAGED("_anvil_damaged");
+    NORMAL(""),
+    CHIPPED("chipped_"),
+    DAMAGED("damaged_");
 
-    private String s;
+    public String s;
 
     Variant(String variant){
       this.s = variant;
-    }
-
-    public String getString(){
-      return s;
     }
   }
 }

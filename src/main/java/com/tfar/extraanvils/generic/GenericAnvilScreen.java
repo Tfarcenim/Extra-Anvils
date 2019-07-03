@@ -24,7 +24,6 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nonnull;
 
-@OnlyIn(Dist.CLIENT)
 public class GenericAnvilScreen extends ContainerScreen<GenericAnvilContainer> implements IContainerListener {
   private static final ResourceLocation ANVIL_RESOURCE = new ResourceLocation("textures/gui/container/anvil.png");
   private static final ResourceLocation hammer = new ResourceLocation(ExtraAnvils.MODID, "textures/gui/hammer.png");
@@ -97,7 +96,7 @@ public class GenericAnvilScreen extends ContainerScreen<GenericAnvilContainer> i
       int j = 0x80ff20;
       boolean flag = true;
       String s = I18n.format("container.repair.cost", i);
-      if (i >= 40 && !this.minecraft.player.abilities.isCreativeMode) {
+      if (i >= container.maximumCap && !this.minecraft.player.abilities.isCreativeMode) {
         s = I18n.format("container.repair.expensive");
         j = 0xff6060;
       } else if (!this.container.getSlot(2).getHasStack()) {
@@ -142,9 +141,17 @@ public class GenericAnvilScreen extends ContainerScreen<GenericAnvilContainer> i
       this.blit(i + 99, j + 45, this.xSize, 0, 28, 21);
     }
     this.minecraft.getTextureManager().bindTexture(hammer);
-    int[] colors = AnvilProperties.getRGB(((GenericAnvilBlock)playerInventory.player.world.getBlockState(BlockPos.fromLong(container.actualPos)).getBlock()).anvilProperties.color);
 
-    GlStateManager.color3f(colors[0]/255f,colors[1]/255f,colors[2]/255f);
+    String color = ((GenericAnvilBlock)playerInventory.player.world.getBlockState(BlockPos.fromLong(container.actualPos)).getBlock()).anvilProperties.color;
+
+    int raw = 0;
+
+      try {
+        raw = Integer.decode(color);
+      } catch (NumberFormatException | NullPointerException notANumber){
+        ExtraAnvils.logger.error(notANumber);
+      }
+    GlStateManager.color3f((raw >> 16 & 0xFF)/255f, (raw >> 8 & 0xFF)/255f, (raw & 0xFF)/255f);
     blit(i + 25, j + 7, 0, 0, 22, 22, 22, 22);
     GlStateManager.color3f(1,1,1);
   }

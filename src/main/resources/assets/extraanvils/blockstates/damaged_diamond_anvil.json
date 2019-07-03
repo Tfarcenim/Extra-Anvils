@@ -1,0 +1,8 @@
+{
+  "variants": {
+    "facing=north": { "model": "extraanvils:block/damaged_diamond_anvil" },
+    "facing=west": { "model": "extraanvils:block/damaged_diamond_anvil", "y": 90 },
+    "facing=south": { "model": "extraanvils:block/damaged_diamond_anvil", "y": 180 },
+    "facing=east": { "model": "extraanvils:block/damaged_diamond_anvil", "y": 270 }
+  }
+}

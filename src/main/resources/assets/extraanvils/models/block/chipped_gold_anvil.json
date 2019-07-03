@@ -1,0 +1,7 @@
+{
+  "parent": "extraanvils:block/anvil_base",
+  "textures": {
+    "particle": "extraanvils:blocks/chipped_gold_anvil",
+    "0": "extraanvils:blocks/chipped_gold_anvil"
+  }
+}

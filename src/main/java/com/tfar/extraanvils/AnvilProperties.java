@@ -27,17 +27,4 @@ public class AnvilProperties {
     this.playerDamage = playerDamage;
     this.traits = traits;
   }
-
-  public static final int[] BLACK = new int[] {0,0,0};
-
-  public static int[] getRGB(String color){
-    if (color.startsWith("#"))
-    try {
-    int raw = Integer.decode(color);
-    return new int[]{raw << 16 & 0xFF, raw << 8 & 0xFF, raw & 0xFF};
-    } catch (NumberFormatException | NullPointerException notANumber){
-      ExtraAnvils.logger.error(notANumber);
-    }
-    return BLACK;
-  }
 }

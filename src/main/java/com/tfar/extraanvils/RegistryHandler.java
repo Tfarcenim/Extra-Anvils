@@ -6,10 +6,12 @@ import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.*;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
+import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.ObjectHolder;
 import org.apache.commons.io.IOUtils;
@@ -91,7 +93,7 @@ public class RegistryHandler {
     writeConfig();
     try {
 
-      FileReader reader = new FileReader("config/extraanvils.json");
+      FileReader reader = new FileReader(configFile);
 
       //config configFile
       JsonObject json = (JsonObject) new JsonParser().parse(reader).getAsJsonObject().get("anvils");
@@ -107,7 +109,7 @@ public class RegistryHandler {
           if (hasMods && enabled) {
             ExtraAnvils.logger.info("registering " + material + " anvil");
             for (GenericAnvilBlock.Variant variant : GenericAnvilBlock.Variant.values()) {
-              Block.Properties properties = Block.Properties.create(Material.ANVIL);
+              Block.Properties properties = Block.Properties.create(Material.ANVIL).hardnessAndResistance(5,6000);
 
               GenericAnvilBlock anvil;
 
@@ -116,7 +118,7 @@ public class RegistryHandler {
            //   else
                 anvil = new GenericAnvilBlock(material, properties, entry, variant);
               ExtraAnvils.anvils.add(anvil);
-              anvil.setRegistryName(anvil.material + variant.getString());
+              anvil.setRegistryName(variant.s + anvil.material + "_anvil");
               registry.register(anvil);
             }
           } else {
@@ -131,6 +133,9 @@ public class RegistryHandler {
     } catch (IOException ofcourse) {
       throw new RuntimeException(ofcourse);
     }
+
+
+
   }
 
   public static boolean checkModlist(String[] s) {
@@ -152,6 +157,25 @@ public class RegistryHandler {
     Item.Properties properties = new Item.Properties().group(ExtraAnvils.creativeTab);
     for (GenericAnvilBlock anvil : ExtraAnvils.anvils)
       registry.register(new BlockItem(anvil,properties).setRegistryName(anvil.getRegistryName()));
+    for (GenericAnvilBlock anvil : ExtraAnvils.anvils) {
+      switch (anvil.variant) {
+        case NORMAL:
+          ExtraAnvils.anvilDamageMap
+                  .put(anvil, (GenericAnvilBlock) ForgeRegistries
+                          .BLOCKS.getValue(new ResourceLocation(ExtraAnvils.MODID,"chipped_"+anvil.getRegistryName().getPath())));
+          break;
+        case CHIPPED:
+          ExtraAnvils.anvilDamageMap
+                  .put(anvil, (GenericAnvilBlock) ForgeRegistries
+                          .BLOCKS.getValue(new ResourceLocation(ExtraAnvils.MODID,anvil.getRegistryName().getPath()
+                                  .replace(GenericAnvilBlock.Variant.CHIPPED.s,
+                                          GenericAnvilBlock.Variant.DAMAGED.s))));
+          break;
+        case DAMAGED:default:
+          ExtraAnvils.anvilDamageMap.put(anvil, null);
+          break;
+      }
+    }
   }
 }
 

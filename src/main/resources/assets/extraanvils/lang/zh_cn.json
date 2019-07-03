@@ -1,8 +1,8 @@
 {
   "block.extraanvils.gold_anvil": "金砧",
-  "block.extraanvils.gold_anvil_chipped": "开裂的金砧",
-  "block.extraanvils.gold_anvil_damaged": "损坏的金砧",
+  "block.extraanvils.chipped_gold_anvil": "开裂的金砧",
+  "block.extraanvils.damaged_gold_anvil": "损坏的金砧",
   "block.extraanvils.diamond_anvil": "钻石砧",
-  "block.extraanvils.diamond_anvil_chipped": "开裂的钻石砧",
-  "block.extraanvils.diamond_anvil_damaged": "损坏的钻石砧"
+  "block.extraanvils.chipped_diamond_anvil": "开裂的钻石砧",
+  "block.extraanvils.damaged_diamond_anvil": "损坏的钻石砧"
 }

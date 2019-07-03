@@ -1,0 +1,19 @@
+{
+  "type": "crafting_shaped",
+  "pattern": [
+    "III",
+    " i ",
+    "iii"
+  ],
+  "key": {
+    "I": {
+      "tag": "forge:stone"
+    },
+    "i": {
+      "item": "minecraft:stone_slab"
+    }
+  },
+  "result": {
+    "item": "extraanvils:stone_anvil"
+  }
+}
