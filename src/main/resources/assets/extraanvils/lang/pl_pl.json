@@ -1,0 +1,11 @@
+  {
+  "block.extraanvils.gold_anvil": "Złote kowadło",
+  "block.extraanvils.chipped_gold_anvil": "Lekko uszkodzone złote kowadło",
+  "block.extraanvils.damaged_gold_anvil": "Mocno uszkodzone złote kowadło",
+    "block.extraanvils.diamond_anvil": "Diamentowe kowadło",
+    "block.extraanvils.chipped_diamond_anvil": "Lekko uszkodzone diamentowe kowadło",
+    "block.extraanvils.damaged_diamond_anvil": "Mocno uszkodzone diamentowe kowadło",
+    "block.extraanvils.stone_anvil": "Kamienne kowadło",
+    "block.extraanvils.chipped_stone_anvil": "Lekko uszkodzone kowadło",
+    "block.extraanvils.damaged_stone_anvil": "Mocno uszkodzone kowadło"
+  }
