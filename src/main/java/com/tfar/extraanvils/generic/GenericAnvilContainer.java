@@ -68,7 +68,7 @@ public class GenericAnvilContainer extends Container {
   }
 
   public GenericAnvilContainer(int id, PlayerInventory playerInventory, BlockPos pos, long position) {
-    super(ExtraAnvils.GENERIC_ANVIL,id);
+    super(ExtraAnvils.ObjectHolders.generic_anvil_container_type,id);
     this.pos = pos;
     this.player = playerInventory.player;
     this.world = player.world;

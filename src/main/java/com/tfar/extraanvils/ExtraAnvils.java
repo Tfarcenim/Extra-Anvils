@@ -29,14 +29,14 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
+import static com.tfar.extraanvils.ExtraAnvils.ObjectHolders.generic_anvil_container_type;
+
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
 @Mod(value = ExtraAnvils.MODID)
 public class ExtraAnvils
 {
   public static final HashMap<GenericAnvilBlock, GenericAnvilBlock> anvilDamageMap = new HashMap<>();
   public static final String MODID = "extraanvils";
-
-    public static ContainerType<GenericAnvilContainer> GENERIC_ANVIL;
 
     public static ItemGroup creativeTab = new ItemGroup(MODID) {
         @Override
@@ -65,7 +65,7 @@ public class ExtraAnvils
 
   @SubscribeEvent
   public static void setup(final FMLClientSetupEvent event) {
-    ScreenManager.registerFactory(GENERIC_ANVIL, GenericAnvilScreen::new);
+    ScreenManager.registerFactory(generic_anvil_container_type, GenericAnvilScreen::new);
   }
 
     @SubscribeEvent
@@ -109,5 +109,7 @@ public class ExtraAnvils
   public static class ObjectHolders {
     public static final EntityType<FallingAnvilEntity> falling_anvil_entity = null;
     public static final Block diamond_anvil = null;
-    }
+    public static final ContainerType<GenericAnvilContainer> generic_anvil_container_type = null;
+
+  }
 }
