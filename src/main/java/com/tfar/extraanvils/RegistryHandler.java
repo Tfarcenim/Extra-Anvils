@@ -93,11 +93,8 @@ public class RegistryHandler {
         JsonElement element = ore.getValue();
         AnvilProperties entry = g.fromJson(element,AnvilProperties.class);
         boolean enabled = entry.enabled;
-        JsonObject builtin = jsonRead.getAsJsonObject(material);
-        String[] modids = builtin == null ? null : g.fromJson(builtin.get("modid"), String[].class);
-        boolean hasMods = checkModlist(modids);
         try {
-          if (hasMods && enabled) {
+          if (enabled) {
             ExtraAnvils.logger.info("registering " + material + " anvil");
             for (GenericAnvilBlock.Variant variant : GenericAnvilBlock.Variant.values()) {
               Block.Properties properties = Block.Properties.create(Material.ANVIL).hardnessAndResistance(5,6000);
@@ -113,7 +110,7 @@ public class RegistryHandler {
               registry.register(anvil);
             }
           } else {
-            ExtraAnvils.logger.info("skipping " + material + " anvil" + ((hasMods) ? "" : " due to missing mod(s)") + (enabled ? "" : " because it's disabled"));
+            ExtraAnvils.logger.info("skipping " + material + " anvil because it's disabled");
           }
           //in case of exceptions
         } catch (Exception e) {
@@ -127,10 +124,6 @@ public class RegistryHandler {
 
 
 
-  }
-
-  public static boolean checkModlist(String[] s) {
-    return s == null || Arrays.stream(s).anyMatch(ModList.get()::isLoaded);
   }
 
   @SubscribeEvent
