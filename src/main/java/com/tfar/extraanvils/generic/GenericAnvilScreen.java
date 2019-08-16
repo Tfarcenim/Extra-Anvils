@@ -1,14 +1,14 @@
 package com.tfar.extraanvils.generic;
 
 import com.mojang.blaze3d.platform.GlStateManager;
-import com.tfar.extraanvils.AnvilProperties;
 import com.tfar.extraanvils.ExtraAnvils;
 import com.tfar.extraanvils.network.Message;
 import com.tfar.extraanvils.network.PacketAnvilRename;
+import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.IGuiEventListener;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
-import net.minecraft.client.gui.IGuiEventListener;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
@@ -19,8 +19,6 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nonnull;
 
@@ -142,7 +140,12 @@ public class GenericAnvilScreen extends ContainerScreen<GenericAnvilContainer> i
     }
     this.minecraft.getTextureManager().bindTexture(hammer);
 
-    String color = ((GenericAnvilBlock)playerInventory.player.world.getBlockState(BlockPos.fromLong(container.actualPos)).getBlock()).anvilProperties.color;
+    BlockPos pos = BlockPos.fromLong(container.actualPos);
+    Block block = playerInventory.player.world.getBlockState(pos).getBlock();
+    String color = "#FFFFFF";
+
+    if (block instanceof GenericAnvilBlock)
+      color = ((GenericAnvilBlock)playerInventory.player.world.getBlockState(BlockPos.fromLong(container.actualPos)).getBlock()).anvilProperties.color;
 
     int raw = 0;
 

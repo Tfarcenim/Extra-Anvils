@@ -2,7 +2,6 @@ package com.tfar.extraanvils.generic;
 
 import com.tfar.extraanvils.AnvilProperties;
 import com.tfar.extraanvils.ExtraAnvils;
-import com.tfar.extraanvils.RegistryHandler;
 import com.tfar.extraanvils.entity.FallingAnvilEntity;
 import net.minecraft.block.AnvilBlock;
 import net.minecraft.block.Block;

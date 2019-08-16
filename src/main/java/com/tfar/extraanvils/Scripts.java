@@ -1,16 +1,8 @@
 package com.tfar.extraanvils;
 
 import com.google.gson.*;
-import com.tfar.extraanvils.generic.GenericAnvilBlock;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.Map;
-
-import static com.tfar.extraanvils.ExtraAnvils.MODID;
-
-  public class Scripts {
+public class Scripts {
 
 
     public static Gson g = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
