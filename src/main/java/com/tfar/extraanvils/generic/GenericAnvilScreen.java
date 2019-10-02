@@ -55,7 +55,7 @@ public class GenericAnvilScreen extends ContainerScreen<GenericAnvilContainer> i
     this.nameField.func_212954_a(this::syncPacket);
     this.children.add(this.nameField);
     this.container.addListener(this);
-    this.func_212928_a(this.nameField);
+    this.setFocused(this.nameField);
   }
 
   /**

@@ -1,5 +1,7 @@
 package com.tfar.extraanvils.generic;
 
+import com.tfar.extraanvils.ApothCompat;
+import com.tfar.extraanvils.Compat;
 import com.tfar.extraanvils.ExtraAnvils;
 import net.minecraft.block.BlockState;
 import net.minecraft.enchantment.Enchantment;
@@ -21,12 +23,14 @@ import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.AnvilUpdateEvent;
+import net.minecraftforge.fml.ModList;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.annotation.Nonnull;
 import java.util.Map;
 
 public class GenericAnvilContainer extends Container {
+
   /**Here comes out item you merged and/or renamed.*/
   private final IInventory outputSlot = new CraftResultInventory();
   /**The 2slots where you put your items in that you want to merge and/or rename.*/
@@ -69,7 +73,7 @@ public class GenericAnvilContainer extends Container {
     this.player = playerInventory.player;
     this.world = player.world;
     this.actualPos = position;
-    this.func_216958_a(this.maximumCost);
+    this.trackInt(this.maximumCost);
     this.maximumCap = ((GenericAnvilBlock)world.getBlockState(BlockPos.fromLong(position)).getBlock()).anvilProperties.cap;
     this.addSlot(new Slot(this.inputSlots, 0, 27, 47));
     this.addSlot(new Slot(this.inputSlots, 1, 76, 47));
@@ -256,8 +260,8 @@ public class GenericAnvilContainer extends Container {
                 flag3 = true;
               } else {
                 flag2 = true;
-                if (j2 > enchantment1.getMaxLevel()) {
-                  j2 = enchantment1.getMaxLevel();
+                if (j2 > Compat.getMaxLevel(enchantment1)) {
+                  j2 = Compat.getMaxLevel(enchantment1);
                 }
 
                 map.put(enchantment1, j2);
