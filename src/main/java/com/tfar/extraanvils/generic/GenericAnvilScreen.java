@@ -140,12 +140,11 @@ public class GenericAnvilScreen extends ContainerScreen<GenericAnvilContainer> i
     }
     this.minecraft.getTextureManager().bindTexture(hammer);
 
-    BlockPos pos = BlockPos.fromLong(container.actualPos);
-    Block block = playerInventory.player.world.getBlockState(pos).getBlock();
+    Block block = playerInventory.player.world.getBlockState(container.pos).getBlock();
     String color = "#FFFFFF";
 
     if (block instanceof GenericAnvilBlock)
-      color = ((GenericAnvilBlock)playerInventory.player.world.getBlockState(BlockPos.fromLong(container.actualPos)).getBlock()).anvilProperties.color;
+      color = ((GenericAnvilBlock)playerInventory.player.world.getBlockState(container.pos).getBlock()).anvilProperties.color;
 
     int raw = 0;
 

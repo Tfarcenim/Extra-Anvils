@@ -1,7 +1,7 @@
 package com.tfar.extraanvils.generic;
 
-import com.tfar.extraanvils.ApothCompat;
-import com.tfar.extraanvils.Compat;
+import com.tfar.anviltweaks.AnvilTile;
+import com.tfar.extraanvils.compat.Compat;
 import com.tfar.extraanvils.ExtraAnvils;
 import net.minecraft.block.BlockState;
 import net.minecraft.enchantment.Enchantment;
@@ -16,14 +16,14 @@ import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.EnchantedBookItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IntReferenceHolder;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.AnvilUpdateEvent;
-import net.minecraftforge.fml.ModList;
+import net.minecraftforge.items.SlotItemHandler;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.annotation.Nonnull;
@@ -54,29 +54,33 @@ public class GenericAnvilContainer extends Container {
   private String repairedItemName;
   /**The player that has this container open.*/
 
+  /** only used by mods*/
+  public TileEntity anviltile;
+
   private final IntReferenceHolder maximumCost = IntReferenceHolder.single();
   public BlockPos pos;
-
-  public long actualPos;
 
   private PlayerEntity player;
 
   private World world;
 
-  public GenericAnvilContainer(int id, PlayerInventory playerInventory, PacketBuffer buffer) {
-    this(id,playerInventory,BlockPos.ZERO, buffer.readLong());
-  }
 
-  public GenericAnvilContainer(int id, PlayerInventory playerInventory, BlockPos pos, long position) {
+  public GenericAnvilContainer(int id, PlayerInventory playerInventory, BlockPos pos) {
     super(ExtraAnvils.ObjectHolders.generic_anvil_container_type,id);
     this.pos = pos;
     this.player = playerInventory.player;
     this.world = player.world;
-    this.actualPos = position;
+    if (Compat.hasTileEntity)this.anviltile = world.getTileEntity(pos);
     this.trackInt(this.maximumCost);
-    this.maximumCap = ((GenericAnvilBlock)world.getBlockState(BlockPos.fromLong(position)).getBlock()).anvilProperties.cap;
-    this.addSlot(new Slot(this.inputSlots, 0, 27, 47));
-    this.addSlot(new Slot(this.inputSlots, 1, 76, 47));
+    this.maximumCap = ((GenericAnvilBlock)world.getBlockState(pos).getBlock()).anvilProperties.cap;
+    if (Compat.isAnvilTweaksHere) {
+      this.addSlot(new SlotItemHandler(((AnvilTile)anviltile).handler, 0, 27, 47));
+      this.addSlot(new SlotItemHandler(((AnvilTile)anviltile).handler, 1, 76, 47));
+    }
+    else {
+      this.addSlot(new Slot(this.inputSlots, 0, 27, 47));
+      this.addSlot(new Slot(this.inputSlots, 1, 76, 47));
+    }
     this.addSlot(new Slot(this.outputSlot, 2, 134, 47) {
       /**
        * Check if the stack is allowed to be placed in this slot, used for armor slots as well as furnace fuel.
@@ -103,7 +107,7 @@ public class GenericAnvilContainer extends Container {
 
         float breakChance = net.minecraftforge.common.ForgeHooks.onAnvilRepair(thePlayer, stack, GenericAnvilContainer.this.inputSlots.getStackInSlot(0), GenericAnvilContainer.this.inputSlots.getStackInSlot(1));
 
-        double durability = ((GenericAnvilBlock)world.getBlockState(BlockPos.fromLong(actualPos)).getBlock()).anvilProperties.durability;
+        double durability = ((GenericAnvilBlock)world.getBlockState(pos).getBlock()).anvilProperties.durability;
 
         if (durability > 0)
           breakChance /= durability;
@@ -313,7 +317,7 @@ public class GenericAnvilContainer extends Container {
       }
       if (flag && !itemstack1.isBookEnchantable(itemstack2)) itemstack1 = ItemStack.EMPTY;
 
-      this.maximumCost.set((int)((j + i)/ ((GenericAnvilBlock)world.getBlockState(BlockPos.fromLong(actualPos)).getBlock()).anvilProperties.enchantability));
+      this.maximumCost.set((int)((j + i)/ ((GenericAnvilBlock)world.getBlockState(pos).getBlock()).anvilProperties.enchantability));
       if (i <= 0) {
         itemstack1 = ItemStack.EMPTY;
       }
@@ -355,7 +359,7 @@ public class GenericAnvilContainer extends Container {
   @Override
   public void onContainerClosed(PlayerEntity playerIn) {
     super.onContainerClosed(playerIn);
-      this.clearContainer(playerIn, world, this.inputSlots);
+      if (!Compat.isAnvilTweaksHere)this.clearContainer(playerIn, world, this.inputSlots);
   }
 
   /**

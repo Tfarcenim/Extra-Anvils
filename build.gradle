@@ -48,7 +48,7 @@ minecraft {
 
             // Recommended logging level for the console
             property 'forge.logging.console.level', 'debug'
-            environment 'MOD_CLASSES', "${project.file("out/production/resources").canonicalPath};${project.file("out/production/classes").canonicalPath}"
+            //environment 'MOD_CLASSES', "${project.file("out/production/resources").canonicalPath};${project.file("out/production/classes").canonicalPath}"
 
             mods {
                 examplemod {
@@ -62,6 +62,7 @@ minecraft {
 
             // Recommended logging data for a userdev environment
             property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+            //environment 'MOD_CLASSES', "${project.file("out/production/resources").canonicalPath};${project.file("out/production/classes").canonicalPath}"
 
             // Recommended logging level for the console
             property 'forge.logging.console.level', 'debug'
@@ -102,6 +103,8 @@ dependencies {
     
     //crashes at runtime!
     compileOnly curse.resolve("Apotheosis", "2796328")
+    compile fileTree(dir: 'libs', include: '*.jar')
+
 
     // Real examples
     // compile 'com.mod-buildcraft:buildcraft:6.0.8:dev'  // adds buildcraft to the dev env
