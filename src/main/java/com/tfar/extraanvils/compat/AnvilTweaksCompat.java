@@ -11,16 +11,12 @@ import net.minecraft.block.Blocks;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraftforge.event.RegistryEvent;
-import net.minecraftforge.fml.client.registry.ClientRegistry;
 
 import java.util.Set;
 
 public class AnvilTweaksCompat extends Compat {
   public static TileEntity getAnvilTweaksTile(GenericAnvilBlock block) {
     return new GenericAnvilAnvilTweaksCompatTile();
-  }
-  public static void bindTESR(){
-    ClientRegistry.bindTileEntitySpecialRenderer(GenericAnvilAnvilTweaksCompatTile.class, new AnvilTileSpecialRenderer());
   }
 
   public static void hax(final RegistryEvent.Register<TileEntityType<?>> event){
