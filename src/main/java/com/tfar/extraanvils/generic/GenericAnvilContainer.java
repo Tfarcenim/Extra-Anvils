@@ -1,6 +1,7 @@
 package com.tfar.extraanvils.generic;
 
 import com.tfar.anviltweaks.AnvilTile;
+import com.tfar.extraanvils.compat.AnvilTweaksCompat;
 import com.tfar.extraanvils.compat.Compat;
 import com.tfar.extraanvils.ExtraAnvils;
 import net.minecraft.block.BlockState;
@@ -74,8 +75,7 @@ public class GenericAnvilContainer extends Container {
     this.trackInt(this.maximumCost);
     this.maximumCap = ((GenericAnvilBlock)world.getBlockState(pos).getBlock()).anvilProperties.cap;
     if (Compat.isAnvilTweaksHere) {
-      this.addSlot(new SlotItemHandler(((AnvilTile)anviltile).handler, 0, 27, 47));
-      this.addSlot(new SlotItemHandler(((AnvilTile)anviltile).handler, 1, 76, 47));
+      AnvilTweaksCompat.addSlots(this);
     }
     else {
       this.addSlot(new Slot(this.inputSlots, 0, 27, 47));
@@ -157,7 +157,6 @@ public class GenericAnvilContainer extends Container {
 
   }
 
-
   public static int xpLevelToAmount(int level){
     if (level < 17) return level*level + 6 * level;
     else if (level < 32) return (int)(2.5 * level*level - 40.5 * level + 360);
@@ -174,6 +173,12 @@ public class GenericAnvilContainer extends Container {
       this.updateRepairOutput();
     }
 
+  }
+
+
+  @Override
+  public Slot addSlot(Slot slotIn) {
+    return super.addSlot(slotIn);
   }
 
   /**

@@ -10,7 +10,6 @@ import java.util.function.Supplier;
 public class PacketAnvilRename {
 
   private String name;
-  private int length;
 
   public PacketAnvilRename() {}
 
@@ -19,7 +18,7 @@ public class PacketAnvilRename {
   }
 
  public PacketAnvilRename(PacketBuffer buf) {
-    length = buf.readInt();
+   int length = buf.readInt();
    name = buf.readString(length);
   }
 
