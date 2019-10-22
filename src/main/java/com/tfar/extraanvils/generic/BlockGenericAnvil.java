@@ -40,12 +40,10 @@ public class BlockGenericAnvil extends BlockFalling {
   public static final PropertyDirection FACING = BlockHorizontal.FACING;
   protected static final AxisAlignedBB X_AXIS_AABB = new AxisAlignedBB(0.0D, 0.0D, 0.125D, 1.0D, 1.0D, 0.875D);
   protected static final AxisAlignedBB Z_AXIS_AABB = new AxisAlignedBB(0.125D, 0.0D, 0.0D, 0.875D, 1.0D, 1.0D);
-  protected static final Logger LOGGER = LogManager.getLogger();
-  public String material;
   public AnvilProperties properties;
   public EnumVariants variant;
 
-  public BlockGenericAnvil(String material, AnvilProperties properties, EnumVariants variant) {
+  public BlockGenericAnvil(AnvilProperties properties, EnumVariants variant) {
 
     super(Material.ANVIL);
     setDefaultState(blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH));
@@ -54,7 +52,6 @@ public class BlockGenericAnvil extends BlockFalling {
     setHardness(5.0F);
     setSoundType(SoundType.ANVIL);
     setResistance(2000.0F);
-    this.material = material;
     this.properties = properties;
     this.variant = variant;
   }
@@ -107,7 +104,7 @@ public class BlockGenericAnvil extends BlockFalling {
    */
   public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
     if (!worldIn.isRemote) {
-      if (!"infinity".equals(this.material))
+      if (!"infinity".equals(this.properties.name))
       playerIn.openGui(ExtraAnvils.instance, 0, worldIn, pos.getX(), pos.getY(), pos.getZ());
       else playerIn.openGui(ExtraAnvils.instance, 1, worldIn, pos.getX(), pos.getY(), pos.getZ());
 
@@ -220,7 +217,7 @@ public class BlockGenericAnvil extends BlockFalling {
         tooltip.add(TextColors.colors.get(trait) + trait.substring(0,1).toUpperCase()+trait.substring(1));
       }
     }
-    if ("infinity".equals(this.material))tooltip.add(stringToRainbow(material));
+    if ("infinity".equals(this.properties.name))tooltip.add(stringToRainbow(this.properties.name));
   }
 
   public static String stringToRainbow(String parString)
@@ -230,7 +227,7 @@ public class BlockGenericAnvil extends BlockFalling {
     {
       return "";
     }
-    String outputString = "";
+    StringBuilder outputString = new StringBuilder();
     TextFormatting[] colorChar =
             {
                     TextFormatting.RED,
@@ -244,15 +241,12 @@ public class BlockGenericAnvil extends BlockFalling {
             };
     for (int i = 0; i < stringLength; i++)
     {
-      outputString = outputString+colorChar[(i +(int) (Minecraft.getSystemTime() / 50)) % 8]+parString.substring(i, i+1);
+      outputString.append(colorChar[(i + (int) (Minecraft.getSystemTime() / 50)) % 8]).append(parString, i, i + 1);
     }
-    return outputString;
+    return outputString.toString();
   }
 
-  @SideOnly(Side.CLIENT)
-  public void registerModel() {
-    ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(this), 0, new ModelResourceLocation(getRegistryName(), "inventory"));
-  }
+
 
   public static class TextColors {
     public static Map<String, TextFormatting> colors = new HashMap<>();

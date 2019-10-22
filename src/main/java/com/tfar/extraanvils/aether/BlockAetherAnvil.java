@@ -13,8 +13,8 @@ import java.util.Random;
 
 public class BlockAetherAnvil extends BlockGenericAnvil {
 
-  public BlockAetherAnvil(String material, AnvilProperties properties, EnumVariants variant) {
-    super(material,properties,variant);
+  public BlockAetherAnvil( AnvilProperties properties, EnumVariants variant) {
+    super(properties,variant);
   }
 
   @Override

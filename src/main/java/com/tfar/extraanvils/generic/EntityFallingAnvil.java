@@ -88,7 +88,7 @@ public class EntityFallingAnvil extends EntityFallingBlock implements IEntityAdd
         if (shouldDamage && rand.nextFloat() < .05 * (i + 1)) {
           IBlockState iblockstate = BlockGenericAnvil.damage(this.fallTile);
           if (iblockstate == null) {
-            if (((BlockGenericAnvil) fallTile.getBlock()).material.equals("gold")) {
+            if (((BlockGenericAnvil) fallTile.getBlock()).properties.name.equals("gold")) {
               fallTile = Blocks.LIGHT_WEIGHTED_PRESSURE_PLATE.getDefaultState();
             } else
               this.dontSetBlock = true;

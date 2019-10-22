@@ -4,12 +4,15 @@ import com.tfar.extraanvils.aether.EntityAetherAnvil;
 import com.tfar.extraanvils.generic.BlockGenericAnvil;
 import com.tfar.extraanvils.generic.EntityFallingAnvil;
 import com.tfar.extraanvils.network.PacketHandler;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
+import net.minecraft.launchwrapper.Launch;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.ModelRegistryEvent;
+import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -34,6 +37,9 @@ public class ExtraAnvils {
   public static final String NAME = "Extra Anvils";
   public static final String MODVERSION = "@VERSION@";
 
+  private static final boolean developerEnvironment = (boolean) Launch.blackboard.get("fml.deobfuscatedEnvironment");
+
+
   public static final HashMap<BlockGenericAnvil, BlockGenericAnvil> anvilDamageMap = new HashMap<>();
 
   public static final List<BlockGenericAnvil> anvils = new ArrayList<>();
@@ -54,7 +60,6 @@ public class ExtraAnvils {
   @Mod.EventHandler
   public void preInit(final FMLPreInitializationEvent event) {
     PacketHandler.registerMessages(ExtraAnvils.MODID);
-    Scripts.scripts();
   }
 
   @Mod.EventHandler
@@ -88,7 +93,9 @@ public class ExtraAnvils {
 
   @SubscribeEvent
   public static void registerModels(ModelRegistryEvent event) {
-    for (BlockGenericAnvil anvil : ExtraAnvils.anvils) anvil.registerModel();
+    for (BlockGenericAnvil anvil : ExtraAnvils.anvils) {
+      ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(anvil), 0, new ModelResourceLocation(anvil.getRegistryName(), "inventory"));
+    }
   }
 
   @SubscribeEvent

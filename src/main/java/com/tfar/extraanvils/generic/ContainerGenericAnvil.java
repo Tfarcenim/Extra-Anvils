@@ -75,7 +75,7 @@ public class ContainerGenericAnvil extends Container {
     this.maximumCap = genericAnvil.properties.cap;
     this.enchantability = Math.max(genericAnvil.properties.enchantability,0.001);
     this.durMultiplier = genericAnvil.properties.durability;
-    this.name = genericAnvil.material;
+    this.name = genericAnvil.properties.name;
     this.addSlotToContainer(new Slot(this.inputSlots, 0, 27, 47));
     this.addSlotToContainer(new Slot(this.inputSlots, 1, 76, 47));
     this.addSlotToContainer(new Slot(this.outputSlot, 2, 134, 47) {

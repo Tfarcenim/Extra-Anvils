@@ -19,7 +19,7 @@ public class GuiHandler implements IGuiHandler {
         if (world.getBlockState(pos).getBlock() instanceof BlockGenericAnvil)
           return new ContainerGenericAnvil(player.inventory, world, pos, player,(BlockGenericAnvil)world.getBlockState(pos).getBlock());
       case 1:
-        if (((BlockGenericAnvil)world.getBlockState(pos).getBlock()).material.equals("infinity"))
+        if (((BlockGenericAnvil)world.getBlockState(pos).getBlock()).properties.name.equals("infinity"))
           return new ContainerInfinityAnvil(player.inventory, world, pos, player,(BlockGenericAnvil)world.getBlockState(pos).getBlock());
       default:
         return null;
