@@ -26,9 +26,4 @@ public class AnvilTweaksCompat extends Compat {
     valid.addAll(ExtraAnvils.anvils);
     ExtraAnvils.register(TileEntityType.Builder.create(() -> new AnvilTile(AnvilTweaks.Stuff.anvil_tile), valid.toArray(new Block[0])).build(null),"anviltweaks","anvil_tile",event.getRegistry());
   }
-
-  public static void addSlots(GenericAnvilContainer container){
-    container.addSlot(new SlotItemHandler(((AnvilTile)container.anviltile).handler, 0, 27, 47));
-    container.addSlot(new SlotItemHandler(((AnvilTile)container.anviltile).handler, 1, 76, 47));
-  }
 }

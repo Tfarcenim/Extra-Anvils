@@ -1,5 +1,6 @@
 package com.tfar.extraanvils.generic;
 
+import com.tfar.extraanvils.compat.Compat;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
@@ -17,14 +18,17 @@ public class GenericAnvilContainerProvider implements INamedContainerProvider {
     this.pos = pos;
   }
 
+  private static final TranslationTextComponent name = new TranslationTextComponent("container.repair");
+
   @Nonnull
   @Override
   public ITextComponent getDisplayName() {
-    return new TranslationTextComponent("container.repair");
+    return name;
   }
 
   @Override
   public Container createMenu(int p_createMenu_1_, @Nonnull PlayerInventory p_createMenu_2_, @Nonnull PlayerEntity p_createMenu_3_) {
-    return new GenericAnvilContainer(p_createMenu_1_, p_createMenu_2_, pos);
+    return Compat.isAnvilTweaksHere ? new GenericAnvilAnvilTweaksContainer(p_createMenu_1_, p_createMenu_2_, pos)
+            : new GenericAnvilContainer(p_createMenu_1_, p_createMenu_2_, pos);
   }
 }

@@ -3,10 +3,9 @@ package com.tfar.extraanvils;
 import com.tfar.anviltweaks.AnvilTile;
 import com.tfar.anviltweaks.AnvilTweaks;
 import com.tfar.extraanvils.compat.AnvilTweaksCompat;
+import com.tfar.extraanvils.compat.Compat;
 import com.tfar.extraanvils.entity.FallingAnvilEntity;
-import com.tfar.extraanvils.generic.GenericAnvilBlock;
-import com.tfar.extraanvils.generic.GenericAnvilContainer;
-import com.tfar.extraanvils.generic.GenericAnvilScreen;
+import com.tfar.extraanvils.generic.*;
 import com.tfar.extraanvils.network.Message;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
@@ -15,6 +14,7 @@ import net.minecraft.client.renderer.entity.FallingBlockRenderer;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.entity.projectile.AbstractArrowEntity;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
@@ -59,12 +59,9 @@ public class ExtraAnvils
 
     public static Logger logger = LogManager.getLogger();
 
-    public static ExtraAnvils instance;
     public static Set<GenericAnvilBlock> anvils = new HashSet<>();
 
-
     public ExtraAnvils(){
-        instance = this;
       //  ModLoadingContext.get().registerExtensionPoint(ExtensionPoint.CONFIGGUIFACTORY, () -> GuiHandler::getClientGuiElement);
     }
 
@@ -96,8 +93,9 @@ public class ExtraAnvils
     @SubscribeEvent
     public static void registerContainers(RegistryEvent.Register<ContainerType<?>> event){
 
-        ContainerType<GenericAnvilContainer> containerType;
-        containerType = IForgeContainerType.create((int id, PlayerInventory playerInventory, PacketBuffer data) -> new GenericAnvilContainer(id, playerInventory, data.readBlockPos()));
+        ContainerType<AbstractGenericAnvilContainer> containerType;
+        containerType = IForgeContainerType.create((int id, PlayerInventory playerInventory, PacketBuffer data) -> isAnvilTweaksHere ? new GenericAnvilAnvilTweaksContainer(id, playerInventory, data.readBlockPos()):
+        new GenericAnvilContainer(id, playerInventory, data.readBlockPos()));
         containerType.setRegistryName(MODID+":generic_anvil_container_type");
         event.getRegistry().register(containerType);
     }
@@ -134,6 +132,6 @@ public class ExtraAnvils
   public static class ObjectHolders {
     public static final EntityType<FallingAnvilEntity> falling_anvil_entity = null;
     public static final Block diamond_anvil = null;
-    public static final ContainerType<GenericAnvilContainer> generic_anvil_container_type = null;
+    public static final ContainerType<? extends AbstractGenericAnvilContainer> generic_anvil_container_type = null;
   }
 }

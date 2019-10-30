@@ -10,7 +10,7 @@ buildscript {
 }
 
 plugins {
-    id "com.wynprice.cursemaven" version "1.2.3"
+    id "com.wynprice.cursemaven" version "2.1.0"
 }
 apply plugin: 'net.minecraftforge.gradle'
 // Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
@@ -101,8 +101,9 @@ dependencies {
     // at runtime, use the full JEI jar
     runtimeOnly fg.deobf("mezz.jei:jei-${mc_version}:${jei_version}")
     
-    //crashes at runtime!
-    compileOnly curse.resolve("Apotheosis", "2796328")
+    compile fg.deobf("curse.maven:apotheosis:2796328")
+    compile fg.deobf("curse.maven:placebo:2803516")
+    
     compile fileTree(dir: 'libs', include: '*.jar')
 
 

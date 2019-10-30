@@ -17,18 +17,17 @@ import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 
 import javax.annotation.Nonnull;
 
-public class GenericAnvilScreen extends ContainerScreen<GenericAnvilContainer> implements IContainerListener {
+public class GenericAnvilScreen extends ContainerScreen<AbstractGenericAnvilContainer> implements IContainerListener {
   private static final ResourceLocation ANVIL_RESOURCE = new ResourceLocation("textures/gui/container/anvil.png");
   private static final ResourceLocation hammer = new ResourceLocation(ExtraAnvils.MODID, "textures/gui/hammer.png");
   private TextFieldWidget nameField;
   private final PlayerInventory playerInventory;
 
-  public GenericAnvilScreen(GenericAnvilContainer container, PlayerInventory inventoryIn, ITextComponent text) {
+  public GenericAnvilScreen(AbstractGenericAnvilContainer container, PlayerInventory inventoryIn, ITextComponent text) {
     super(container,inventoryIn, text);
     this.playerInventory = inventoryIn;
   }

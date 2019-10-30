@@ -35,8 +35,6 @@ public class GenericAnvilBlock extends AnvilBlock {
     this.variant = variant;
   }
 
-  private static final TranslationTextComponent name = new TranslationTextComponent("container.repair");
-
   @Override
   public boolean onBlockActivated(BlockState state,@Nonnull World worldIn,@Nonnull BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
     if (!worldIn.isRemote) NetworkHooks.openGui((ServerPlayerEntity) player, new GenericAnvilContainerProvider(pos), pos);
