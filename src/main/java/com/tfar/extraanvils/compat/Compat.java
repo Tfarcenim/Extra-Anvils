@@ -1,10 +1,10 @@
 package com.tfar.extraanvils.compat;
 
-import com.tfar.extraanvils.generic.GenericAnvilBlock;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod;
+
 @Mod.EventBusSubscriber()
 public class Compat {
   public static final boolean isApothesisHere = ModList.get().isLoaded("apotheosis");
@@ -15,7 +15,7 @@ public class Compat {
     return isApothesisHere ? ApothCompat.getActualMaxLevel(enchantment) : enchantment.getMaxLevel();
   }
 
-  public static TileEntity createTileEntity(GenericAnvilBlock block){
-    return isAnvilTweaksHere ? AnvilTweaksCompat.getAnvilTweaksTile(block) : Compat.isApothesisHere ? ApothCompat.getApothTile(block): null;
+  public static TileEntity createTileEntity(){
+    return isAnvilTweaksHere ? AnvilTweaksCompat.getAnvilTweaksTile() : Compat.isApothesisHere ? ApothCompat.getApothTile(): null;
   }
 }

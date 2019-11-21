@@ -68,7 +68,7 @@ public class AnvilOutputSlot extends Slot {
     BlockState blockstate = container.player.world.getBlockState(container.pos);
     if (durability >= 0 && !thePlayer.abilities.isCreativeMode && blockstate.getBlock()
             instanceof GenericAnvilBlock && thePlayer.getRNG().nextFloat() < breakChance) {
-      BlockState blockstate1 = AnvilBlock.damage(blockstate);
+      BlockState blockstate1 = GenericAnvilBlock.damage(blockstate);
       if (blockstate1 == null) {
         container.world.removeBlock(container.pos, false);
         container.world.playEvent(1029, container.pos, 0);

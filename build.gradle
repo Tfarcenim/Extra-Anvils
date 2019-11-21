@@ -101,10 +101,10 @@ dependencies {
     // at runtime, use the full JEI jar
     runtimeOnly fg.deobf("mezz.jei:jei-${mc_version}:${jei_version}")
     
-    compile fg.deobf("curse.maven:apotheosis:2796328")
-    compile fg.deobf("curse.maven:placebo:2803516")
-    
-    compile fileTree(dir: 'libs', include: '*.jar')
+    compileOnly fg.deobf("curse.maven:apotheosis:2821146")
+    compileOnly fg.deobf("curse.maven:placebo:2803516")
+
+    compileOnly fg.deobf("curse.maven:anvil-tweaks:2799889")
 
 
     // Real examples

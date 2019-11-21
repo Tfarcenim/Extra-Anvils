@@ -14,9 +14,10 @@ public class GenericAnvilAnvilTweaksContainer extends AbstractGenericAnvilContai
   public GenericAnvilAnvilTweaksContainer(int id, PlayerInventory playerInventory, BlockPos pos) {
     super(id, playerInventory, pos);
     this.blockEntity = (AnvilTile) world.getTileEntity(pos);
+    addContainerSlots();
+    addPlayerSlots(playerInventory);
   }
 
-  @Override
   public void addContainerSlots() {
     this.addSlot(new SlotItemHandler(getHandler(), 0, 27, 47) {
       public void onSlotChanged() {
@@ -25,13 +26,13 @@ public class GenericAnvilAnvilTweaksContainer extends AbstractGenericAnvilContai
         }
 
         updateRepairOutput();
-        getBlockEntity().angles[0] = getBlockEntity().rand.nextInt(4);
+        blockEntity.angles[0] = blockEntity.rand.nextInt(4);
       }
     });
     this.addSlot(new SlotItemHandler(getHandler(), 1, 76, 47) {
       public void onSlotChanged() {
         updateRepairOutput();
-        getBlockEntity().angles[1] = getBlockEntity().rand.nextInt(4);
+        blockEntity.angles[1] = blockEntity.rand.nextInt(4);
       }
     });
     this.addSlot(new AnvilOutputSlot(this.outputSlot, 2, 134, 47,this));
@@ -39,10 +40,6 @@ public class GenericAnvilAnvilTweaksContainer extends AbstractGenericAnvilContai
 
   @Override
   public ItemStackHandler getHandler() {
-    return getBlockEntity().handler;
-  }
-
-  public AnvilTile getBlockEntity() {
-    return this.blockEntity == null ? ((AnvilTile) world.getTileEntity(pos)) : blockEntity;
+    return blockEntity.handler;
   }
 }

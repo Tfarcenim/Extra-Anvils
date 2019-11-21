@@ -8,15 +8,17 @@ import net.minecraftforge.items.SlotItemHandler;
 public class GenericAnvilContainer extends AbstractGenericAnvilContainer {
 
   /**The 2slots where you put your items in that you want to merge and/or rename.*/
-  private final ItemStackHandler inputslots = new ItemStackHandler(2);
+  private final ItemStackHandler inputslots;
 
   public GenericAnvilContainer(int id, PlayerInventory playerInventory, BlockPos pos) {
     super(id, playerInventory, pos);
+    inputslots = new ItemStackHandler(2);
+    addContainerSlots();
+    addPlayerSlots(playerInventory);
   }
 
-  @Override
   public void addContainerSlots() {
-    this.addSlot(new SlotItemHandler(inputslots, 0, 27, 47) {
+    this.addSlot(new SlotItemHandler(getHandler(), 0, 27, 47) {
       public void onSlotChanged() {
         if (this.getStack().isEmpty()) {
           GenericAnvilContainer.this.repairedItemName = "";
@@ -25,7 +27,7 @@ public class GenericAnvilContainer extends AbstractGenericAnvilContainer {
         GenericAnvilContainer.this.updateRepairOutput();
       }
     });
-    this.addSlot(new SlotItemHandler(this.inputslots, 1, 76, 47) {
+    this.addSlot(new SlotItemHandler(getHandler(), 1, 76, 47) {
       public void onSlotChanged() {
         GenericAnvilContainer.this.updateRepairOutput();
       }

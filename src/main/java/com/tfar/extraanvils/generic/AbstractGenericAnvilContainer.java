@@ -9,13 +9,11 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.CraftResultInventory;
 import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.EnchantedBookItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IntReferenceHolder;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.StringTextComponent;
@@ -30,7 +28,6 @@ import java.util.Map;
 
 public abstract class AbstractGenericAnvilContainer extends Container {
 
-    private static final Inventory DUMMY = new Inventory(0);
     /**Here comes out item you merged and/or renamed.*/
     final IInventory outputSlot = new CraftResultInventory();
 
@@ -47,10 +44,7 @@ public abstract class AbstractGenericAnvilContainer extends Container {
 
     final IntReferenceHolder maximumCost = IntReferenceHolder.single();
     public BlockPos pos;
-
-
     World world;
-
 
     public AbstractGenericAnvilContainer(int id, PlayerInventory playerInventory, BlockPos pos) {
       super(ExtraAnvils.ObjectHolders.generic_anvil_container_type,id);
@@ -59,20 +53,19 @@ public abstract class AbstractGenericAnvilContainer extends Container {
       this.world = player.world;
       this.trackInt(this.maximumCost);
       this.maximumCap = ((GenericAnvilBlock)world.getBlockState(pos).getBlock()).anvilProperties.cap;
-      addContainerSlots();
+    }
 
+    public void addPlayerSlots(PlayerInventory inv){
       for(int i = 0; i < 3; ++i) {
         for(int j = 0; j < 9; ++j) {
-          this.addSlot(new Slot(playerInventory, j + i * 9 + 9, 8 + j * 18, 84 + i * 18));
+          this.addSlot(new Slot(inv, j + i * 9 + 9, 8 + j * 18, 84 + i * 18));
         }
       }
 
       for(int k = 0; k < 9; ++k) {
-        this.addSlot(new Slot(playerInventory, k, 8 + k * 18, 142));
+        this.addSlot(new Slot(inv, k, 8 + k * 18, 142));
       }
     }
-
-    public abstract void addContainerSlots();
 
     public abstract ItemStackHandler getHandler();
 
@@ -80,10 +73,6 @@ public abstract class AbstractGenericAnvilContainer extends Container {
       if (level < 17) return level*level + 6 * level;
       else if (level < 32) return (int)(2.5 * level*level - 40.5 * level + 360);
       else return (int)(4.5 * level*level - 162.5 * level + 2220);
-    }
-
-    public void onCraftMatrixChanged() {
-      onCraftMatrixChanged(DUMMY);
     }
 
     /**

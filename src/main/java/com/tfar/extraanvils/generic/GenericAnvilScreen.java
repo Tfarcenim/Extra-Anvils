@@ -51,7 +51,7 @@ public class GenericAnvilScreen extends ContainerScreen<AbstractGenericAnvilCont
     this.nameField.setDisabledTextColour(-1);
     this.nameField.setEnableBackgroundDrawing(false);
     this.nameField.setMaxStringLength(35);
-    this.nameField.func_212954_a(this::syncPacket);
+    this.nameField.setResponder(this::syncPacket);
     this.children.add(this.nameField);
     this.container.addListener(this);
     this.setFocused(this.nameField);
