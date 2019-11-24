@@ -15,7 +15,7 @@ public class Compat {
     return isApothesisHere ? ApothCompat.getActualMaxLevel(enchantment) : enchantment.getMaxLevel();
   }
 
-  public static TileEntity createTileEntity(){
-    return isAnvilTweaksHere ? AnvilTweaksCompat.getAnvilTweaksTile() : Compat.isApothesisHere ? ApothCompat.getApothTile(): null;
+  public static TileEntity createTileEntity() {
+    return isAnvilTweaksHere ? AnvilTweaksCompat.getAnvilTweaksTile() : Compat.isApothesisHere ? ApothCompat.getApothTile() : null;
   }
 }

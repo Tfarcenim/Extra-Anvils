@@ -2,6 +2,7 @@ package com.tfar.extraanvils;
 
 import com.google.gson.*;
 import com.tfar.extraanvils.generic.GenericAnvilBlock;
+import com.tfar.extraanvils.generic.GenericAnvilBlockItem;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.item.BlockItem;
@@ -137,7 +138,7 @@ public class RegistryHandler {
   public static void registerItems(IForgeRegistry<Item> registry) {
     Item.Properties properties = new Item.Properties().group(ExtraAnvils.creativeTab);
     for (GenericAnvilBlock anvil : ExtraAnvils.anvils)
-      registry.register(new BlockItem(anvil,properties).setRegistryName(anvil.getRegistryName()));
+      registry.register(new GenericAnvilBlockItem(anvil,properties).setRegistryName(anvil.getRegistryName()));
     for (GenericAnvilBlock anvil : ExtraAnvils.anvils) {
       switch (anvil.variant) {
         case NORMAL:

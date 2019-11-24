@@ -16,7 +16,7 @@ import net.minecraftforge.items.SlotItemHandler;
 
 import java.util.Set;
 
-public class AnvilTweaksCompat extends Compat {
+public class AnvilTweaksCompat {
   public static TileEntity getAnvilTweaksTile() {
     return new GenericAnvilAnvilTweaksCompatTile();
   }

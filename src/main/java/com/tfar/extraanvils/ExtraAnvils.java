@@ -11,6 +11,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.client.renderer.entity.FallingBlockRenderer;
+import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerInventory;
@@ -49,7 +50,10 @@ public class ExtraAnvils
   public static final HashMap<GenericAnvilBlock, GenericAnvilBlock> anvilDamageMap = new HashMap<>();
   public static final String MODID = "extraanvils";
 
-    public static ItemGroup creativeTab = new ItemGroup(MODID) {
+  @ObjectHolder("apotheosis:splitting")
+  public static final Enchantment splitting = null;
+
+  public static ItemGroup creativeTab = new ItemGroup(MODID) {
         @Override
         public ItemStack createIcon() {
             return new ItemStack(ObjectHolders.diamond_anvil);
