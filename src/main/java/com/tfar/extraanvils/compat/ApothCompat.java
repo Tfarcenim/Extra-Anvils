@@ -39,7 +39,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ApothCompat extends Compat {
+public class ApothCompat {
+
   public static int getActualMaxLevel(Enchantment ench) {
     return shadows.apotheosis.ench.asm.EnchHooks.getMaxLevel(ench);
   }

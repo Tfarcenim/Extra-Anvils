@@ -25,11 +25,9 @@ public class GenericAnvilScreen extends ContainerScreen<AbstractGenericAnvilCont
   private static final ResourceLocation ANVIL_RESOURCE = new ResourceLocation("textures/gui/container/anvil.png");
   private static final ResourceLocation hammer = new ResourceLocation(ExtraAnvils.MODID, "textures/gui/hammer.png");
   private TextFieldWidget nameField;
-  private final PlayerInventory playerInventory;
 
   public GenericAnvilScreen(AbstractGenericAnvilContainer container, PlayerInventory inventoryIn, ITextComponent text) {
     super(container,inventoryIn, text);
-    this.playerInventory = inventoryIn;
   }
 
   @Override

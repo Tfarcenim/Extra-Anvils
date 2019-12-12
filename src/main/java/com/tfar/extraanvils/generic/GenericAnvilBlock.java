@@ -103,7 +103,9 @@ public class GenericAnvilBlock extends AnvilBlock {
   @Override
   protected void onStartFalling(FallingBlockEntity e) {
     super.onStartFalling(e);
-    ApothCompat.onStartFalling(e);
+    if (Compat.isApothesisHere) {
+      ApothCompat.onStartFalling(e);
+    }
   }
 
   @Override
