@@ -28,7 +28,6 @@ public class RegistryHandler {
   private static boolean error = false;
   private static File configFile = new File("config/extraanvils.json");
   private static BufferedInputStream in = new BufferedInputStream(RegistryHandler.class.getResourceAsStream("/"+ExtraAnvils.MODID+".json"));
-  //hardcoded into the mod, used for oredict, jsons and modids
   public static JsonObject jsonRead;
 
   static {
