@@ -30,6 +30,8 @@ import net.minecraft.world.World;
 import net.minecraft.world.storage.loot.LootContext;
 import net.minecraft.world.storage.loot.LootParameters;
 import net.minecraftforge.registries.ForgeRegistries;
+
+/*
 import shadows.apotheosis.ApotheosisObjects;
 import shadows.apotheosis.advancements.AdvancementTriggers;
 import shadows.apotheosis.ench.anvil.TileAnvil;
@@ -118,4 +120,4 @@ public class ApothCompat {
       te.write(e.tileEntityData);
     }
   }
-}
+}*/

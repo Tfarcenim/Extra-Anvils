@@ -12,10 +12,10 @@ public class Compat {
   public static final boolean hasTileEntity = isApothesisHere || isAnvilTweaksHere;
 
   public static int getMaxLevel(Enchantment enchantment){
-    return isApothesisHere ? ApothCompat.getActualMaxLevel(enchantment) : enchantment.getMaxLevel();
+    return enchantment.getMaxLevel();//isApothesisHere ? ApothCompat.getActualMaxLevel(enchantment) : enchantment.getMaxLevel();
   }
 
   public static TileEntity createTileEntity() {
-    return isAnvilTweaksHere ? AnvilTweaksCompat.getAnvilTweaksTile() : Compat.isApothesisHere ? ApothCompat.getApothTile() : null;
+    return isAnvilTweaksHere ? AnvilTweaksCompat.getAnvilTweaksTile() /*: Compat.isApothesisHere ? ApothCompat.getApothTile()*/ : null;
   }
 }

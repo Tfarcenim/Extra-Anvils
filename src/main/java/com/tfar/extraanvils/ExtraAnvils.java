@@ -1,21 +1,16 @@
 package com.tfar.extraanvils;
 
-import com.tfar.anviltweaks.AnvilTile;
-import com.tfar.anviltweaks.AnvilTweaks;
 import com.tfar.extraanvils.compat.AnvilTweaksCompat;
-import com.tfar.extraanvils.compat.Compat;
 import com.tfar.extraanvils.entity.FallingAnvilEntity;
 import com.tfar.extraanvils.generic.*;
 import com.tfar.extraanvils.network.Message;
 import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
 import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.client.renderer.entity.FallingBlockRenderer;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.entity.projectile.AbstractArrowEntity;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
@@ -40,13 +35,12 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
-import static com.tfar.extraanvils.ExtraAnvils.ObjectHolders.generic_anvil_container_type;
+import static com.tfar.extraanvils.ExtraAnvils.ObjectHolders.generic_anvil;
 import static com.tfar.extraanvils.compat.Compat.isAnvilTweaksHere;
 
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
 @Mod(value = ExtraAnvils.MODID)
-public class ExtraAnvils
-{
+public class ExtraAnvils {
   public static final HashMap<GenericAnvilBlock, GenericAnvilBlock> anvilDamageMap = new HashMap<>();
   public static final String MODID = "extraanvils";
 
@@ -54,88 +48,90 @@ public class ExtraAnvils
   public static final Enchantment splitting = null;
 
   public static ItemGroup creativeTab = new ItemGroup(MODID) {
-        @Override
-        public ItemStack createIcon() {
-            return new ItemStack(ObjectHolders.diamond_anvil);
-        }
-    };
-
-
-    public static Logger logger = LogManager.getLogger();
-
-    public static Set<GenericAnvilBlock> anvils = new HashSet<>();
-
-    public ExtraAnvils(){
-      //  ModLoadingContext.get().registerExtensionPoint(ExtensionPoint.CONFIGGUIFACTORY, () -> GuiHandler::getClientGuiElement);
+    @Override
+    public ItemStack createIcon() {
+      return new ItemStack(ObjectHolders.diamond_anvil);
     }
+  };
 
-    @SubscribeEvent
-    public static void commonSetup(final FMLCommonSetupEvent event) {
-      Message.registerMessages(MODID);
-    }
+
+  public static Logger logger = LogManager.getLogger();
+
+  public static Set<GenericAnvilBlock> anvils = new HashSet<>();
+
+  public ExtraAnvils() {
+    //  ModLoadingContext.get().registerExtensionPoint(ExtensionPoint.CONFIGGUIFACTORY, () -> GuiHandler::getClientGuiElement);
+  }
+
+  @SubscribeEvent
+  public static void commonSetup(final FMLCommonSetupEvent event) {
+    Message.registerMessages(MODID);
+  }
 
   @SubscribeEvent
   public static void registerTiles(final RegistryEvent.Register<TileEntityType<?>> event) {
-    if (isAnvilTweaksHere)AnvilTweaksCompat.hax(event);
+    if (isAnvilTweaksHere) AnvilTweaksCompat.hax(event);
   }
 
   @SubscribeEvent
   public static void clientSetup(final FMLClientSetupEvent event) {
-    ScreenManager.registerFactory(generic_anvil_container_type, GenericAnvilScreen::new);
+    ScreenManager.registerFactory(generic_anvil, GenericAnvilScreen::new);
   }
 
-    @SubscribeEvent
-    public static void registerBlocks(RegistryEvent.Register<Block> event) {
-        RegistryHandler.registerBlocks(event.getRegistry());
-    }
+  @SubscribeEvent
+  public static void registerBlocks(RegistryEvent.Register<Block> event) {
+    RegistryHandler.registerBlocks(event);
+  }
 
-    @SubscribeEvent
-    public static void registerItems(RegistryEvent.Register<Item> event) {
-        RegistryHandler.registerItems(event.getRegistry());
-    }
+  @SubscribeEvent
+  public static void registerItems(RegistryEvent.Register<Item> event) {
+    RegistryHandler.registerItems(event);
+  }
 
-    @SubscribeEvent
-    public static void registerContainers(RegistryEvent.Register<ContainerType<?>> event){
+  @SubscribeEvent
+  public static void registerContainers(RegistryEvent.Register<ContainerType<?>> event) {
 
-        ContainerType<AbstractGenericAnvilContainer> containerType;
-        containerType = IForgeContainerType.create((int id, PlayerInventory playerInventory, PacketBuffer data) -> isAnvilTweaksHere ? new GenericAnvilAnvilTweaksContainer(id, playerInventory, data.readBlockPos()):
-        new GenericAnvilContainer(id, playerInventory, data.readBlockPos()));
-        containerType.setRegistryName(MODID+":generic_anvil_container_type");
-        event.getRegistry().register(containerType);
-    }
+    ContainerType<AbstractGenericAnvilContainer> containerType;
+    containerType = IForgeContainerType.create((int id, PlayerInventory playerInventory, PacketBuffer data) -> isAnvilTweaksHere ? new GenericAnvilAnvilTweaksContainer(id, playerInventory, data.readBlockPos()) :
+            new GenericAnvilContainer(id, playerInventory, data.readBlockPos()));
+    register(containerType, "generic_anvil", event.getRegistry());
+  }
 
-    @SubscribeEvent
-  public static void registerEntities(RegistryEvent.Register<EntityType<?>> event){
-      event.getRegistry().register(
-              EntityType.Builder
-                      .<FallingAnvilEntity>create(FallingAnvilEntity::new, EntityClassification.MISC)
-                      .setShouldReceiveVelocityUpdates(true)
-                      .setUpdateInterval(1)
-                      .setTrackingRange(128)
-                      .size(.98f, .98f)
-                      .setCustomClientFactory((spawnEntity, world) -> ObjectHolders.falling_anvil_entity.create(world))
-                      .build(MODID+":falling_anvil_entity")
-                      .setRegistryName(MODID+":falling_anvil_entity"));
-    }
-    @SubscribeEvent
-    public static void client(FMLClientSetupEvent event){
-      RenderingRegistry.registerEntityRenderingHandler(FallingAnvilEntity.class, FallingBlockRenderer::new);
-    }
+  @SubscribeEvent
+  public static void registerEntities(RegistryEvent.Register<EntityType<?>> event) {
+    register(
+            EntityType.Builder
+                    .<FallingAnvilEntity>create(FallingAnvilEntity::new, EntityClassification.MISC)
+                    .setShouldReceiveVelocityUpdates(true)
+                    .setUpdateInterval(1)
+                    .setTrackingRange(128)
+                    .size(.98f, .98f)
+                    .build(MODID + ":falling_anvil")
+            , "falling_anvil", event.getRegistry());
+  }
+
+  @SubscribeEvent
+  public static void client(FMLClientSetupEvent event) {
+    RenderingRegistry.registerEntityRenderingHandler(ObjectHolders.falling_anvil, FallingBlockRenderer::new);
+  }
 
   public static <T extends IForgeRegistryEntry<T>> void register(T obj, String name, IForgeRegistry<T> registry) {
-    register(obj,MODID,name,registry);
+    register(obj, MODID, name, registry);
   }
 
-  public static <T extends IForgeRegistryEntry<T>> void register(T obj,String modid, String name, IForgeRegistry<T> registry) {
-    registry.register(obj.setRegistryName(new ResourceLocation(modid, name)));
+  public static <T extends IForgeRegistryEntry<T>> void register(T obj, String modid, String name, IForgeRegistry<T> registry) {
+    register(obj,new ResourceLocation(modid, name),registry);
   }
 
+  public static <T extends IForgeRegistryEntry<T>> void register(T obj, ResourceLocation location, IForgeRegistry<T> registry) {
+    registry.register(obj.setRegistryName(location));
+  }
 
 
   @ObjectHolder(value = MODID)
   public static class ObjectHolders {
-    public static final EntityType<FallingAnvilEntity> falling_anvil_entity = null;
+    public static final EntityType<FallingAnvilEntity> falling_anvil = null;
     public static final Block diamond_anvil = null;
-    public static final ContainerType<? extends AbstractGenericAnvilContainer> generic_anvil_container_type = null;
+    public static final ContainerType<? extends AbstractGenericAnvilContainer> generic_anvil = null;
   }
 }

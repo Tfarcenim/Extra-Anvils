@@ -1,6 +1,6 @@
 package com.tfar.extraanvils.generic;
 
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.tfar.extraanvils.ExtraAnvils;
 import com.tfar.extraanvils.network.Message;
 import com.tfar.extraanvils.network.PacketAnvilRename;
@@ -83,8 +83,7 @@ public class GenericAnvilScreen extends ContainerScreen<AbstractGenericAnvilCont
    * Draw the foreground layer for the GuiContainer (everything in front of the items)
    */
   protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
-    GlStateManager.disableLighting();
-    GlStateManager.disableBlend();
+    RenderSystem.disableBlend();
     this.font.drawString(this.title.getFormattedText(), 60, 6, 0x404040);
     int i = this.container.getMaxCost();
     if (i > 0 || this.container.getSlot(2).canTakeStack(this.playerInventory.player)) {
@@ -107,8 +106,6 @@ public class GenericAnvilScreen extends ContainerScreen<AbstractGenericAnvilCont
         this.font.drawStringWithShadow(s, (float)k, 69, j);
       }
     }
-
-    GlStateManager.enableLighting();
   }
 
   private void syncPacket(String name) {
@@ -125,7 +122,7 @@ public class GenericAnvilScreen extends ContainerScreen<AbstractGenericAnvilCont
 
   @Override
   protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
-    GlStateManager.color4f(1, 1, 1, 1);
+    RenderSystem.color4f(1, 1, 1, 1);
     this.minecraft.getTextureManager().bindTexture(ANVIL_RESOURCE);
     int i = (this.width - this.xSize) / 2;
     int j = (this.height - this.ySize) / 2;
@@ -150,9 +147,8 @@ public class GenericAnvilScreen extends ContainerScreen<AbstractGenericAnvilCont
       } catch (NumberFormatException | NullPointerException notANumber){
         ExtraAnvils.logger.error(notANumber);
       }
-    GlStateManager.color3f((raw >> 16 & 0xFF)/255f, (raw >> 8 & 0xFF)/255f, (raw & 0xFF)/255f);
+    RenderSystem.color3f((raw >> 16 & 0xFF)/255f, (raw >> 8 & 0xFF)/255f, (raw & 0xFF)/255f);
     blit(i + 25, j + 7, 0, 0, 22, 22, 22, 22);
-    GlStateManager.color3f(1,1,1);
   }
 
 
@@ -178,10 +174,9 @@ public class GenericAnvilScreen extends ContainerScreen<AbstractGenericAnvilCont
   public void render(int mouseX, int mouseY, float partialTicks) {
     this.renderBackground();
     super.render(mouseX, mouseY, partialTicks);
-    this.renderHoveredToolTip(mouseX, mouseY);
-    GlStateManager.disableLighting();
-    GlStateManager.disableBlend();
+    RenderSystem.disableBlend();
     this.nameField.render(mouseX, mouseY, partialTicks);
+    this.renderHoveredToolTip(mouseX, mouseY);
   }
 
   @Override

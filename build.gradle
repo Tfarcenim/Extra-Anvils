@@ -42,10 +42,7 @@ minecraft {
     runs {
         client {
             workingDirectory project.file('run')
-
-            // Recommended logging data for a userdev environment
-            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
-
+            
             // Recommended logging level for the console
             property 'forge.logging.console.level', 'debug'
             //environment 'MOD_CLASSES', "${project.file("out/production/resources").canonicalPath};${project.file("out/production/classes").canonicalPath}"
@@ -59,9 +56,6 @@ minecraft {
 
         server {
             workingDirectory project.file('run')
-
-            // Recommended logging data for a userdev environment
-            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
             //environment 'MOD_CLASSES', "${project.file("out/production/resources").canonicalPath};${project.file("out/production/classes").canonicalPath}"
 
             // Recommended logging level for the console
@@ -97,14 +91,14 @@ dependencies {
     // compile "some.group:artifact:version:classifier"
     // compile "some.group:artifact:version"
     // compile against the JEI API but do not include it at runtime
-    compileOnly fg.deobf("mezz.jei:jei-${mc_version}:${jei_version}:api")
+    //compileOnly fg.deobf("mezz.jei:jei-${mc_version}:${jei_version}:api")
     // at runtime, use the full JEI jar
-    runtimeOnly fg.deobf("mezz.jei:jei-${mc_version}:${jei_version}")
+    //runtimeOnly fg.deobf("mezz.jei:jei-${mc_version}:${jei_version}")
     
-    compile fg.deobf("curse.maven:apotheosis:2821146")
-    compile fg.deobf("curse.maven:placebo:2803516")
+    //compile fg.deobf("curse.maven:apotheosis:2821146")
+    //compile fg.deobf("curse.maven:placebo:2803516")
 
-    compileOnly fg.deobf("curse.maven:anvil-tweaks:2799889")
+    compileOnly fg.deobf("curse.maven:anvil-tweaks:2851137")
 
 
     // Real examples

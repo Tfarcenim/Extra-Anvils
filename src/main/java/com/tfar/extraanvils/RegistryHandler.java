@@ -1,126 +1,80 @@
 package com.tfar.extraanvils;
 
-import com.google.gson.*;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.tfar.extraanvils.generic.GenericAnvilBlock;
 import com.tfar.extraanvils.generic.GenericAnvilBlockItem;
 import net.minecraft.block.Block;
-import net.minecraft.block.material.Material;
-import net.minecraft.item.BlockItem;
+import net.minecraft.block.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.*;
+import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.IForgeRegistry;
 import org.apache.commons.io.IOUtils;
 
 import java.io.*;
 import java.nio.charset.Charset;
-import java.util.Map;
-
-import static com.tfar.extraanvils.Scripts.g;
 
 public class RegistryHandler {
 
-  private static final String[] array = {"color","durability", "cap", "weight", "enchantability", "playerDamage"};
 
+  public static Gson g = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
   private static boolean error = false;
   private static File configFile = new File("config/extraanvils.json");
-  private static BufferedInputStream in = new BufferedInputStream(RegistryHandler.class.getResourceAsStream("/"+ExtraAnvils.MODID+".json"));
-  public static JsonObject jsonRead;
+  private static BufferedInputStream in = new BufferedInputStream(RegistryHandler.class.getResourceAsStream("/extraanvils.json"));
+  private static AnvilProperties[] jsonRead;
 
   static {
     String s;
     try {
       s = IOUtils.toString(in, Charset.defaultCharset());
     } catch (IOException e) {
-      throw new RuntimeException("The default config is broken, report to mod author asap!", e);
+      throw new RuntimeException("Impossible, how could this happen?", e);
     }
-    jsonRead = g.fromJson(s, JsonObject.class).get("anvils").getAsJsonObject();
+    jsonRead = g.fromJson(s, AnvilProperties[].class);
   }
 
   public static void writeConfig() {
 
     if (configFile.exists()) return;
 
-    JsonObject jsonWrite = new JsonObject();
-    JsonObject writeAnvil = new JsonObject();
-
-    for (Map.Entry<String, JsonElement> ore : jsonRead.entrySet()) {
-
-      JsonElement readAnvil = ore.getValue();
-      JsonObject temp = new JsonObject();
-      temp.add("enabled", new JsonPrimitive(true));
-
-      for (String prop : array) {
-        temp.add(prop, readAnvil.getAsJsonObject().get(prop));
-      }
-
-      JsonArray traits = (JsonArray) readAnvil.getAsJsonObject().get("traits");
-
-      if (traits != null) temp.add("traits", traits);
-
-      writeAnvil.add(ore.getKey(), temp);
-    }
-
-    jsonWrite.add("anvils", writeAnvil);
-
     try {
       FileWriter writer = new FileWriter(configFile);
-      writer.write(g.toJson(jsonWrite));
+      writer.write(g.toJson(jsonRead));
       writer.flush();
     } catch (IOException ugh) {
       //I expect this from a user, but you?!
-      throw new RuntimeException("The default config is broken, report to mod author asap!", ugh);
+      throw new RuntimeException("Impossible, how could this happen?", ugh);
     }
   }
 
 
-  public static void registerBlocks(IForgeRegistry<Block> registry) {
+  public static void registerBlocks(RegistryEvent.Register<Block> event) {
     writeConfig();
     try {
-
-      FileReader reader = new FileReader(configFile);
-
-      //config configFile
-      JsonObject json = (JsonObject) new JsonParser().parse(reader).getAsJsonObject().get("anvils");
-      for (Map.Entry<String, JsonElement> ore : json.entrySet()) {
-        String material = ore.getKey();
-        JsonElement element = ore.getValue();
-        AnvilProperties entry = g.fromJson(element,AnvilProperties.class);
-        boolean enabled = entry.enabled;
+      FileReader reader = new FileReader("config/extraanvils.json");
+      AnvilProperties[] anvilProperties = g.fromJson(reader, AnvilProperties[].class);
+      for (AnvilProperties anvilProperties1 : anvilProperties) {
+        String name = anvilProperties1.name;
         try {
-          if (enabled) {
-            ExtraAnvils.logger.info("registering " + material + " anvil");
-            for (GenericAnvilBlock.Variant variant : GenericAnvilBlock.Variant.values()) {
-              Block.Properties properties = Block.Properties.create(Material.ANVIL).hardnessAndResistance(5,6000);
-
-              GenericAnvilBlock anvil;
-
-          //    if (entry.traits != null && Arrays.asList(entry.traits).contains("reverse"))
-            //    anvil = new com.tfar.extraanvils.aether.BlockAetherAnvil(material, entry, variant);
-           //   else
-                anvil = new GenericAnvilBlock(material, properties, entry, variant);
-              ExtraAnvils.anvils.add(anvil);
-              anvil.setRegistryName(variant.s + anvil.material + "_anvil");
-              registry.register(anvil);
-            }
-          } else {
-            ExtraAnvils.logger.info("skipping " + material + " anvil because it's disabled");
+          ExtraAnvils.logger.info("registering " + name + " anvil");
+          for (GenericAnvilBlock.Variant variant : GenericAnvilBlock.Variant.values()) {
+            Block.Properties properties = Block.Properties.from(Blocks.ANVIL);
+            GenericAnvilBlock anvil = new GenericAnvilBlock(name, properties, anvilProperties1, variant);
+            ExtraAnvils.anvils.add(anvil);
+            ExtraAnvils.register(anvil,variant.s + name+"_anvil",event.getRegistry());
           }
           //in case of exceptions
         } catch (Exception e) {
-          ExtraAnvils.logger.error("Error registering " + material + " anvil, skipping", e);
+          ExtraAnvils.logger.error("Error registering " + name + " anvil, skipping", e);
           error = true;
         }
       }
-    } catch (IOException ofcourse) {
-      throw new RuntimeException(ofcourse);
+    } catch (IOException e) {
     }
-
-
-
   }
 
   @SubscribeEvent
@@ -134,25 +88,25 @@ public class RegistryHandler {
     }
   }
 
-  public static void registerItems(IForgeRegistry<Item> registry) {
+  public static void registerItems(RegistryEvent.Register<Item> event) {
     Item.Properties properties = new Item.Properties().group(ExtraAnvils.creativeTab);
-    for (GenericAnvilBlock anvil : ExtraAnvils.anvils)
-      registry.register(new GenericAnvilBlockItem(anvil,properties).setRegistryName(anvil.getRegistryName()));
+    ExtraAnvils.anvils.forEach(anvil -> ExtraAnvils.register(new GenericAnvilBlockItem(anvil, properties), anvil.getRegistryName(), event.getRegistry()));
     for (GenericAnvilBlock anvil : ExtraAnvils.anvils) {
       switch (anvil.variant) {
         case NORMAL:
           ExtraAnvils.anvilDamageMap
                   .put(anvil, (GenericAnvilBlock) ForgeRegistries
-                          .BLOCKS.getValue(new ResourceLocation(ExtraAnvils.MODID,"chipped_"+anvil.getRegistryName().getPath())));
+                          .BLOCKS.getValue(new ResourceLocation(ExtraAnvils.MODID, "chipped_" + anvil.getRegistryName().getPath())));
           break;
         case CHIPPED:
           ExtraAnvils.anvilDamageMap
                   .put(anvil, (GenericAnvilBlock) ForgeRegistries
-                          .BLOCKS.getValue(new ResourceLocation(ExtraAnvils.MODID,anvil.getRegistryName().getPath()
+                          .BLOCKS.getValue(new ResourceLocation(ExtraAnvils.MODID, anvil.getRegistryName().getPath()
                                   .replace(GenericAnvilBlock.Variant.CHIPPED.s,
                                           GenericAnvilBlock.Variant.DAMAGED.s))));
           break;
-        case DAMAGED:default:
+        case DAMAGED:
+        default:
           ExtraAnvils.anvilDamageMap.put(anvil, null);
           break;
       }
