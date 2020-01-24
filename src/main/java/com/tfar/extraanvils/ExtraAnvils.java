@@ -3,6 +3,7 @@ package com.tfar.extraanvils;
 import com.tfar.anviltweaks.AnvilTile;
 import com.tfar.anviltweaks.AnvilTweaks;
 import com.tfar.extraanvils.compat.AnvilTweaksCompat;
+import com.tfar.extraanvils.compat.ApothCompat;
 import com.tfar.extraanvils.compat.Compat;
 import com.tfar.extraanvils.entity.FallingAnvilEntity;
 import com.tfar.extraanvils.generic.*;
@@ -42,6 +43,7 @@ import java.util.Set;
 
 import static com.tfar.extraanvils.ExtraAnvils.ObjectHolders.generic_anvil_container_type;
 import static com.tfar.extraanvils.compat.Compat.isAnvilTweaksHere;
+import static com.tfar.extraanvils.compat.Compat.isApothesisHere;
 
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
 @Mod(value = ExtraAnvils.MODID)
@@ -77,6 +79,7 @@ public class ExtraAnvils
   @SubscribeEvent
   public static void registerTiles(final RegistryEvent.Register<TileEntityType<?>> event) {
     if (isAnvilTweaksHere)AnvilTweaksCompat.hax(event);
+    else if(isApothesisHere) ApothCompat.hax(event);
   }
 
   @SubscribeEvent

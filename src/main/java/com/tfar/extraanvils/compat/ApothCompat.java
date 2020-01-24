@@ -1,5 +1,8 @@
 package com.tfar.extraanvils.compat;
 
+import com.google.common.collect.Sets;
+import com.tfar.anviltweaks.AnvilTile;
+import com.tfar.anviltweaks.AnvilTweaks;
 import com.tfar.extraanvils.ExtraAnvils;
 import com.tfar.extraanvils.generic.GenericAnvilBlock;
 import com.tfar.extraanvils.generic.GenericAnvilBlockItem;
@@ -22,6 +25,7 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.INBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.EntityPredicates;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -29,6 +33,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.storage.loot.LootContext;
 import net.minecraft.world.storage.loot.LootParameters;
+import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.registries.ForgeRegistries;
 import shadows.apotheosis.ApotheosisObjects;
 import shadows.apotheosis.advancements.AdvancementTriggers;
@@ -38,6 +43,7 @@ import shadows.apotheosis.ench.anvil.compat.IAnvilTile;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class ApothCompat {
 
@@ -109,6 +115,12 @@ public class ApothCompat {
         break;
       }
     }
+  }
+
+  public static void hax(final RegistryEvent.Register<TileEntityType<?>> event){
+    Set<Block> valid = Sets.newHashSet(Blocks.ANVIL,Blocks.CHIPPED_ANVIL,Blocks.DAMAGED_ANVIL);
+    valid.addAll(ExtraAnvils.anvils);
+    ExtraAnvils.register(TileEntityType.Builder.create(GenericAnvilApothOnlyCompatTile::new, valid.toArray(new Block[0])).build(null),"apotheosis","anvil",event.getRegistry());
   }
 
   public static void onStartFalling(FallingBlockEntity e){
