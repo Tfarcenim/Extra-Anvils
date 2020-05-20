@@ -77,7 +77,7 @@ public class GenericAnvilScreen extends ContainerScreen<AbstractGenericAnvilCont
     if (p_keyPressed_1_ == 256) {
       this.minecraft.player.closeScreen();
     }
-    return this.nameField.keyPressed(p_keyPressed_1_, p_keyPressed_2_, p_keyPressed_3_) || this.nameField.func_212955_f() || super.keyPressed(p_keyPressed_1_, p_keyPressed_2_, p_keyPressed_3_);  }
+    return this.nameField.keyPressed(p_keyPressed_1_, p_keyPressed_2_, p_keyPressed_3_) || this.nameField.getVisible() || super.keyPressed(p_keyPressed_1_, p_keyPressed_2_, p_keyPressed_3_);  }
 
   /**
    * Draw the foreground layer for the GuiContainer (everything in front of the items)

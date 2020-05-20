@@ -1,7 +1,7 @@
 package com.tfar.extraanvils.compat;
 
-import com.tfar.anviltweaks.AnvilTileRenderer;
-import com.tfar.anviltweaks.AnvilTweaks;
+import tfar.anviltweaks.AnvilTileRenderer;
+import tfar.anviltweaks.AnvilTweaks;
 import com.tfar.extraanvils.Client;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 

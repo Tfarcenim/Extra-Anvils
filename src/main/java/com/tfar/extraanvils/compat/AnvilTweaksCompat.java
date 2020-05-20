@@ -1,8 +1,8 @@
 package com.tfar.extraanvils.compat;
 
 import com.google.common.collect.Sets;
-import com.tfar.anviltweaks.AnvilTile;
-import com.tfar.anviltweaks.AnvilTweaks;
+import tfar.anviltweaks.AnvilTile;
+import tfar.anviltweaks.AnvilTweaks;
 import com.tfar.extraanvils.ExtraAnvils;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
@@ -14,7 +14,7 @@ import java.util.Set;
 
 public class AnvilTweaksCompat {
   public static TileEntity getAnvilTweaksTile() {
-    return new GenericAnvilAnvilTweaksCompatTile();
+    return new AnvilTile(AnvilTweaks.Stuff.anvil_tile);
   }
 
   public static void hax(final RegistryEvent.Register<TileEntityType<?>> event){

@@ -1,6 +1,6 @@
 package com.tfar.extraanvils.generic;
 
-import com.tfar.anviltweaks.AnvilTile;
+import tfar.anviltweaks.AnvilTile;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.items.ItemStackHandler;
