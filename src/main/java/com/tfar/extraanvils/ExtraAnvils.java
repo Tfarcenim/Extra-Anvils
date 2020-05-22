@@ -60,8 +60,6 @@ public class ExtraAnvils {
   public static Set<GenericAnvilBlock> anvils = new HashSet<>();
 
   public ExtraAnvils() {
-    System.exit(0);
-    //  ModLoadingContext.get().registerExtensionPoint(ExtensionPoint.CONFIGGUIFACTORY, () -> GuiHandler::getClientGuiElement);
   }
 
   @SubscribeEvent
