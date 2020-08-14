@@ -1,5 +1,6 @@
 package com.tfar.extraanvils.generic;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.tfar.extraanvils.ExtraAnvils;
 import com.tfar.extraanvils.network.Message;
@@ -18,6 +19,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 
 import javax.annotation.Nonnull;
 
@@ -28,13 +30,8 @@ public class GenericAnvilScreen extends ContainerScreen<AbstractGenericAnvilCont
 
   public GenericAnvilScreen(AbstractGenericAnvilContainer container, PlayerInventory inventoryIn, ITextComponent text) {
     super(container,inventoryIn, text);
+    this.titleX = 60;
   }
-
-  @Override
-  public IGuiEventListener getFocused() {
-    return this.nameField.isFocused() ? this.nameField : null;
-  }
-
 
   @Override
   public void init() {
@@ -42,7 +39,7 @@ public class GenericAnvilScreen extends ContainerScreen<AbstractGenericAnvilCont
     this.minecraft.keyboardListener.enableRepeatEvents(true);
     int i = (this.width - this.xSize) / 2;
     int j = (this.height - this.ySize) / 2;
-    this.nameField = new TextFieldWidget(this.font, i + 62, j + 24, 103, 12, I18n.format("container.repair"));
+    this.nameField = new TextFieldWidget(this.font, i + 62, j + 24, 103, 12,new TranslationTextComponent("container.repair"));
     this.nameField.setCanLoseFocus(false);
     this.nameField.changeFocus(true);
     this.nameField.setTextColor(-1);
@@ -52,7 +49,6 @@ public class GenericAnvilScreen extends ContainerScreen<AbstractGenericAnvilCont
     this.nameField.setResponder(this::syncPacket);
     this.children.add(this.nameField);
     this.container.addListener(this);
-    this.setFocused(this.nameField);
   }
 
   /**
@@ -66,13 +62,6 @@ public class GenericAnvilScreen extends ContainerScreen<AbstractGenericAnvilCont
   }
 
   @Override
-  public void removed() {
-    super.removed();
-    this.minecraft.keyboardListener.enableRepeatEvents(false);
-    this.container.removeListener(this);
-  }
-
-  @Override
   public boolean keyPressed(int p_keyPressed_1_, int p_keyPressed_2_, int p_keyPressed_3_) {
     if (p_keyPressed_1_ == 256) {
       this.minecraft.player.closeScreen();
@@ -82,9 +71,9 @@ public class GenericAnvilScreen extends ContainerScreen<AbstractGenericAnvilCont
   /**
    * Draw the foreground layer for the GuiContainer (everything in front of the items)
    */
-  protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
+  protected void drawGuiContainerForegroundLayer(MatrixStack stack,int mouseX, int mouseY) {
+    super.drawGuiContainerForegroundLayer(stack, mouseX, mouseY);
     RenderSystem.disableBlend();
-    this.font.drawString(this.title.getFormattedText(), 60, 6, 0x404040);
     int i = this.container.getMaxCost();
     if (i > 0 || this.container.getSlot(2).canTakeStack(this.playerInventory.player)) {
       int j = 0x80ff20;
@@ -102,8 +91,8 @@ public class GenericAnvilScreen extends ContainerScreen<AbstractGenericAnvilCont
       if (flag) {
         int k = this.xSize - 8 - this.font.getStringWidth(s) - 2;
         int l = 69;
-        fill(k - 2, 67, this.xSize - 8, 79, 0x4f000000);
-        this.font.drawStringWithShadow(s, (float)k, 69, j);
+        fill(stack,k - 2, 67, this.xSize - 8, 79, 0x4f000000);
+        this.font.drawStringWithShadow(stack,s, (float)k, 69, j);
       }
     }
   }
@@ -121,16 +110,16 @@ public class GenericAnvilScreen extends ContainerScreen<AbstractGenericAnvilCont
   }
 
   @Override
-  protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
+  protected void drawGuiContainerBackgroundLayer(MatrixStack stack,float partialTicks, int mouseX, int mouseY) {
     RenderSystem.color4f(1, 1, 1, 1);
     this.minecraft.getTextureManager().bindTexture(ANVIL_RESOURCE);
     int i = (this.width - this.xSize) / 2;
     int j = (this.height - this.ySize) / 2;
-    this.blit(i, j, 0, 0, this.xSize, this.ySize);
-    this.blit(i + 59, j + 20, 0, this.ySize + (this.container.getSlot(0).getHasStack() ? 0 : 16), 110, 16);
+    this.blit(stack,i, j, 0, 0, this.xSize, this.ySize);
+    this.blit(stack,i + 59, j + 20, 0, this.ySize + (this.container.getSlot(0).getHasStack() ? 0 : 16), 110, 16);
 
     if ((this.container.getSlot(0).getHasStack() || this.container.getSlot(1).getHasStack()) && !this.container.getSlot(2).getHasStack()) {
-      this.blit(i + 99, j + 45, this.xSize, 0, 28, 21);
+      this.blit(stack,i + 99, j + 45, this.xSize, 0, 28, 21);
     }
     this.minecraft.getTextureManager().bindTexture(hammer);
 
@@ -148,7 +137,7 @@ public class GenericAnvilScreen extends ContainerScreen<AbstractGenericAnvilCont
         ExtraAnvils.logger.error(notANumber);
       }
     RenderSystem.color3f((raw >> 16 & 0xFF)/255f, (raw >> 8 & 0xFF)/255f, (raw & 0xFF)/255f);
-    blit(i + 25, j + 7, 0, 0, 22, 22, 22, 22);
+    blit(stack,i + 25, j + 7, 0, 0, 22, 22, 22, 22);
   }
 
 
@@ -171,12 +160,12 @@ public class GenericAnvilScreen extends ContainerScreen<AbstractGenericAnvilCont
   }
 
   @Override
-  public void render(int mouseX, int mouseY, float partialTicks) {
-    this.renderBackground();
-    super.render(mouseX, mouseY, partialTicks);
+  public void render(MatrixStack stack,int mouseX, int mouseY, float partialTicks) {
+    this.renderBackground(stack);
+    super.render(stack,mouseX, mouseY, partialTicks);
     RenderSystem.disableBlend();
-    this.nameField.render(mouseX, mouseY, partialTicks);
-    this.renderHoveredToolTip(mouseX, mouseY);
+    this.nameField.render(stack,mouseX, mouseY, partialTicks);
+    this.func_230459_a_(stack,mouseX, mouseY);
   }
 
   @Override

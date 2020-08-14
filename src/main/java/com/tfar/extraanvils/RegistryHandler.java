@@ -3,9 +3,9 @@ package com.tfar.extraanvils;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.tfar.extraanvils.generic.GenericAnvilBlock;
-import com.tfar.extraanvils.generic.GenericAnvilBlockItem;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
+import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.*;
@@ -77,20 +77,9 @@ public class RegistryHandler {
     }
   }
 
-  @SubscribeEvent
-  public static void onPlayerJoin(PlayerEvent.PlayerLoggedInEvent e) {
-    if (error) {
-      ITextComponent component = new StringTextComponent(TextFormatting.WHITE + "[")
-              .appendSibling(new TranslationTextComponent("extraanvils.name").setStyle(new Style().setColor(TextFormatting.AQUA)))
-              .appendSibling(new StringTextComponent("]: ").setStyle(new Style().setColor(TextFormatting.WHITE)))
-              .appendSibling(new TranslationTextComponent("extraanvils.error")).setStyle(new Style().setColor(TextFormatting.RED));
-      e.getPlayer().sendMessage(component);
-    }
-  }
-
   public static void registerItems(RegistryEvent.Register<Item> event) {
     Item.Properties properties = new Item.Properties().group(ExtraAnvils.creativeTab);
-    ExtraAnvils.anvils.forEach(anvil -> ExtraAnvils.register(new GenericAnvilBlockItem(anvil, properties), anvil.getRegistryName(), event.getRegistry()));
+    ExtraAnvils.anvils.forEach(anvil -> ExtraAnvils.register(new BlockItem(anvil, properties), anvil.getRegistryName(), event.getRegistry()));
     for (GenericAnvilBlock anvil : ExtraAnvils.anvils) {
       switch (anvil.variant) {
         case NORMAL:

@@ -68,37 +68,6 @@ public class GenericAnvilBlock extends AnvilBlock {
     return Compat.createTileEntity();
   }
 
-  public void onBlockPlacedBy(World world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
-    if (Compat.isApothesisHere){
-      //ApothCompat.onBlockPlacedBy(world, pos, state, placer, stack);
-    }
-  }
-
-  @Override
-  @OnlyIn(Dist.CLIENT)
-  public void addInformation(ItemStack stack, IBlockReader world, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
-    if (Compat.isApothesisHere && !stack.hasEffect())
-      tooltip.add(new TranslationTextComponent("info.apotheosis.anvil"));
-  }
-
-  @Override
-  protected void onStartFalling(FallingBlockEntity e) {
-    super.onStartFalling(e);
-    if (Compat.isApothesisHere) {
-      //ApothCompat.onStartFalling(e);
-    }
-  }
-
-  @Override
-  public void onEndFalling(World world, BlockPos pos, BlockState fallState, BlockState hitState) {
-    super.onEndFalling(world, pos, fallState, hitState);
-    if (Compat.isApothesisHere){
-      //ApothCompat.onEndFalling(world, pos, fallState, hitState);
-    }
-  }
-
-
-
   @Nullable
   public static BlockState damage(BlockState state) {
     Block block = ExtraAnvils.anvilDamageMap.get(state.getBlock());

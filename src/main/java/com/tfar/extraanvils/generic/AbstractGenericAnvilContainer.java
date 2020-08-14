@@ -172,8 +172,8 @@ public abstract class AbstractGenericAnvilContainer extends Container {
                   flag3 = true;
                 } else {
                   flag2 = true;
-                  if (j2 > Compat.getMaxLevel(enchantment1)) {
-                    j2 = Compat.getMaxLevel(enchantment1);
+                  if (j2 > enchantment1.getMaxLevel()) {
+                    j2 = enchantment1.getMaxLevel();
                   }
 
                   map.put(enchantment1, j2);
