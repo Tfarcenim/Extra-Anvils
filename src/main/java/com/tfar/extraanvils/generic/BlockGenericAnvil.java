@@ -241,7 +241,7 @@ public class BlockGenericAnvil extends BlockFalling {
             };
     for (int i = 0; i < stringLength; i++)
     {
-      outputString.append(colorChar[(i + (int) (Minecraft.getSystemTime() / 50)) % 8]).append(parString, i, i + 1);
+      outputString.append(colorChar[(i + Math.abs((int)Minecraft.getSystemTime()) / 50) % 8]).append(parString, i, i + 1);
     }
     return outputString.toString();
   }
